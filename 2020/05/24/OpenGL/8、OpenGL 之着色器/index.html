@@ -1,0 +1,529 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="OpenGL">
+
+
+<meta name="description" content="OpenGL 之着色器简介
+着色器只是一种把输入转化为输出的程序
+着色器也是一种非常独立的程序，因为它们之间不能相互通信；
+它们之间唯一的沟通只有通过输入和输出。
+
+GLSL
+着色器是使用一种叫...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    8、OpenGL 之着色器 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="8、OpenGL 之着色器">
+            
+            8、OpenGL 之着色器
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/OpenGL/">OpenGL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/OpenGL/">OpenGL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/05/24</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="OpenGL-之着色器"><a href="#OpenGL-之着色器" class="headerlink" title="OpenGL 之着色器"></a><strong>OpenGL 之着色器</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><ul>
+<li>着色器只是一种把输入转化为输出的程序</li>
+<li>着色器也是一种非常独立的程序，因为它们之间不能相互通信；</li>
+<li>它们之间唯一的沟通只有通过输入和输出。</li>
+</ul>
+<h3 id="GLSL"><a href="#GLSL" class="headerlink" title="GLSL"></a><strong>GLSL</strong></h3><ul>
+<li>着色器是使用一种叫GLSL的类C语言写成的。GLSL是为图形计算量身定制的，它包含一些针对向量和矩阵操作的有用特性。</li>
+<li>一个典型的着色器有下面的结构：<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#version version_number</span><br><span class="line"><span class="keyword">in</span> <span class="class"><span class="keyword">type</span> <span class="title">in_variable_name</span>;</span></span><br><span class="line"><span class="keyword">in</span> <span class="class"><span class="keyword">type</span> <span class="title">in_variable_name</span>;</span></span><br><span class="line"></span><br><span class="line">out <span class="class"><span class="keyword">type</span> <span class="title">out_variable_name</span>;</span></span><br><span class="line"></span><br><span class="line">uniform <span class="class"><span class="keyword">type</span> <span class="title">uniform_name</span>;</span></span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// 处理输入并进行一些图形操作</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 输出处理过的结果到输出变量</span></span><br><span class="line">  out_variable_name = weird_stuff_we_processed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>每个输入变量也叫顶点属性(Vertex Attribute)。我们能声明的顶点属性是有上限的，它一般由硬件来决定。OpenGL确保至少有16个包含4分量的顶点属性可用，但是有些硬件或许允许更多的顶点属性，你可以查询GL_MAX_VERTEX_ATTRIBS来获取具体的上限：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> nrAttributes;</span><br><span class="line">glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &amp;nrAttributes);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Maximum nr of vertex attributes supported: "</span> &lt;&lt; nrAttributes &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a><strong>数据类型</strong></h3><ul>
+<li>GLSL中包含C等其它语言大部分的默认基础数据类型：int、float、double、uint和bool。</li>
+<li>GLSL也有两种容器类型，分别是向量(Vector)和矩阵(Matrix)</li>
+</ul>
+<p>类型|    含义</p>
+<p>vecn |     包含n个float分量的默认向量<br>bvecn |     包含n个bool分量的向量<br>ivecn |     包含n个int分量的向量<br>uvecn |     包含n个unsigned int分量的向量<br>dvecn |     包含n个double分量的向量</p>
+<h3 id="向量重组"><a href="#向量重组" class="headerlink" title="向量重组"></a><strong>向量重组</strong></h3><p>一个向量的分量可以通过vec.x这种方式获取，这里x是指这个向量的第一个分量。你可以分别使用.x、.y、.z和.w来获取它们的第1、2、3、4个分量。GLSL也允许你对颜色使用rgba，或是对纹理坐标使用stpq访问相同的分量。</p>
+<p>向量这一数据类型也允许一些有趣而灵活的分量选择方式，叫做重组(Swizzling)。重组允许这样的语法：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vec2 someVec<span class="comment">;</span></span><br><span class="line">vec4 <span class="keyword">differentVec </span>= someVec.xyxx<span class="comment">;</span></span><br><span class="line">vec3 anotherVec = <span class="keyword">differentVec.zyw;</span></span><br><span class="line"><span class="keyword">vec4 </span>otherVec = someVec.xxxx + anotherVec.yxzy<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可以使用上面4个字母任意组合来创建一个和原来向量一样长的（同类型）新向量，只要原来向量有那些分量即可；</li>
+<li>不允许在一个vec2向量中去获取.z元素</li>
+</ul>
+<h3 id="向量构造传参"><a href="#向量构造传参" class="headerlink" title="向量构造传参"></a><strong>向量构造传参</strong></h3><p>也可以把一个向量作为一个参数传给不同的向量构造函数，以减少需求参数的数量：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> vect = <span class="type">vec2</span>(<span class="number">0.5</span>, <span class="number">0.7</span>);</span><br><span class="line"><span class="type">vec4</span> result = <span class="type">vec4</span>(vect, <span class="number">0.0</span>, <span class="number">0.0</span>);</span><br><span class="line"><span class="type">vec4</span> otherResult = <span class="type">vec4</span>(result.xyz, <span class="number">1.0</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入与输出"><a href="#输入与输出" class="headerlink" title="输入与输出"></a><strong>输入与输出</strong></h3><ul>
+<li>着色器是各自独立的小程序，它们都是一个整体的一部分</li>
+<li>每个着色器都有输入和输出进行数据交流和传递，GLSL定义了in和out</li>
+<li>顶点着色器的输入特殊在，它从顶点数据中直接接收输入</li>
+<li>顶点着色器需要为它的输入提供一个额外的layout标识，这样我们才能把它链接到顶点数据。</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><ul>
+<li><p>顶点着色器</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> aPos; <span class="comment">// 位置变量的属性位置值为0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> vertexColor; <span class="comment">// 为片段着色器指定一个颜色输出</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aPos, <span class="number">1.0</span>); <span class="comment">// 注意我们如何把一个vec3作为vec4的构造器的参数</span></span><br><span class="line">    vertexColor = <span class="type">vec4</span>(<span class="number">0.5</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>); <span class="comment">// 把输出变量设置为暗红色</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>片段着色器</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">in</span> <span class="type">vec4</span> vertexColor; <span class="comment">// 从顶点着色器传来的输入变量（名称相同、类型相同）</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    FragColor = vertexColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Uniform"><a href="#Uniform" class="headerlink" title="Uniform"></a><strong>Uniform</strong></h3><ul>
+<li>Uniform是一种从CPU中的应用向GPU中的着色器发送数据的方式</li>
+<li>uniform和顶点属性有些不同</li>
+<li>uniform是全局的(Global)。在每个着色器程序对象中都是独一无二的，而且它可以被着色器程序的任意着色器在任意阶段访问</li>
+<li>把uniform值设置成什么，uniform会一直保存它们的数据，直到它们被重置或更新。</li>
+</ul>
+<h4 id="让三角形颜色随时间变化"><a href="#让三角形颜色随时间变化" class="headerlink" title="让三角形颜色随时间变化"></a><strong>让三角形颜色随时间变化</strong></h4><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">uniform</span> <span class="type">vec4</span> ourColor; <span class="comment">// 在OpenGL程序代码中设定这个变量</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    FragColor = ourColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">float timeValue = glfwGetTime()<span class="comment">;</span></span><br><span class="line">float greenValue = (<span class="name">sin</span>(<span class="name">timeValue</span>) / <span class="number">2.0</span>f) + <span class="number">0.5</span>f<span class="comment">;</span></span><br><span class="line">int vertexColorLocation = glGetUniformLocation(<span class="name">shaderProgram</span>, <span class="string">"ourColor"</span>)<span class="comment">;</span></span><br><span class="line">glUseProgram(<span class="name">shaderProgram</span>)<span class="comment">;</span></span><br><span class="line">glUniform4f(<span class="name">vertexColorLocation</span>, <span class="number">0.0</span>f, greenValue, <span class="number">0.0</span>f, <span class="number">1.0</span>f)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<p>查询uniform地址不要求你之前使用过着色器程序，但是更新一个uniform之前你必须先调用glUseProgram，因为它是在当前激活的着色器程序中设置uniform的。</p>
+<h4 id="glUniform后缀"><a href="#glUniform后缀" class="headerlink" title="glUniform后缀"></a><strong>glUniform后缀</strong></h4><table>
+<thead>
+<tr>
+<th>后缀</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>f</td>
+<td>函数需要一个float作为它的值</td>
+</tr>
+<tr>
+<td>i</td>
+<td>函数需要一个int作为它的值</td>
+</tr>
+<tr>
+<td>ui</td>
+<td>函数需要一个unsigned int作为它的值</td>
+</tr>
+<tr>
+<td>3f</td>
+<td>函数需要3个float作为它的值</td>
+</tr>
+<tr>
+<td>fv</td>
+<td>函数需要一个float向量/数组作为它的值</td>
+</tr>
+</tbody></table>
+<h3 id="存在位置和颜色的顶点数据"><a href="#存在位置和颜色的顶点数据" class="headerlink" title="存在位置和颜色的顶点数据"></a><strong>存在位置和颜色的顶点数据</strong></h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="comment">// 位置              // 颜色</span></span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>,   <span class="comment">// 右下</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>,   <span class="comment">// 左下</span></span><br><span class="line">     <span class="number">0.0f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>    <span class="comment">// 顶部</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> aPos;   <span class="comment">// 位置变量的属性位置值为 0 </span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">in</span> <span class="type">vec3</span> aColor; <span class="comment">// 颜色变量的属性位置值为 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec3</span> ourColor; <span class="comment">// 向片段着色器输出一个颜色</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">    ourColor = aColor; <span class="comment">// 将ourColor设置为我们从顶点数据那里得到的输入颜色</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;  </span><br><span class="line"><span class="keyword">in</span> <span class="type">vec3</span> ourColor;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    FragColor = <span class="type">vec4</span>(ourColor, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 位置属性</span></span><br><span class="line">glVertexAttribPointer(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">6</span> * sizeof(<span class="built_in">float</span>), (<span class="built_in">void</span>*)<span class="number">0</span>);</span><br><span class="line">glEnableVertexAttribArray(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 颜色属性</span></span><br><span class="line">glVertexAttribPointer(<span class="number">1</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">6</span> * sizeof(<span class="built_in">float</span>), (<span class="built_in">void</span>*)(<span class="number">3</span>* sizeof(<span class="built_in">float</span>)));</span><br><span class="line">glEnableVertexAttribArray(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/05/24/LinearAlgebra/54、LinearAlgebra 之正交基与标准正交基/" class="pre-post btn btn-default" title='54、LinearAlgebra 之正交基与标准正交基'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            54、LinearAlgebra 之正交基与标准正交基</span>
+    </a>
+    
+    
+    <a href="/2020/05/24/LinearAlgebra/53、LinearAlgebra 之左零空间，四大子空间和研究子空间的原因/" class="next-post btn btn-default" title='53、LinearAlgebra 之左零空间，四大子空间和研究子空间的原因'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            53、LinearAlgebra 之左零空间，四大子空间和研究子空间的原因</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL-之着色器"><span class="toc-text">OpenGL 之着色器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GLSL"><span class="toc-text">GLSL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据类型"><span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#向量重组"><span class="toc-text">向量重组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#向量构造传参"><span class="toc-text">向量构造传参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输入与输出"><span class="toc-text">输入与输出</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Uniform"><span class="toc-text">Uniform</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#让三角形颜色随时间变化"><span class="toc-text">让三角形颜色随时间变化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#glUniform后缀"><span class="toc-text">glUniform后缀</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存在位置和颜色的顶点数据"><span class="toc-text">存在位置和颜色的顶点数据</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

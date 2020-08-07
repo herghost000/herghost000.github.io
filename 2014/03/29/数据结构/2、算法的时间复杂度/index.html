@@ -1,0 +1,521 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="数据结构">
+
+
+<meta name="description" content="算法的时间复杂度
+只关注最高次项
+时间复杂度是指最坏时间复杂度
+只有常数项记做1
+
+我们假设计算机运行一行基础代码需要执行一次运算。
+1234int aFunc(void) &#123;    ...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    2、算法的时间复杂度 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="2、算法的时间复杂度">
+            
+            2、算法的时间复杂度
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/数据结构/">数据结构</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/数据结构/">数据结构</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2014/03/29</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2323</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h4 id="算法的时间复杂度"><a href="#算法的时间复杂度" class="headerlink" title="算法的时间复杂度"></a><strong>算法的时间复杂度</strong></h4><ul>
+<li>只关注最高次项</li>
+<li>时间复杂度是指最坏时间复杂度</li>
+<li>只有常数项记做1</li>
+</ul>
+<p>我们假设计算机运行一行基础代码需要执行一次运算。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);      <span class="comment">//  需要执行 1 次</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;       <span class="comment">// 需要执行 1 次</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么上面这个方法需要执行 2 次运算</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;n; i++) &#123;         <span class="comment">// 需要执行 (n + 1) 次</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);      <span class="comment">// 需要执行 n 次</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;       <span class="comment">// 需要执行 1 次</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法需要 (n + 1 + n + 1) = 2n + 2 次运算。</p>
+<p>我们把 算法需要执行的运算次数 用 输入大小n 的函数 表示，即 T(n) 。<br>此时为了 估算算法需要的运行时间 和 简化算法分析，我们引入时间复杂度的概念。</p>
+<p>定义：存在常数 c 和函数 f(N)，使得当 N &gt;= c 时 T(N) &lt;= f(N)，表示为 T(n) = O(f(n)) 。<br>如图：<br><img src="https://upload-images.jianshu.io/upload_images/2868692-072500c32dbce83f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/650/format/webp" alt="image"></p>
+<p>当 N &gt;= 2 的时候，f(n) = n^2 总是大于 T(n) = n + 2 的，于是我们说 f(n) 的增长速度是大于或者等于 T(n) 的，也说 f(n) 是 T(n) 的上界，可以表示为 T(n) = O(f(n))。</p>
+<p>因为f(n) 的增长速度是大于或者等于 T(n) 的，即T(n) = O(f(n))，所以我们可以用 f(n) 的增长速度来度量 T(n) 的增长速度，所以我们说这个算法的时间复杂度是 O(f(n))。</p>
+<p>算法的时间复杂度，用来度量算法的运行时间，记作: T(n) = O(f(n))。它表示随着 输入大小n 的增大，算法执行需要的时间的增长速度可以用 f(n) 来描述。</p>
+<p>显然如果 T(n) = n^2，那么 T(n) = O(n^2)，T(n) = O(n^3)，T(n) = O(n^4) 都是成立的，但是因为第一个 f(n) 的增长速度与 T(n) 是最接近的，所以第一个是最好的选择，所以我们说这个算法的复杂度是 O(n^2) 。</p>
+<p>那么当我们拿到算法的执行次数函数 T(n) 之后怎么得到算法的时间复杂度呢？</p>
+<ol>
+<li><p>我们知道常数项对函数的增长速度影响并不大，所以当 T(n) = c，c 为一个常数的时候，我们说这个算法的时间复杂度为 O(1)；如果 T(n) 不等于一个常数项时，直接将常数项省略。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">比如</span><br><span class="line">第一个 Hello, World 的例子中 <span class="constructor">T(<span class="params">n</span>)</span> = <span class="number">2</span>，所以我们说那个函数(算法)的时间复杂度为 <span class="constructor">O(1)</span>。</span><br><span class="line"><span class="constructor">T(<span class="params">n</span>)</span> = n + <span class="number">29</span>，此时时间复杂度为 <span class="constructor">O(<span class="params">n</span>)</span>。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们知道高次项对于函数的增长速度的影响是最大的。n^3 的增长速度是远超 n^2 的，同时 n^2 的增长速度是远超 n 的。 同时因为要求的精度不高，所以我们直接忽略低此项。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比如</span><br><span class="line"><span class="built_in">T</span>(<span class="built_in">n</span>) = <span class="built_in">n</span>^<span class="number">3</span> + <span class="built_in">n</span>^<span class="number">2</span> + <span class="number">29</span>，此时时间复杂度为 O(<span class="built_in">n</span>^<span class="number">3</span>)。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>因为函数的阶数对函数的增长速度的影响是最显著的，所以我们忽略与最高阶相乘的常数。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比如</span><br><span class="line"><span class="built_in">T</span>(<span class="built_in">n</span>) = <span class="number">3</span><span class="built_in">n</span>^<span class="number">3</span>，此时时间复杂度为 O(<span class="built_in">n</span>^<span class="number">3</span>)。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>综合起来：如果一个算法的执行次数是 T(n)，那么只保留最高次项，同时忽略最高项的系数后得到函数 f(n)，此时算法的时间复杂度就是 O(f(n))。为了方便描述，下文称此为 大O推导法。</p>
+<p>由此可见，由执行次数 T(n) 得到时间复杂度并不困难，很多时候困难的是从算法通过分析和数学运算得到 T(n)。对此，提供下列四个便利的法则，这些法则都是可以简单推导出来的，总结出来以便提高效率。</p>
+<ol>
+<li>对于一个循环，假设循环体的时间复杂度为 O(n)，循环次数为 m，则这个<br>循环的时间复杂度为 O(n×m)。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;         <span class="comment">// 循环次数为 n</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);      <span class="comment">// 循环体时间复杂度为 O(1)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>此时时间复杂度为 O(n × 1)，即 O(n)。</p>
+<ol start="2">
+<li>对于多个循环，假设循环体的时间复杂度为 O(n)，各个循环的循环次数分别是a, b, c…，则这个循环的时间复杂度为 O(n×a×b×c…)。分析的时候应该由里向外分析这些循环。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;         <span class="comment">// 循环次数为 n</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;       <span class="comment">// 循环次数为 n</span></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);      <span class="comment">// 循环体时间复杂度为 O(1)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>此时时间复杂度为 O(n × n × 1)，即 O(n^2)。</p>
+<ol start="3">
+<li>对于顺序执行的语句或者算法，总的时间复杂度等于其中最大的时间复杂度。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 第一部分时间复杂度为 O(n^2)</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第二部分时间复杂度为 O(n)</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Hello, World!\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>此时时间复杂度为 max(O(n^2), O(n))，即 O(n^2)。</p>
+<ol start="4">
+<li>对于条件判断语句，总的时间复杂度等于其中 时间复杂度最大的路径 的时间复杂度。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 第一条路径时间复杂度为 O(n^2)</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"输入数据大于等于零\n"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 第二条路径时间复杂度为 O(n)</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"输入数据小于零\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>此时时间复杂度为 max(O(n^2), O(n))，即 O(n^2)。</p>
+<p>时间复杂度分析的基本策略是：从内向外分析，从最深层开始分析。如果遇到函数调用，要深入函数进行分析。</p>
+<p>最后，我们来练习一下</p>
+<p>一. 基础题<br>求该方法的时间复杂度</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void aFunc(int n) &#123;</span><br><span class="line">    <span class="keyword">for</span> (int <span class="built_in">i</span> = <span class="number">0</span>; <span class="built_in">i</span> &lt; n; <span class="built_in">i</span>++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (int <span class="built_in">j</span> = <span class="built_in">i</span>; <span class="built_in">j</span> &lt; n; <span class="built_in">j</span>++) &#123;</span><br><span class="line">            printf(<span class="string">"Hello World\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考答案：</p>
+<p>当 i = 0 时，内循环执行 n 次运算，当 i = 1 时，内循环执行 n - 1 次运算……当 i = n - 1 时，内循环执行 1 次运算。<br>所以，执行次数 T(n) = n + (n - 1) + (n - 2)……+ 1 = n(n + 1) / 2 = n^2 / 2 + n / 2。<br>根据上文说的 大O推导法 可以知道，此时时间复杂度为 O(n^2)。</p>
+<p>二. 进阶题<br>求该方法的时间复杂度</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">aFunc</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; n; i++) &#123;</span><br><span class="line">        i *= <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%i\n"</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考答案：</p>
+<p>假设循环次数为 t，则循环条件满足 2^t &lt; n。<br>可以得出，执行次数t = log(2)(n)，即 T(n) = log(2)(n)，可见时间复杂度为 O(log(2)(n))，即 O(log n)。</p>
+<p>三. 再次进阶<br>求该方法的时间复杂度</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">long aFunc(<span class="built_in">int</span> n) &#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> aFunc(n - <span class="number">1</span>) + aFunc(n - <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考答案：</p>
+<p>显然运行次数，T(0) = T(1) = 1，同时 T(n) = T(n - 1) + T(n - 2) + 1，这里的 1 是其中的加法算一次执行。</p>
+<p>显然 T(n) = T(n - 1) + T(n - 2) 是一个斐波那契数列，通过归纳证明法可以证明，当 n &gt;= 1 时 T(n) &lt; (5/3)^n，同时当 n &gt; 4 时 T(n) &gt;= (3/2)^n。</p>
+<p>所以该方法的时间复杂度可以表示为 O((5/3)^n)，简化后为 O(2^n)。</p>
+<p>可见这个方法所需的运行时间是以指数的速度增长的。如果大家感兴趣，可以试下分别用 1，10，100 的输入大小来测试下算法的运行时间，相信大家会感受到时间复杂度的无穷魅力。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2014/03/29/STL/2.0、string容器/" class="pre-post btn btn-default" title='2.0、string容器'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            2.0、string容器</span>
+    </a>
+    
+    
+    <a href="/2014/03/28/Cpp/40、delete与delete[]区别/" class="next-post btn btn-default" title='40、delete与delete[]区别'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            40、delete与delete[]区别</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#算法的时间复杂度"><span class="toc-text">算法的时间复杂度</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

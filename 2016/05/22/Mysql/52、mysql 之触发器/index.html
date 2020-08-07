@@ -1,0 +1,470 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之触发器触发器是与表有关的数据库对象，在满足定义条件时触发，并执行触发器中定义的语句集合。
+
+尽量少使用触发器，不建议使用。
+假设触发器触发每次执行1s，insert table 5...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    52、mysql 之触发器 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="52、mysql 之触发器">
+            
+            52、mysql 之触发器
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/05/22</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1538</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之触发器"><a href="#mysql-之触发器" class="headerlink" title="mysql 之触发器"></a><strong>mysql 之触发器</strong></h2><p>触发器是与表有关的数据库对象，在满足定义条件时触发，并执行触发器中定义的语句集合。</p>
+<ul>
+<li>尽量少使用触发器，不建议使用。</li>
+<li>假设触发器触发每次执行1s，insert table 500条数据，那么就需要触发500次触发器，光是触发器执行的时间就花费了500s，而insert 500条数据一共是1s，那么这个insert的效率就非常低了。因此我们特别需要注意的一点是触发器的begin end;之间的语句的执行效率一定要高，资源消耗要小。</li>
+<li>触发器尽量少的使用，因为不管如何，它还是很消耗资源，如果使用的话要谨慎的使用，确定它是非常高效的：触发器是针对每一行的；对增删改非常频繁的表上切记不要使用触发器，因为它会非常消耗资源。 </li>
+</ul>
+<h3 id="为什么不推荐使用触发器而是存储过程"><a href="#为什么不推荐使用触发器而是存储过程" class="headerlink" title="为什么不推荐使用触发器而是存储过程"></a><strong>为什么不推荐使用触发器而是存储过程</strong></h3><ol>
+<li>存储过程和触发器二者是有很大的联系的，我的一般理解就是触发器是一个隐藏的存储过程，因为它不需要参数，不需要显示调用，往往在你不知情的情况下已经做了很多操作。从这个角度来说，由于是隐藏的，无形中增加了系统的复杂性，非DBA人员理解起来数据库就会有困难，因为它不执行根本感觉不到它的存在。</li>
+<li>再有，涉及到复杂的逻辑的时候，触发器的嵌套是避免不了的，如果再涉及几个存储过程，再加上事务等等，很容易出现死锁现象，再调试的时候也会经常性的从一个触发器转到另外一个，级联关系的不断追溯，很容易使人头大。其实，从性能上，触发器并没有提升多少性能，只是从代码上来说，可能在coding的时候很容易实现业务，所以我的观点是：摒弃触发器！触发器的功能基本都可以用存储过程来实现。</li>
+<li>在编码中存储过程显示调用很容易阅读代码，触发器隐式调用容易被忽略。<br>存储过程也有他的致命伤↓</li>
+<li>存储过程的致命伤在于移植性，存储过程不能跨库移植，比如事先是在mysql数据库的存储过程，考虑性能要移植到oracle上面那么所有的存储过程都需要被重写一遍。</li>
+</ol>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a><strong>语法</strong></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> trigger_name trigger_time trigger_event</span><br><span class="line"> <span class="keyword">ON</span> table_name</span><br><span class="line"> <span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></span><br><span class="line"> <span class="keyword">BEGIN</span></span><br><span class="line"> ...</span><br><span class="line"> <span class="keyword">END</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>trigger_name</code> : 触发器名称，用户自行指定</li>
+<li><code>trigger_time</code>： 触发时机，取值<code>BEFORE</code>（之前）、<code>AFTER</code>（之后）</li>
+<li><code>trigger_event</code> : 出发事件，<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>。（插入、更新、删除）</li>
+<li><code>tbl_name</code> : 需要建立触发器的表名。</li>
+<li><code>trigger_stmt</code> : 触发程序体，可以是一条SQL语句或是BEGIN和END包含的索条语句</li>
+<li>由上面，可以知道<code>MYSQL</code>可以创建6种类型的触发器。<br>（<code>BEFORE INSERT</code>、<code>BEFORE UPDATE</code>、<code>BEFORE DELETE</code>）<br>（<code>AFTER INSERT</code>、<code>AFTER UPDATE</code>、<code>AFTER DELETE</code>）<br>并且一张表上不能创建两个相同类型的触发器，因此一张表上面最多能创建6种类型的触发器。</li>
+</ul>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a><strong>使用</strong></h3><ul>
+<li><code>NEW</code>、<code>OLD</code>关键字<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELIMITER</span> //</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> before_employee_update </span><br><span class="line">    <span class="keyword">BEFORE</span> <span class="keyword">UPDATE</span> <span class="keyword">ON</span> employees</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span> </span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> employees_audit</span><br><span class="line">    <span class="keyword">SET</span> action = <span class="string">'update'</span>,</span><br><span class="line">     employeeNumber = <span class="built_in">OLD</span>.employeeNumber,</span><br><span class="line">        lastname = <span class="built_in">OLD</span>.lastname,</span><br><span class="line">        changedat = NOW(); </span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">//</span><br><span class="line"><span class="keyword">DELIMITER</span> ;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a><strong>查看</strong></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TRIGGERS</span>\G;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> information_schema.triggers\G</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> information_schema.triggers <span class="keyword">where</span> trigger_name=<span class="string">'upd_check'</span>\G;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a><strong>删除</strong></h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TRIGGER</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] [<span class="built_in">schema_name</span>.]trigger_name</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/05/23/Mysql/53、mysql 之事件调度器/" class="pre-post btn btn-default" title='53、mysql 之事件调度器'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            53、mysql 之事件调度器</span>
+    </a>
+    
+    
+    <a href="/2016/05/22/Redis/22、redis 之缓存预热/" class="next-post btn btn-default" title='22、redis 之缓存预热'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            22、redis 之缓存预热</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之触发器"><span class="toc-text">mysql 之触发器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么不推荐使用触发器而是存储过程"><span class="toc-text">为什么不推荐使用触发器而是存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#语法"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看"><span class="toc-text">查看</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除"><span class="toc-text">删除</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

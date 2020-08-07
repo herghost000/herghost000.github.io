@@ -1,0 +1,586 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="稀土,Vue.js,微信小程序,Kotlin,RxJava,React Native,Wireshark,敏捷开发,Bootstrap,OKHttp,正则表达式,WebGL,Webpack,Docker,MVVM">
+
+
+<meta name="description" content="记录与分享笔记">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    分类: Golang |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content ">
+                    <ol class="breadcrumb">
+    
+    <li>
+        Golang
+    </li>
+    
+</ol>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/02/03/Golang/34、Go语言 之defer延迟执行/">
+                    34、Go语言 之defer延迟执行</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年02月03日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之defer延迟执行Go语言的 defer 语句会将其后面跟随的语句进行延迟处理，在 defer 归属的函数即将返回时，将延迟处理的语句按 defer 的逆序进行执行，也就是说，先被 defer 的语句最后被执行，最后被 d...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/02/02/Golang/33、Go语言 之可变参数/">
+                    33、Go语言 之可变参数</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年02月02日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之可变参数在C语言时代大家一般都用过 printf() 函数，从那个时候开始其实已经在感受可变参数的魅力和价值，如同C语言中的 printf() 函数，Go语言标准库中的 fmt.Println() 等函数的实现也依赖于语言...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/02/01/Golang/32、Go语言 之闭包/">
+                    32、Go语言 之闭包</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年02月01日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之闭包Go语言中闭包是引用了自由变量的函数，被引用的自由变量和函数一同存在，即使已经离开了自由变量的环境也不会被释放或者删除，在闭包中可以继续使用这个自由变量，因此，简单的说：函数 + 引用环境 = 闭包
+一个函数类型就像结...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/31/Golang/31、Go语言 之匿名函数/">
+                    31、Go语言 之匿名函数</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月31日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之匿名函数Go语言支持匿名函数，即在需要使用函数时再定义函数，匿名函数没有函数名只有函数体，函数可以作为一种类型被赋值给函数类型的变量，匿名函数也往往以变量方式传递，这与C语言的回调函数比较类似，不同的是，Go语言支持随时在...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/30/Golang/30、Go语言 之函数变量/">
+                    30、Go语言 之函数变量</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月30日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之函数变量
+在Go语言中，函数也是一种类型，可以和其他类型一样保存在变量中，下面的代码定义了一个函数变量 f，并将一个函数名为 fire() 的函数赋给函数变量 f，这样调用函数变量 f 时，实际调用的就是 fire() 函...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/29/Golang/29、Go语言 之函数声明/">
+                    29、Go语言 之函数声明</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月29日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之函数声明函数构成了代码执行的逻辑结构，在Go语言中，函数的基本组成为：关键字 func、函数名、参数列表、返回值、函数体和返回语句，每一个程序都包含很多的函数，函数是基本的代码块。
+因为Go语言是编译型语言，所以函数编写的...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/28/Golang/28、Go语言 之continue继续下一次循环/">
+                    28、Go语言 之continue继续下一次循环</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月28日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之continue继续下一次循环Go语言中 continue 语句可以结束当前循环，开始下一次的循环迭代过程，仅限在 for 循环内使用，在 continue 语句后添加标签时，表示开始标签对应的循环，例如：
+1234567...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/27/Golang/27、Go语言 之break（跳出循环）/">
+                    27、Go语言 之break（跳出循环）</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月27日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之break（跳出循环）Go语言中 break 语句可以结束 for、switch 和 select 的代码块，另外 break 语句还可以在语句后面添加标签，表示退出某个标签对应的代码块，标签要求必须定义在对应的 for、...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/26/Golang/26、Go语言 之goto语句/">
+                    26、Go语言 之goto语句</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月26日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之goto语句Go语言中 goto 语句通过标签进行代码间的无条件跳转，同时 goto 语句在快速跳出循环、避免重复退出上也有一定的帮助，使用 goto 语句能简化一些代码的实现过程。
+使用 goto 退出多层循环下面这段代...
+            
+        </p>
+    </div>
+</article>
+
+<article class="post">
+    
+    <div class="post-content">
+        <div class="post-head home-post-head">
+            <h1 class="post-title">
+                <a href="/2016/01/25/Golang/25、Go语言 之switch case语句/">
+                    25、Go语言 之switch case语句</a>
+            </h1>
+            <div class="post-meta"> &bull;
+                <time class="post-date" datetime="" title="">
+                    2016年01月25日
+                </time>
+            </div>
+        </div>
+        <p class="brief">
+            
+            Go语言 之switch case语句Go语言的 switch 要比C语言的更加通用，表达式不需要为常量，甚至不需要为整数，case 按照从上到下的顺序进行求值，直到找到匹配的项，如果 switch 没有表达式，则对 true 进行匹...
+            
+        </p>
+    </div>
+</article>
+
+
+<nav class="pagination" role="navigation">
+    <div id="page-nav">
+        <a class="extend prev" rel="prev" href="/categories/Golang/page/7/"><i class='fa fa-angle-left'></i></a><a class="page-number" href="/categories/Golang/">1</a><span class="space">&hellip;</span><a class="page-number" href="/categories/Golang/page/6/">6</a><a class="page-number" href="/categories/Golang/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/categories/Golang/page/9/">9</a><a class="page-number" href="/categories/Golang/page/10/">10</a><a class="page-number" href="/categories/Golang/page/11/">11</a><a class="extend next" rel="next" href="/categories/Golang/page/9/"><i class='fa fa-angle-right'></i></a>
+    </div>
+</nav>
+
+                </main>
+                
+                    
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/search.js?rev=@@hash"></script>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

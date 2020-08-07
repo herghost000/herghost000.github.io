@@ -1,0 +1,496 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="计算机网络">
+
+
+<meta name="description" content="计算机网络 之互联网的组成从互联网的工作方式上看，可以划分为两大块：
+
+边缘部分： 由所有连接在互联网上的主机组成。这部分是用户直接使用的，用来进行通信（传送数据、音频或视频）和资源共享。这些主...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    3、计算机网络 之互联网的组成 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="3、计算机网络 之互联网的组成">
+            
+            3、计算机网络 之互联网的组成
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/计算机网络/">计算机网络</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/计算机网络/">计算机网络</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2013/09/01</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2532</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="计算机网络-之互联网的组成"><a href="#计算机网络-之互联网的组成" class="headerlink" title="计算机网络 之互联网的组成"></a><strong>计算机网络 之互联网的组成</strong></h2><p>从互联网的工作方式上看，可以划分为两大块：</p>
+<ol>
+<li><strong>边缘部分</strong>： 由所有连接在互联网上的主机组成。这部分是用户直接使用的，用来进行通信（传送数据、音频或视频）和资源共享。这些主机又称为端系统 (end system)。</li>
+<li><strong>核心部分</strong>：由大量网络和连接这些网络的路由器组成。这部分是为边缘部分提供服务的（提供连通性和交换）。</li>
+</ol>
+<h3 id="边缘部分"><a href="#边缘部分" class="headerlink" title="边缘部分"></a><strong>边缘部分</strong></h3><p>“主机A与主机B进行通信”实际上指：运行在主机A上的某个程序和运行在主机B上的另一个程序进行通信。</p>
+<p>端系统（主机）之间的通信方式通常可划分为两大类：</p>
+<ul>
+<li>客户-服务器方式（C/S方式）</li>
+<li>对等方式（P2P方式）<br><img src="http://m.qpic.cn/psc?/V11lfhu04R3Vpn/pP8rOZrZ0vRZM69ZCg1vshRQ0PxTUXR34Yq7q5QkJ*qZTEFPi9qy44nYpMuHUiNpPMFJbq0BcayZcUuQI8E.*w!!/b&bo=IAOeAQAAAAADB54!&rf=viewer_4" alt="image"></li>
+</ul>
+<h4 id="客户-服务器方式-C-S方式"><a href="#客户-服务器方式-C-S方式" class="headerlink" title="客户-服务器方式(C/S方式)"></a><strong>客户-服务器方式(C/S方式)</strong></h4><p>客户 (client) 和服务器 (server) 都是指通信中所涉及的两个应用进程。</p>
+<p>客户-服务器方式所描述的是进程之间服务和被服务的关系。</p>
+<p>客户软件的特点：被用户调用后运行，在打算通信时主动向远地服务器发起通信（请求服务）。因此，客户程序必须知道服务器程序的地址。</p>
+<p>客户是服务的请求方，服务器是服务的提供方。</p>
+<p>服务请求方和服务提供方都要使用网络核心部分所提供的服务。</p>
+<h4 id="对等方式-P2P方式"><a href="#对等方式-P2P方式" class="headerlink" title="对等方式(P2P方式)"></a><strong>对等方式(P2P方式)</strong></h4><p>对等连接是指两个主机在通信时并不区分哪一个是服务请求方还是服务提供方。</p>
+<p>只要两个主机都运行了对等连接软件 (P2P 软件) ，它们就可以进行平等的、对等连接通信。</p>
+<p>双方都可以下载对方已经存储在硬盘中的共享文档。</p>
+<p>对等连接方式从本质上看仍然是使用客户服务器方式，只是对等连接中的每一个主机既是客户又是服务器。</p>
+<p>对等连接工作方式可支持大量对等用户（如上百万个）同时工作。</p>
+<h3 id="互联网的核心部分"><a href="#互联网的核心部分" class="headerlink" title="互联网的核心部分"></a><strong>互联网的核心部分</strong></h3><p>网络中的核心部分要向网络边缘中的大量主机提供连通性，使边缘部分中的任何一个主机都能够向其他主机通信（即传送或接收各种形式的数据）。</p>
+<p>在网络核心部分起特殊作用的是路由器 (router)。</p>
+<p>路由器是实现分组交换 (packet switching) 的关键构件，其任务是转发收到的分组，这是网络核心部分最重要的功能。<br>从通信资源的分配角度来看，“交换”就是按照某种方式动态地分配传输线路的资源。</p>
+<h4 id="电路交换"><a href="#电路交换" class="headerlink" title="电路交换"></a><strong>电路交换</strong></h4><ul>
+<li>应用实例:电话机(从电话发明至今)</li>
+<li>过程:建立连接(占用通信资源)—&gt;通话(一直占用通信资源)—&gt;释放连接(归还通信资源)</li>
+<li>特点:在通话的全部时间内,通话的两个用户始终占用端到端的通信资源<br>分析:电路交换主要应用在电话机网络,而不适用于计算机网络.因为电路交换需要独占一整条线路,会导致线路堵塞,体现在打电话的时候第三方无法呼入,由于电话机使用的低频性(不可能一整天都是通话状态),所以这个缺点可以接受(一般过会儿再呼叫就行),而且,由于是独占了端到端的通信资源,所以延迟率很低,可以保证实时对话,这一点尤为重要.但是,如果是用来传送计算机数据,其线路的传输效率往往很低(计算机往往要一直维持连接状态,但是真正用于数据传输的时间占比很低,如果不一直维持连接状态,则需要频繁建立和释放连接,同样消耗资源且效率低)</li>
+<li>优点:通信双方延时小</li>
+<li>缺点:网络传输易堵塞,浪费资源</li>
+<li>适用范围:连续传输大量数据,且传送时间远大于连接建立时间</li>
+</ul>
+<h4 id="报文交换"><a href="#报文交换" class="headerlink" title="报文交换"></a><strong>报文交换</strong></h4><ul>
+<li>应用实例:电报(20世纪40年代,现在报文交换已不使用)</li>
+<li>过程:客户发送电报—-&gt;电报中心接受整份电报—&gt;电报中心存储,等待,转发电报—&gt;客户接收电报</li>
+<li>原理:存储转发</li>
+<li>分析:不需要预先分配传输带宽,故传输突发数据时可提高整个网络的信道利用率.(想发送的时候直接发送就行,不发送的时候不会占用通信资源),但也因此,在同时有多个用户发送数据时,会造成拥堵,此时需要电报中心先存储起接受到的数据,形成一条队列,再进行转发,因为是以每份报文为单位的,需要易一整份报文都接受和存储,故延时较长(几分钟到几小时)</li>
+<li>优点:网络信道利用率较高</li>
+<li>缺点:延时长,对转发中心要求高(需占用较大存储空间)</li>
+<li>适用范围:现已不使用</li>
+</ul>
+<h4 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a><strong>分组交换</strong></h4><ul>
+<li>应用实例:计算机网络</li>
+<li>过程:将要发送的整块数据(报文)划分成多个等长小数据段—&gt;每个分组(包)在网络上独立传输—&gt;在目标主机组合还原成报文</li>
+<li>原理:存储转发</li>
+<li>分析:具有报文转发的优点,同时缩小报文转发的缺点.因为每个包的传输过程都是独立的,故具有并行的优点.简单的例子是有10条线路,发送一个100M的文件采用报文交换只能利用到其中一条线路,耗时10分钟,而用分组交换分成10个10M的包进行- 传输,则第一个包占用一条线路后,其他的包会避开拥堵,选用其他的线路,故只需要1分钟.不过实际上利用率远没有这么高,每个包都需要独立传输,在目标主机还需要组合,故需要附带必要的控制信息(首部).</li>
+<li>优点:<ul>
+<li><strong>高效</strong>    在分组传输的过程中动态分配传输带宽,对通信链路是逐段占用</li>
+<li><strong>灵活</strong>    为每一个分组独立地选择最合适的转发路由</li>
+<li><strong>迅速</strong>    以分组作为传送单位,不需先建立连接</li>
+<li><strong>可靠</strong>    保证可靠性的网络协议;分布式多路由的分组交换网,使网络有很好的生存性</li>
+</ul>
+</li>
+<li>缺点:对传输的各个包来说,仍需面临拥堵排队问题,且因为分组使得每个包都需要独立携带传输信息,带来更大的开销.</li>
+</ul>
+<h4 id="比较"><a href="#比较" class="headerlink" title="比较"></a><strong>比较</strong></h4><p>电路交换独占了信道(需预先分配传输带宽),可直达.使用存储转发的报文交换和分组交换则共用信道(不需预先分配连接带宽),需转发.<br>分组交换把整块的数据切分,比报文交换更灵活,高效,迅速</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2013/09/01/计算机网络/4、计算机网络 之计算机网络的类别/" class="pre-post btn btn-default" title='4、计算机网络 之计算机网络的类别'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            4、计算机网络 之计算机网络的类别</span>
+    </a>
+    
+    
+    <a href="/2013/09/01/计算机网络/2、计算机网络 之互联网概述/" class="next-post btn btn-default" title='2、计算机网络 之互联网概述'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            2、计算机网络 之互联网概述</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算机网络-之互联网的组成"><span class="toc-text">计算机网络 之互联网的组成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#边缘部分"><span class="toc-text">边缘部分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户-服务器方式-C-S方式"><span class="toc-text">客户-服务器方式(C/S方式)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对等方式-P2P方式"><span class="toc-text">对等方式(P2P方式)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#互联网的核心部分"><span class="toc-text">互联网的核心部分</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#电路交换"><span class="toc-text">电路交换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#报文交换"><span class="toc-text">报文交换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分组交换"><span class="toc-text">分组交换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比较"><span class="toc-text">比较</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之比较函数和操作符BETWEEN … AND …
+expr BETWEEN min AND max
+检查一个值是否在一个范围内
+
+
+选取 uid 在 2 到 5 之间的用户数据
+1S...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    13、mysql 之比较函数和操作符 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="13、mysql 之比较函数和操作符">
+            
+            13、mysql 之比较函数和操作符
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/13</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1577</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之比较函数和操作符"><a href="#mysql-之比较函数和操作符" class="headerlink" title="mysql 之比较函数和操作符"></a><strong>mysql 之比较函数和操作符</strong></h2><h3 id="BETWEEN-…-AND-…"><a href="#BETWEEN-…-AND-…" class="headerlink" title="BETWEEN … AND …"></a><strong>BETWEEN … AND …</strong></h3><ul>
+<li><code>expr BETWEEN min AND max</code></li>
+<li>检查一个值是否在一个范围内</li>
+</ul>
+<ol>
+<li><p>选取 uid 在 2 到 5 之间的用户数据</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * <span class="keyword">FROM</span><span class="built_in"> user </span>WHERE uid BETWEEN 2 <span class="keyword">AND</span> 5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>选择出所有 username 介于 a 至 j 之间的用户（并包括单字母k/K）：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> username <span class="keyword">BETWEEN</span> <span class="string">'a'</span> <span class="keyword">AND</span> <span class="string">'k'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>BETWEEN AND 常用于检索时间或日期段内的内容</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// <span class="type">int</span> 时间戳格式，查询 <span class="number">2008</span><span class="number">-08</span><span class="number">-08</span> <span class="number">20</span>:<span class="number">00</span>:<span class="number">00</span> 到 <span class="number">2009</span><span class="number">-01</span><span class="number">-01</span> 零点之前的数据</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> column_time <span class="keyword">BETWEEN</span> <span class="number">1218196800</span> <span class="keyword">AND</span> <span class="number">1230739199</span></span><br><span class="line"> </span><br><span class="line">// <span class="type">DATE</span> 格式，查询 <span class="number">2008</span><span class="number">-08</span><span class="number">-08</span> 到 <span class="number">2009</span><span class="number">-01</span><span class="number">-01</span> 零点之前的数据</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> column_time <span class="keyword">BETWEEN</span> <span class="string">'2008-08-08'</span> <span class="keyword">AND</span> <span class="string">'2009-01-01'</span></span><br><span class="line"> </span><br><span class="line">// DATETIME 格式，查询 <span class="number">2008</span><span class="number">-08</span><span class="number">-08</span> <span class="number">20</span>:<span class="number">00</span>:<span class="number">00</span> 到 <span class="number">2009</span><span class="number">-01</span><span class="number">-01</span> 零点之前的数据</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> column_time <span class="keyword">BETWEEN</span> <span class="string">'2008-08-08 20:00:00'</span> <span class="keyword">AND</span> <span class="string">'2008-12-31 23:59:59'</span></span><br><span class="line"></span><br><span class="line">但对于查询到当前时间的数据，建议使用 &gt;= 运算符：</span><br><span class="line">// DATETIME 格式，查询 <span class="number">2008</span><span class="number">-08</span><span class="number">-08</span> <span class="number">20</span>:<span class="number">00</span>:<span class="number">00</span> 到当前时刻的数据</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">table</span> <span class="keyword">WHERE</span> column_time &gt;= <span class="string">'2008-08-08 20:00:00'</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="COALESCE"><a href="#COALESCE" class="headerlink" title="COALESCE"></a><strong>COALESCE</strong></h3><ul>
+<li><code>COALESCE(value,...)</code></li>
+<li>返回参数中的第一个非空表达式（从左向右依次类推）<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> coalesce(<span class="keyword">null</span>,<span class="number">2</span>,<span class="number">3</span>); // <span class="keyword">Return</span> <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> coalesce(<span class="keyword">null</span>,<span class="keyword">null</span>,<span class="number">3</span>); // <span class="keyword">Return</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> coalesce(<span class="keyword">null</span>,<span class="keyword">null</span>,<span class="keyword">null</span>); // <span class="keyword">Return</span> <span class="keyword">NULL</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> coalesce(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>); // <span class="keyword">Return</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="GREATEST"><a href="#GREATEST" class="headerlink" title="GREATEST"></a><strong>GREATEST</strong></h3><ul>
+<li><code>GREATEST(value1,value2,...)</code></li>
+<li>返回参数列表中最大值，如果参数列表中存在NULL，则返回NULL<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">SELECT</span> GREATEST(<span class="number">2</span>,<span class="number">0</span>);</span><br><span class="line">        -&gt; <span class="number">2</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> GREATEST(<span class="number">34.0</span>,<span class="number">3.0</span>,<span class="number">5.0</span>,<span class="number">767.0</span>);</span><br><span class="line">        -&gt; <span class="number">767.0</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> GREATEST(<span class="string">'B'</span>,<span class="string">'A'</span>,<span class="string">'C'</span>);</span><br><span class="line">        -&gt; <span class="string">'C'</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> GREATEST(<span class="string">'B'</span>,<span class="keyword">NULL</span>,<span class="string">'C'</span>);</span><br><span class="line">        -&gt; <span class="keyword">NULL</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="LEAST"><a href="#LEAST" class="headerlink" title="LEAST"></a><strong>LEAST</strong></h3><ul>
+<li><code>LEAST(value1,value2,...)</code></li>
+<li>参数中存在NULL则返回NULL</li>
+<li>返回最小值参数<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">SELECT</span> LEAST(<span class="number">2</span>,<span class="number">0</span>);</span><br><span class="line">        -&gt; <span class="number">0</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> LEAST(<span class="number">34.0</span>,<span class="number">3.0</span>,<span class="number">5.0</span>,<span class="number">767.0</span>);</span><br><span class="line">        -&gt; <span class="number">3.0</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> LEAST(<span class="string">'B'</span>,<span class="string">'A'</span>,<span class="string">'C'</span>);</span><br><span class="line">        -&gt; <span class="string">'A'</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> LEAST(<span class="string">'B'</span>,<span class="string">'A'</span>,<span class="keyword">NULL</span>);</span><br><span class="line">        -&gt; <span class="keyword">NULL</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="IN"><a href="#IN" class="headerlink" title="IN"></a><strong>IN</strong></h3><ul>
+<li><code>expr IN (value,...)</code></li>
+<li>查询某个范围内的数据</li>
+<li>查询到返回1</li>
+<li>未查询到返回0</li>
+<li>存在NULL且未查询到返回NULL<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">where</span> field <span class="keyword">in</span> (value1,value2,value3,…)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> uid <span class="keyword">IN</span>(<span class="keyword">SELECT</span> uid <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> status=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">22</span>, <span class="number">3</span>); // <span class="keyword">Return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">2</span>, <span class="number">3</span>); // <span class="keyword">Return</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="keyword">NULL</span>, <span class="number">3</span>); // <span class="keyword">Return</span> <span class="keyword">NULL</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">2</span>, <span class="keyword">NULL</span>); // <span class="keyword">Return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>); // <span class="keyword">Return</span> <span class="number">1</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="number">3</span>,<span class="keyword">NULL</span>); // <span class="keyword">Return</span> <span class="keyword">NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="keyword">NULL</span>,<span class="number">2</span>); // <span class="keyword">Return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">2</span> <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="number">1</span>,<span class="keyword">NULL</span>,<span class="number">3</span>); // <span class="keyword">Return</span> <span class="keyword">NULL</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="ISNULL"><a href="#ISNULL" class="headerlink" title="ISNULL"></a><strong>ISNULL</strong></h3><ul>
+<li><code>ISNULL(expr)</code></li>
+<li>如果expr是 NULL，则 ISNULL()返回 1，否则返回 0<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT ISNULL(<span class="number">1</span>+<span class="number">1</span>);</span><br><span class="line">        -&gt; <span class="number">0</span></span><br><span class="line">mysql&gt; SELECT ISNULL(<span class="number">1</span>/<span class="number">0</span>);</span><br><span class="line">        -&gt; <span class="number">1</span></span><br><span class="line">mysql&gt; SELECT ISNULL(NULL);</span><br><span class="line">        -&gt; <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="INTERVAL"><a href="#INTERVAL" class="headerlink" title="INTERVAL"></a><strong>INTERVAL</strong></h3><ul>
+<li>INTERVAL(N,N1,N2,N3,……….)</li>
+<li>返回比N大的参数位置<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT INTERVAL(<span class="number">6</span>,NULL); <span class="comment">// Return 1</span></span><br><span class="line">SELECT INTERVAL(<span class="number">6</span>,NULL); <span class="comment">// Return 1</span></span><br><span class="line">SELECT INTERVAL(<span class="number">6</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,NULL,<span class="number">6</span>,<span class="number">85</span>,<span class="number">8</span>,<span class="number">9</span>,NULL); <span class="comment">// Return 7</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/14/Mysql/14、mysql 之 order by 排序查询/" class="pre-post btn btn-default" title='14、mysql 之 order by 排序查询'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            14、mysql 之 order by 排序查询</span>
+    </a>
+    
+    
+    <a href="/2016/04/13/Golang/104、Go语言 之定时任务/" class="next-post btn btn-default" title='104、Go语言 之定时任务'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            104、Go语言 之定时任务</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之比较函数和操作符"><span class="toc-text">mysql 之比较函数和操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BETWEEN-…-AND-…"><span class="toc-text">BETWEEN … AND …</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COALESCE"><span class="toc-text">COALESCE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GREATEST"><span class="toc-text">GREATEST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LEAST"><span class="toc-text">LEAST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IN"><span class="toc-text">IN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ISNULL"><span class="toc-text">ISNULL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#INTERVAL"><span class="toc-text">INTERVAL</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

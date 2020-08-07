@@ -1,0 +1,520 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之可变参数在C语言时代大家一般都用过 printf() 函数，从那个时候开始其实已经在感受可变参数的魅力和价值，如同C语言中的 printf() 函数，Go语言标准库中的 fmt.Pr...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    33、Go语言 之可变参数 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="33、Go语言 之可变参数">
+            
+            33、Go语言 之可变参数
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/02/02</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1648</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之可变参数"><a href="#Go语言-之可变参数" class="headerlink" title="Go语言 之可变参数"></a><strong>Go语言 之可变参数</strong></h2><p>在C语言时代大家一般都用过 printf() 函数，从那个时候开始其实已经在感受可变参数的魅力和价值，如同C语言中的 printf() 函数，Go语言标准库中的 fmt.Println() 等函数的实现也依赖于语言的可变参数功能。</p>
+<p>本节我们将介绍可变参数的用法。合适地使用可变参数，可以让代码简单易用，尤其是输入输出类函数，比如日志函数等。</p>
+<h3 id="可变参数类型"><a href="#可变参数类型" class="headerlink" title="可变参数类型"></a><strong>可变参数类型</strong></h3><p>可变参数是指函数传入的参数个数是可变的，为了做到这点，首先需要将函数定义为可以接受可变参数的类型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">myfunc</span><span class="params">(args ...<span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, arg := <span class="keyword">range</span> args &#123;</span><br><span class="line">        fmt.Println(arg)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这段代码的意思是，函数 myfunc() 接受不定数量的参数，这些参数的类型全部是 int，所以它可以用如下方式调用：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">myfunc(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">myfunc(<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">13</span>)</span><br></pre></td></tr></table></figure>
+
+<p>形如…type格式的类型只能作为函数的参数类型存在，并且必须是最后一个参数，它是一个语法糖（syntactic sugar），即这种语法对语言的功能并没有影响，但是更方便程序员使用，通常来说，使用语法糖能够增加程序的可读性，从而减少程序出错的可能。</p>
+<p>从内部实现机理上来说，类型…type本质上是一个数组切片，也就是[]type，这也是为什么上面的参数 args 可以用 for 循环来获得每个传入的参数。</p>
+<p>假如没有…type这样的语法糖，开发者将不得不这么写：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">myfunc2</span><span class="params">(args []<span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, arg := <span class="keyword">range</span> args &#123;</span><br><span class="line">        fmt.Println(arg)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从函数的实现角度来看，这没有任何影响，该怎么写就怎么写，但从调用方来说，情形则完全不同：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myfunc2([]<span class="built_in">int</span>&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">13</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>大家会发现，我们不得不加上[]int{}来构造一个数组切片实例，但是有了…type这个语法糖，我们就不用自己来处理了。</p>
+<h3 id="任意类型的可变参数"><a href="#任意类型的可变参数" class="headerlink" title="任意类型的可变参数"></a><strong>任意类型的可变参数</strong></h3><p>之前的例子中将可变参数类型约束为 int，如果你希望传任意类型，可以指定类型为 interface{}，下面是Go语言标准库中 fmt.Printf() 的函数原型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Printf</span><span class="params">(format <span class="keyword">string</span>, args ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用 interface{} 传递任意类型数据是Go语言的惯例用法，使用 interface{} 仍然是类型安全的，这和 C/C++ 不太一样，下面通过示例来了解一下如何分配传入 interface{} 类型的数据。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">MyPrintf</span><span class="params">(args ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, arg := <span class="keyword">range</span> args &#123;</span><br><span class="line">        <span class="keyword">switch</span> arg.(<span class="keyword">type</span>) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="keyword">int</span>:</span><br><span class="line">                fmt.Println(arg, <span class="string">"is an int value."</span>)</span><br><span class="line">            <span class="keyword">case</span> <span class="keyword">string</span>:</span><br><span class="line">                fmt.Println(arg, <span class="string">"is a string value."</span>)</span><br><span class="line">            <span class="keyword">case</span> <span class="keyword">int64</span>:</span><br><span class="line">                fmt.Println(arg, <span class="string">"is an int64 value."</span>)</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                fmt.Println(arg, <span class="string">"is an unknown type."</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> v1 <span class="keyword">int</span> = <span class="number">1</span></span><br><span class="line">    <span class="keyword">var</span> v2 <span class="keyword">int64</span> = <span class="number">234</span></span><br><span class="line">    <span class="keyword">var</span> v3 <span class="keyword">string</span> = <span class="string">"hello"</span></span><br><span class="line">    <span class="keyword">var</span> v4 <span class="keyword">float32</span> = <span class="number">1.234</span></span><br><span class="line">    MyPrintf(v1, v2, v3, v4)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该程序的输出结果为：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">is</span> an <span class="built_in">int</span> value.</span><br><span class="line"><span class="number">234</span> <span class="keyword">is</span> an <span class="built_in">int</span>64 value.</span><br><span class="line">hello <span class="keyword">is</span> a <span class="built_in">string</span> value.</span><br><span class="line"><span class="number">1.234</span> <span class="keyword">is</span> an unknown type.</span><br></pre></td></tr></table></figure>
+
+<h3 id="遍历可变参数列表——获取每一个参数的值"><a href="#遍历可变参数列表——获取每一个参数的值" class="headerlink" title="遍历可变参数列表——获取每一个参数的值"></a><strong>遍历可变参数列表——获取每一个参数的值</strong></h3><p>可变参数列表的数量不固定，传入的参数是一个切片，如果需要获得每一个参数的具体值时，可以对可变参数变量进行遍历，参见下面代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"bytes"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"><span class="comment">// 定义一个函数, 参数数量为0~n, 类型约束为字符串</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">joinStrings</span><span class="params">(slist ...<span class="keyword">string</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="comment">// 定义一个字节缓冲, 快速地连接字符串</span></span><br><span class="line">    <span class="keyword">var</span> b bytes.Buffer</span><br><span class="line">    <span class="comment">// 遍历可变参数列表slist, 类型为[]string</span></span><br><span class="line">    <span class="keyword">for</span> _, s := <span class="keyword">range</span> slist &#123;</span><br><span class="line">        <span class="comment">// 将遍历出的字符串连续写入字节数组</span></span><br><span class="line">        b.WriteString(s)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将连接好的字节数组转换为字符串并输出</span></span><br><span class="line">    <span class="keyword">return</span> b.String()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 输入3个字符串, 将它们连成一个字符串</span></span><br><span class="line">    fmt.Println(joinStrings(<span class="string">"pig "</span>, <span class="string">"and"</span>, <span class="string">" rat"</span>))</span><br><span class="line">    fmt.Println(joinStrings(<span class="string">"hammer"</span>, <span class="string">" mom"</span>, <span class="string">" and"</span>, <span class="string">" hawk"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码输出如下：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pig <span class="keyword">and</span> <span class="built_in">rat</span></span><br><span class="line">hammer mom <span class="keyword">and</span> hawk</span><br></pre></td></tr></table></figure>
+
+<p>代码说明如下：</p>
+<ul>
+<li>第 8 行，定义了一个可变参数的函数，slist 的类型为 []string，每一个参数的类型都是 string，也就是说，该函数只接受字符串类型作为参数。</li>
+<li>第 11 行，bytes.Buffer 在这个例子中的作用类似于 StringBuilder，可以高效地进行字符串连接操作。</li>
+<li>第 13 行，遍历 slist 可变参数，s 为每个参数的值，类型为 string。</li>
+<li>第 15 行，将每一个传入参数放到 bytes.Buffer 中。</li>
+<li>第 19 行，将 bytes.Buffer 中的数据转换为字符串作为函数返回值返回。</li>
+<li>第 24 行，输入 3 个字符串，使用 joinStrings() 函数将参数连接为字符串输出。</li>
+<li>第 25 行，输入 4 个字符串，连接后输出。</li>
+</ul>
+<p>如果要获取可变参数的数量，可以使用 len() 函数对可变参数变量对应的切片进行求长度操作，以获得可变参数数量。</p>
+<h3 id="获得可变参数类型——获得每一个参数的类型"><a href="#获得可变参数类型——获得每一个参数的类型" class="headerlink" title="获得可变参数类型——获得每一个参数的类型"></a><strong>获得可变参数类型——获得每一个参数的类型</strong></h3><p>当可变参数为 interface{} 类型时，可以传入任何类型的值，此时，如果需要获得变量的类型，可以通过 switch 获得变量的类型，下面的代码演示将一系列不同类型的值传入 printTypeValue() 函数，该函数将分别为不同的参数打印它们的值和类型的详细描述。</p>
+<p>打印类型及值：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"bytes"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printTypeValue</span><span class="params">(slist ...<span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="comment">// 字节缓冲作为快速字符串连接</span></span><br><span class="line">    <span class="keyword">var</span> b bytes.Buffer</span><br><span class="line">    <span class="comment">// 遍历参数</span></span><br><span class="line">    <span class="keyword">for</span> _, s := <span class="keyword">range</span> slist &#123;</span><br><span class="line">        <span class="comment">// 将interface&#123;&#125;类型格式化为字符串</span></span><br><span class="line">        str := fmt.Sprintf(<span class="string">"%v"</span>, s)</span><br><span class="line">        <span class="comment">// 类型的字符串描述</span></span><br><span class="line">        <span class="keyword">var</span> typeString <span class="keyword">string</span></span><br><span class="line">        <span class="comment">// 对s进行类型断言</span></span><br><span class="line">        <span class="keyword">switch</span> s.(<span class="keyword">type</span>) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="keyword">bool</span>:    <span class="comment">// 当s为布尔类型时</span></span><br><span class="line">            typeString = <span class="string">"bool"</span></span><br><span class="line">        <span class="keyword">case</span> <span class="keyword">string</span>:    <span class="comment">// 当s为字符串类型时</span></span><br><span class="line">            typeString = <span class="string">"string"</span></span><br><span class="line">        <span class="keyword">case</span> <span class="keyword">int</span>:    <span class="comment">// 当s为整型类型时</span></span><br><span class="line">            typeString = <span class="string">"int"</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 写字符串前缀</span></span><br><span class="line">        b.WriteString(<span class="string">"value: "</span>)</span><br><span class="line">        <span class="comment">// 写入值</span></span><br><span class="line">        b.WriteString(str)</span><br><span class="line">        <span class="comment">// 写类型前缀</span></span><br><span class="line">        b.WriteString(<span class="string">" type: "</span>)</span><br><span class="line">        <span class="comment">// 写类型字符串</span></span><br><span class="line">        b.WriteString(typeString)</span><br><span class="line">        <span class="comment">// 写入换行符</span></span><br><span class="line">        b.WriteString(<span class="string">"\n"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b.String()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 将不同类型的变量通过printTypeValue()打印出来</span></span><br><span class="line">    fmt.Println(printTypeValue(<span class="number">100</span>, <span class="string">"str"</span>, <span class="literal">true</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码输出如下：</p>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">value</span>: <span class="number">100</span> <span class="keyword">type</span>: <span class="built_in">int</span></span><br><span class="line"><span class="keyword">value</span>: str <span class="keyword">type</span>: <span class="built_in">string</span></span><br><span class="line"><span class="keyword">value</span>: <span class="literal">true</span> <span class="keyword">type</span>: <span class="built_in">bool</span></span><br></pre></td></tr></table></figure>
+
+<p>代码说明如下：</p>
+<ul>
+<li>第 8 行，printTypeValue() 输入不同类型的值并输出类型和值描述。</li>
+<li>第 11 行，bytes.Buffer 字节缓冲作为快速字符串连接。</li>
+<li>第 14 行，遍历 slist 的每一个元素，类型为 interface{}。</li>
+<li>第 17 行，使用 fmt.Sprintf 配合%v动词，可以将 interface{} 格式的任意值转为字符串。</li>
+<li>第 20 行，声明一个字符串，作为变量的类型名。</li>
+<li>第 23 行，switch s.(type) 可以对 interface{} 类型进行类型断言，也就是判断变量的实际类型。</li>
+<li>第 24～29 行为 s 变量可能的类型，将每种类型的对应类型字符串赋值到 typeString 中。</li>
+<li>第 33～42 行为写输出格式的过程。<h3 id="在多个可变参数函数中传递参数"><a href="#在多个可变参数函数中传递参数" class="headerlink" title="在多个可变参数函数中传递参数"></a><strong>在多个可变参数函数中传递参数</strong></h3>可变参数变量是一个包含所有参数的切片，如果要将这个含有可变参数的变量传递给下一个可变参数函数，可以在传递时给可变参数变量后面添加…，这样就可以将切片中的元素进行传递，而不是传递可变参数变量本身。</li>
+</ul>
+<p>下面的例子模拟 print() 函数及实际调用的 rawPrint() 函数，两个函数都拥有可变参数，需要将参数从 print 传递到 rawPrint 中。</p>
+<p>可变参数传递：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="comment">// 实际打印的函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">rawPrint</span><span class="params">(rawList ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 遍历可变参数切片</span></span><br><span class="line">    <span class="keyword">for</span> _, a := <span class="keyword">range</span> rawList &#123;</span><br><span class="line">        <span class="comment">// 打印参数</span></span><br><span class="line">        fmt.Println(a)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 打印函数封装</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">print</span><span class="params">(slist ...<span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 将slist可变参数切片完整传递给下一个函数</span></span><br><span class="line">    rawPrint(slist...)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码输出如下：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>对代码的说明：</p>
+<ul>
+<li>第 9～13 行，遍历 rawPrint() 的参数列表 rawList 并打印。</li>
+<li>第 20 行，将变量在 print 的可变参数列表中添加…后传递给 rawPrint()。</li>
+<li>第 25 行，传入 1、2、3 这 3 个整型值并进行打印。</li>
+</ul>
+<p>如果尝试将第 20 行修改为：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">rawPrint</span><span class="params">(<span class="string">"fmt"</span>, slist)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>再次执行代码，将输出：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+
+<p>此时，slist（类型为 []interface{}）将被作为一个整体传入 rawPrint()，rawPrint() 函数中遍历的变量也就是 slist 的切片值。</p>
+<p>可变参数使用…进行传递与切片间使用 append 连接是同一个特性。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/02/03/Golang/34、Go语言 之defer延迟执行/" class="pre-post btn btn-default" title='34、Go语言 之defer延迟执行'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            34、Go语言 之defer延迟执行</span>
+    </a>
+    
+    
+    <a href="/2016/02/01/Golang/32、Go语言 之闭包/" class="next-post btn btn-default" title='32、Go语言 之闭包'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            32、Go语言 之闭包</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之可变参数"><span class="toc-text">Go语言 之可变参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可变参数类型"><span class="toc-text">可变参数类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#任意类型的可变参数"><span class="toc-text">任意类型的可变参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遍历可变参数列表——获取每一个参数的值"><span class="toc-text">遍历可变参数列表——获取每一个参数的值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获得可变参数类型——获得每一个参数的类型"><span class="toc-text">获得可变参数类型——获得每一个参数的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在多个可变参数函数中传递参数"><span class="toc-text">在多个可变参数函数中传递参数</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

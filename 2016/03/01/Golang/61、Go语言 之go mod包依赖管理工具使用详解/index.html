@@ -1,0 +1,576 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之go mod包依赖管理工具使用详解
+go run 运行当个.go文件
+go install 在编译源代码之后还安装到指定的目录
+go build 加上可编译的go源文件可以得到一个可...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    61、Go语言 之go mod包依赖管理工具使用详解 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="61、Go语言 之go mod包依赖管理工具使用详解">
+            
+            61、Go语言 之go mod包依赖管理工具使用详解
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/03/01</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1620</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之go-mod包依赖管理工具使用详解"><a href="#Go语言-之go-mod包依赖管理工具使用详解" class="headerlink" title="Go语言 之go mod包依赖管理工具使用详解"></a><strong>Go语言 之go mod包依赖管理工具使用详解</strong></h2><ul>
+<li>go run 运行当个.go文件</li>
+<li>go install 在编译源代码之后还安装到指定的目录</li>
+<li>go build 加上可编译的go源文件可以得到一个可执行文件</li>
+<li>go get = git clone + go install 从指定源上面下载或者更新指定的代码和依赖，并对他们进行编译和安装</li>
+</ul>
+<p>go modules 是 golang 1.11 新加的特性。现在 1.12 已经发布了，是时候用起来了。Modules 官方定义为：<br>模块是相关 Go 包的集合。modules 是源代码交换和版本控制的单元。go 命令直接支持使用 modules，包括记录和解析对其他模块的依赖性。modules 替换旧的基于 GOPATH 的方法来指定在给定构建中使用哪些源文件。</p>
+<h3 id="如何使用-Modules？"><a href="#如何使用-Modules？" class="headerlink" title="如何使用 Modules？"></a><strong>如何使用 Modules？</strong></h3><h4 id="1-首先需要把-golang-升级到-1-11（现在-1-12-已经发布了，建议使用-1-12）"><a href="#1-首先需要把-golang-升级到-1-11（现在-1-12-已经发布了，建议使用-1-12）" class="headerlink" title="1) 首先需要把 golang 升级到 1.11（现在 1.12 已经发布了，建议使用 1.12）"></a><strong>1) 首先需要把 golang 升级到 1.11（现在 1.12 已经发布了，建议使用 1.12）</strong></h4><h4 id="2-设置-GO111MODULE"><a href="#2-设置-GO111MODULE" class="headerlink" title="2) 设置 GO111MODULE"></a><strong>2) 设置 GO111MODULE</strong></h4><p>GO111MODULE</p>
+<ul>
+<li>GO111MODULE 有三个值：off, on 和 auto（默认值）。</li>
+<li>GO111MODULE=off，go 命令行将不会支持 module 功能，寻找依赖包的方式将会沿用旧版本那种通过 vendor 目录或者 GOPATH 模式来查找。</li>
+<li>GO111MODULE=on，go 命令行会使用 modules，而一点也不会去 GOPATH 目录下查找。</li>
+<li>GO111MODULE=auto，默认值，go 命令行将会根据当前目录来决定是否启用 module 功能。这种情况下可以分为两种情形：<ul>
+<li>当前目录在 GOPATH/src 之外且该目录包含 go.mod 文件</li>
+<li>当前文件在包含 go.mod 文件的目录下面。</li>
+</ul>
+</li>
+</ul>
+<p>当 modules 功能启用时，依赖包的存放位置变更为 $GOPATH/pkg，允许同一个 package 多个版本并存，且多个项目可以共享缓存的 module。</p>
+<h4 id="go-mod"><a href="#go-mod" class="headerlink" title="go mod"></a><strong>go mod</strong></h4><p>golang 提供了 go mod 命令来管理包。</p>
+<p>go mod 有以下命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>download</td>
+<td>download modules to local cache (下载依赖包)</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>edit go.mod from tools or scripts (编辑go.mod)</td>
+</tr>
+<tr>
+<td>graph</td>
+<td>print module requirement graph (打印模块依赖图)</td>
+</tr>
+<tr>
+<td>init</td>
+<td>initialize new module in current directory (在当前目录初始化mod)</td>
+</tr>
+<tr>
+<td>tidy</td>
+<td>add missing and remove unused modules (拉取缺少的模块，移除不用的模块)</td>
+</tr>
+<tr>
+<td>vendor</td>
+<td>make vendored copy of dependencies (将依赖复制到vendor下)</td>
+</tr>
+<tr>
+<td>verify</td>
+<td>verify dependencies have expected content (验证依赖是否正确)</td>
+</tr>
+<tr>
+<td>why</td>
+<td>explain why packages or modules are needed (解释为什么需要依赖)</td>
+</tr>
+<tr>
+<td>### <strong>如何在项目中使用</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>【示例 1】创建一个新项目</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="1-在-GOPATH-目录之外新建一个目录，并使用go-mod-init初始化生成-go-mod-文件"><a href="#1-在-GOPATH-目录之外新建一个目录，并使用go-mod-init初始化生成-go-mod-文件" class="headerlink" title="1) 在 GOPATH 目录之外新建一个目录，并使用go mod init初始化生成 go.mod 文件"></a><strong>1) 在 GOPATH 目录之外新建一个目录，并使用go mod init初始化生成 go.mod 文件</strong></h4><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">~ <span class="built_in">mkdir</span> hello</span><br><span class="line">~ <span class="keyword">cd</span> hello</span><br><span class="line">hello <span class="keyword">go</span> <span class="keyword">mod</span> init hello</span><br><span class="line"><span class="keyword">go</span>: creating <span class="keyword">new</span> <span class="keyword">go</span>.<span class="keyword">mod</span>: module hello</span><br><span class="line">hello <span class="keyword">ls</span></span><br><span class="line"><span class="keyword">go</span>.<span class="keyword">mod</span></span><br><span class="line">hello <span class="keyword">cat</span> <span class="keyword">go</span>.<span class="keyword">mod</span></span><br><span class="line">module hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.12</span></span><br></pre></td></tr></table></figure>
+
+<p>go.mod 文件一旦创建后，它的内容将会被 go toolchain 全面掌控。go toolchain 会在各类命令执行时，比如 go get、go build、go mod 等修改和维护 go.mod 文件。</p>
+<p>go.mod 提供了 module, require、replace 和 exclude 四个命令</p>
+<ul>
+<li>module 语句指定包的名字（路径）</li>
+<li>require 语句指定的依赖项模块</li>
+<li>replace 语句可以替换依赖项模块</li>
+<li>exclude 语句可以忽略依赖项模块</li>
+</ul>
+<h4 id="2-添加依赖"><a href="#2-添加依赖" class="headerlink" title="2) 添加依赖"></a><strong>2) 添加依赖</strong></h4><p>新建一个 server.go 文件，写入以下代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">    <span class="string">"github.com/labstack/echo"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    e := echo.<span class="type">New</span>()</span><br><span class="line">    e.<span class="type">GET</span>(<span class="string">"/"</span>, <span class="function"><span class="keyword">func</span><span class="params">(<span class="built_in">c</span> echo.Context)</span></span> error &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">c</span>.<span class="type">String</span>(http.<span class="type">StatusOK</span>, <span class="string">"Hello, World!"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    e.<span class="type">Logger</span>.<span class="type">Fatal</span>(e.<span class="type">Start</span>(<span class="string">":1323"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行go run server.go运行代码会发现 go mod 会自动查找依赖自动下载：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> run server.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">go</span>: finding github.<span class="keyword">com</span>/labstack/<span class="keyword">echo</span> v3.<span class="number">3.10</span>+incompatible</span><br><span class="line"><span class="keyword">go</span>: downloading github.<span class="keyword">com</span>/labstack/<span class="keyword">echo</span> v3.<span class="number">3.10</span>+incompatible</span><br><span class="line"><span class="keyword">go</span>: extracting github.<span class="keyword">com</span>/labstack/<span class="keyword">echo</span> v3.<span class="number">3.10</span>+incompatible</span><br><span class="line"><span class="keyword">go</span>: finding github.<span class="keyword">com</span>/labstack/gommon/color latest</span><br><span class="line"><span class="keyword">go</span>: finding github.<span class="keyword">com</span>/labstack/gommon/<span class="built_in">log</span> latest</span><br><span class="line"><span class="keyword">go</span>: finding github.<span class="keyword">com</span>/labstack/gommon v0.<span class="number">2.8</span></span><br><span class="line"># 此处省略很多行</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">   ____    __</span><br><span class="line">  / __/___/ /  ___</span><br><span class="line">/ _// __/ _ \/ _ \</span><br><span class="line">/___/\__/_//_/\___/ v3.<span class="number">3.10</span>-dev</span><br><span class="line">High performance, minimalist Go web framework</span><br><span class="line">http<span class="variable">s:</span>//<span class="keyword">echo</span>.labstack.<span class="keyword">com</span></span><br><span class="line">____________________________________O/_______</span><br><span class="line">                                    O\</span><br><span class="line">⇨ http server started <span class="keyword">on</span> [::]:<span class="number">1323</span></span><br></pre></td></tr></table></figure>
+
+<p>现在查看 go.mod 内容：<br>$ cat go.mod</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">module hello</span><br><span class="line"></span><br><span class="line">go <span class="number">1.12</span></span><br><span class="line"></span><br><span class="line">require (</span><br><span class="line">    github.com/labstack/echo v3<span class="number">.3</span><span class="number">.10</span>+incompatible <span class="comment">// indirect</span></span><br><span class="line">    github.com/labstack/gommon v0<span class="number">.2</span><span class="number">.8</span> <span class="comment">// indirect</span></span><br><span class="line">    github.com/mattn/go-colorable v0<span class="number">.1</span><span class="number">.1</span> <span class="comment">// indirect</span></span><br><span class="line">    github.com/mattn/go-isatty v0<span class="number">.0</span><span class="number">.7</span> <span class="comment">// indirect</span></span><br><span class="line">    github.com/valyala/fasttemplate v1<span class="number">.0</span><span class="number">.0</span> <span class="comment">// indirect</span></span><br><span class="line">    golang.org/x/crypto v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190313024323</span>-a1f597ede03a <span class="comment">// indirect</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>go module 安装 package 的原則是先拉最新的 release tag，若无 tag 则拉最新的 commit，详见 Modules 官方介绍。go 会自动生成一个 go.sum 文件来记录 dependency tree：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cat go.sum</span><br><span class="line">github.com/labstack/echo v3.<span class="number">3.10</span>+incompatible <span class="selector-tag">h1</span>:pGRcYk231ExFAyoAjAfD85kQzRJCRI8bbnE7CX5OEgg=</span><br><span class="line">github.com/labstack/echo v3.<span class="number">3.10</span>+incompatible/go<span class="selector-class">.mod</span> <span class="selector-tag">h1</span>:<span class="number">0</span>INS7j/VjnFxD4E2wkz67b8cVwCLbBmJyDaka6Cmk1s=</span><br><span class="line">github.com/labstack/gommon v0.<span class="number">2.8</span> <span class="selector-tag">h1</span>:JvRqmeZcfrHC5u6uVleB4NxxNbzx6gpbJiQknDbKQu0=</span><br><span class="line">github.com/labstack/gommon v0.<span class="number">2.8</span>/go<span class="selector-class">.mod</span> <span class="selector-tag">h1</span>:/tj9csK2iPSBvn+<span class="number">3</span>NLM9e52usepMtrd5ilFYA+wQNJ4=</span><br><span class="line">github.com/mattn/go-colorable v0.<span class="number">1.1</span> <span class="selector-tag">h1</span>:G1f5SKeVxmagw/IyvzvtZE4Gybcc4Tr1tf7I8z0XgOg=</span><br><span class="line">github.com/mattn/go-colorable v0.<span class="number">1.1</span>/go<span class="selector-class">.mod</span> <span class="selector-tag">h1</span>:FuOcm+DKB9mbwrcAfNl7/TZVBZ6rcnceauSikq3lYCQ=</span><br><span class="line">... 省略很多行</span><br></pre></td></tr></table></figure>
+
+<p>再次执行脚本go run server.go发现跳过了检查并安装依赖的步骤。</p>
+<p>可以使用命令 go list -m -u all 来检查可以升级的 package，使用 go get -u need-upgrade-package 升级后会将新的依赖版本更新到 go.mod * 也可以使用 go get -u 升级所有依赖</p>
+<p>go get 升级有一下几种方法：</p>
+<ul>
+<li>运行 go get -u 将会升级到最新的次要版本或者修订版本(x.y.z, z 是修订版本号，y 是次要版本号)</li>
+<li>运行 go get -u=patch 将会升级到最新的修订版本</li>
+<li>运行 go get package@version 将会升级到指定的版本号 version</li>
+<li>运行 go get 如果有版本的更改，那么 go.mod 文件也会更改</li>
+</ul>
+<p>【示例 2】改造现有项目 (helloword)</p>
+<p>项目目录为：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ tree</span><br><span class="line">.</span><br><span class="line">├── api</span><br><span class="line">│   └── apis.go</span><br><span class="line">└── server.go</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> directory, <span class="number">2</span> files</span><br></pre></td></tr></table></figure>
+
+<p>server.go 源码为：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    api <span class="string">"./api"</span>  <span class="comment">// 这里使用的是相对路径</span></span><br><span class="line">    <span class="string">"github.com/labstack/echo"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    e := echo.New()</span><br><span class="line">    e.GET(<span class="string">"/"</span>, api.HelloWorld)</span><br><span class="line">    e.Logger.Fatal(e.Start(<span class="string">":1323"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>api/apis.go 源码为：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package api</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">    <span class="string">"github.com/labstack/echo"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">HelloWorld</span><span class="params">(<span class="built_in">c</span> echo.Context)</span></span> error &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">c</span>.<span class="type">JSON</span>(http.<span class="type">StatusOK</span>, <span class="string">"hello world"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>1) 使用 go mod init *** 初始化 go.mod<br>$ go mod init helloworld</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">go</span>: creating <span class="built_in">new</span> <span class="built_in">go</span>.<span class="built_in">mod</span>: module helloworld</span><br></pre></td></tr></table></figure>
+
+<p>2) 运行go run server.go</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">go:</span> finding github.com<span class="regexp">/labstack/</span>gommon/color latest</span><br><span class="line"><span class="string">go:</span> finding github.com<span class="regexp">/labstack/</span>gommon/log latest</span><br><span class="line"><span class="string">go:</span> finding golang.org<span class="regexp">/x/</span>crypto<span class="regexp">/acme/</span>autocert latest</span><br><span class="line"><span class="string">go:</span> finding golang.org<span class="regexp">/x/</span>crypto/acme latest</span><br><span class="line"><span class="string">go:</span> finding golang.org<span class="regexp">/x/</span>crypto latest</span><br><span class="line">build command-line-<span class="string">arguments:</span> cannot find module <span class="keyword">for</span> path _<span class="regexp">/home/</span>gs<span class="regexp">/helloworld/</span>api</span><br></pre></td></tr></table></figure>
+
+<p>首先还是会查找并下载安装依赖，然后运行脚本 server.go，这里会抛出一个错误：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build <span class="keyword">command</span>-<span class="built_in">line</span>-<span class="keyword">argument</span><span class="variable">s:</span> cannot <span class="keyword">find</span> module <span class="keyword">for</span> path _/home/gs/helloworld/api</span><br></pre></td></tr></table></figure>
+
+<p>但是 go.mod 已经更新：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ cat go.mod</span><br><span class="line">module helloworld</span><br><span class="line"></span><br><span class="line">go <span class="number">1.12</span></span><br><span class="line"></span><br><span class="line">require (</span><br><span class="line">        github.com/labstack/echo v3<span class="number">.3</span><span class="number">.10</span>+incompatible <span class="comment">// indirect</span></span><br><span class="line">        github.com/labstack/gommon v0<span class="number">.2</span><span class="number">.8</span> <span class="comment">// indirect</span></span><br><span class="line">        github.com/mattn/go-colorable v0<span class="number">.1</span><span class="number">.1</span> <span class="comment">// indirect</span></span><br><span class="line">        github.com/mattn/go-isatty v0<span class="number">.0</span><span class="number">.7</span> <span class="comment">// indirect</span></span><br><span class="line">        github.com/valyala/fasttemplate v1<span class="number">.0</span><span class="number">.0</span> <span class="comment">// indirect</span></span><br><span class="line">        golang.org/x/crypto v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190313024323</span>-a1f597ede03a <span class="comment">// indirect</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>那为什么会抛出这个错误呢？</p>
+<p>这是因为 server.go 中使用 internal package 的方法跟以前已经不同了，由于 go.mod 会扫描同工作目录下所有 package 并且变更引入方法，必须将 helloworld 当成路径的前缀，也就是需要写成 import helloworld/api，以往 GOPATH/dep 模式允许的 import ./api 已经失效，详情可以查看这个 issue。</p>
+<p>3) 更新旧的 package import 方式</p>
+<p>所以 server.go 需要改写成：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    api <span class="string">"helloworld/api"</span>  <span class="comment">// 这是更新后的引入方法</span></span><br><span class="line">    <span class="string">"github.com/labstack/echo"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    e := echo.New()</span><br><span class="line">    e.GET(<span class="string">"/"</span>, api.HelloWorld)</span><br><span class="line">    e.Logger.Fatal(e.Start(<span class="string">":1323"</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个小坑：开始在 golang1.11 下使用 go mod 遇到过 go build github.com/valyala/fasttemplate: module requires go 1.12 这种错误，遇到类似这种需要升级到 1.12 的问题，直接升级 golang1.12 就好了。</p>
+<p>4) 到这里就和新创建一个项目没什么区别了</p>
+<h3 id="使用-replace-替换无法直接获取的-package"><a href="#使用-replace-替换无法直接获取的-package" class="headerlink" title="使用 replace 替换无法直接获取的 package"></a><strong>使用 replace 替换无法直接获取的 package</strong></h3><p>由于某些已知的原因，并不是所有的package都能成功下载，比如：golang.org 下的包。</p>
+<p>modules 可以通过在 go.mod 文件中使用 replace 指令替换成 github 上对应的库，比如：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">replace (</span><br><span class="line">    golang.org/x/crypto v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190313024323</span>-a1f597ede03a =&gt; github.com/golang/crypto v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190313024323</span>-a1f597ede03a</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">replace golang.org/x/crypto v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190313024323</span>-a1f597ede03a =&gt; github.com/golang/crypto v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190313024323</span>-a1f597ede03a</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/03/02/Golang/62、Go语言 之goroutine轻量级线程/" class="pre-post btn btn-default" title='62、Go语言 之goroutine轻量级线程'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            62、Go语言 之goroutine轻量级线程</span>
+    </a>
+    
+    
+    <a href="/2016/02/29/Golang/60、Go语言 之工厂模式自动注册——管理多个包的结构体/" class="next-post btn btn-default" title='60、Go语言 之工厂模式自动注册——管理多个包的结构体'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            60、Go语言 之工厂模式自动注册——管理多个包的结构体</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之go-mod包依赖管理工具使用详解"><span class="toc-text">Go语言 之go mod包依赖管理工具使用详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用-Modules？"><span class="toc-text">如何使用 Modules？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-首先需要把-golang-升级到-1-11（现在-1-12-已经发布了，建议使用-1-12）"><span class="toc-text">1) 首先需要把 golang 升级到 1.11（现在 1.12 已经发布了，建议使用 1.12）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-设置-GO111MODULE"><span class="toc-text">2) 设置 GO111MODULE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#go-mod"><span class="toc-text">go mod</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-在-GOPATH-目录之外新建一个目录，并使用go-mod-init初始化生成-go-mod-文件"><span class="toc-text">1) 在 GOPATH 目录之外新建一个目录，并使用go mod init初始化生成 go.mod 文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-添加依赖"><span class="toc-text">2) 添加依赖</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-replace-替换无法直接获取的-package"><span class="toc-text">使用 replace 替换无法直接获取的 package</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

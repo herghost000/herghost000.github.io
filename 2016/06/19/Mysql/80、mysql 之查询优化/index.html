@@ -1,0 +1,535 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之查询优化
+慢查询开启与捕获
+explain+慢SQL分析
+show profile查询SQL在mysql服务器里面的执行细节和生命周期情况
+SQL数据库服务器的参数调优
+
+小表驱动...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    80、mysql 之查询优化 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="80、mysql 之查询优化">
+            
+            80、mysql 之查询优化
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/06/19</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1510</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之查询优化"><a href="#mysql-之查询优化" class="headerlink" title="mysql 之查询优化"></a><strong>mysql 之查询优化</strong></h2><ol>
+<li>慢查询开启与捕获</li>
+<li>explain+慢SQL分析</li>
+<li>show profile查询SQL在mysql服务器里面的执行细节和生命周期情况</li>
+<li>SQL数据库服务器的参数调优</li>
+</ol>
+<h3 id="小表驱动大表"><a href="#小表驱动大表" class="headerlink" title="小表驱动大表"></a><strong>小表驱动大表</strong></h3><p>永远小表驱动大表 类似嵌套循环Nested Loop</p>
+<h4 id="Case"><a href="#Case" class="headerlink" title="Case"></a><strong>Case</strong></h4><p>优化原则：小表驱动大表，即小的数据集驱动大的数据集</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> A <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">in</span> (<span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> B)</span><br><span class="line">等价于</span><br><span class="line"><span class="keyword">for</span> <span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> B</span><br><span class="line">    <span class="keyword">for</span> <span class="keyword">select</span> * <span class="keyword">from</span> A <span class="keyword">where</span> A.id = B.id</span><br></pre></td></tr></table></figure>
+
+<p>当B表的数据集小于A表的数据集，用in优于exists</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="function"><span class="keyword">from</span> A <span class="keyword">where</span> <span class="title">exists</span> (<span class="params"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> B <span class="keyword">where</span> B.id = A.id</span>)</span></span><br><span class="line"><span class="function">等价于</span></span><br><span class="line"><span class="function"><span class="keyword">for</span> <span class="keyword">select</span> * <span class="keyword">from</span> A</span></span><br><span class="line"><span class="function">    <span class="keyword">for</span> <span class="keyword">select</span> * <span class="keyword">from</span> B <span class="keyword">where</span> B.id</span> = A.id</span><br></pre></td></tr></table></figure>
+
+<p>当A表的数据集小于B表的数据集，用exists优于in</p>
+<p>==注意：A表与B表的id字段应建立索引==</p>
+<ul>
+<li>EXISTS<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">SELECT</span></span> ...... FROM <span class="keyword">table</span> WHERE <span class="comment">EXISTS(subquery)</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>该语法可以理解为：将主查询的数据，放到子查询中做条件验证，根据验证结果（true或false）来决定主查询的数据结果是否得以保留。</p>
+<ul>
+<li>提示</li>
+</ul>
+<ol>
+<li>EXISTS（subquery）只返回true或false，因此子查询中的select * 也可以是select 1 或 select ‘X’，根据官方的说法是实际执行时会忽略select清单，因此没有区别。</li>
+<li>EXISTS子查询的实际执行过程可能经过了优化而不是我们理解上的逐条对比，如果担心效率问题，可进行实际检验以确定是否有效率。</li>
+<li>EXISTS子查询往往也可以用条件表达式，其它子查询或join来代替，何种何种最优需要具体问题具体分析。</li>
+</ol>
+<h3 id="order-by关键字优化"><a href="#order-by关键字优化" class="headerlink" title="order by关键字优化"></a><strong>order by关键字优化</strong></h3><ol>
+<li>ORDER BY子句，尽量使用Index方式排序，避免使用FileSort方式排序</li>
+<li>MySQL支持二种方式的排序，FileSort和Index,Index效率高。它指MySQL扫描索引本身完成排序。FileSort方式效率较低。</li>
+<li>ORDER BY满足两情况，会使用Index方式排序<ul>
+<li>ORDER BY语句使用索引最左前列</li>
+<li>使用where子句与OrderBy子句条件列组合满足索引最左前列</li>
+</ul>
+</li>
+<li>尽可能在索引列上完成排序操作，遵照索引建的最佳左前缀</li>
+<li>如果不在索引列上，filesort有两种算法：mysql就要启动双路排序和单路排序<ul>
+<li>双路排序<ul>
+<li>MySQL4.1之前是使用双路排序，字面意思是两次扫描磁盘，最终得到数据。读取行指针和orderby列，对他们进行排序，然后扫描已经排序好的列表，按照列表中的值重新从列表中读取对应的数据传输</li>
+<li>从磁盘取排序字段，在buffer进行排序，再从磁盘取其他字段。</li>
+</ul>
+</li>
+<li>取一批数据，要对磁盘进行两次扫描，众所周知，I\O是很耗时的，所以在mysql4.1之后，出现了第二张改进的算法，就是单路排序。</li>
+<li>单路排序<ul>
+<li>从磁盘读取查询需要的所有列，按照orderby列在buffer对它们进行排序，然后扫描排序后的列表进行输出，它的效率更快一些，避免了第二次读取数据，并且把随机IO变成顺序IO，但是它会使用更多的空间，因为它把每一行都保存在内存中了。</li>
+<li>由于单路是后出来的，总体而言好过双路</li>
+<li>但是用单路有问题，sort_buffer小了会导致大量I/O操作</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="优化策略"><a href="#优化策略" class="headerlink" title="优化策略"></a><strong>优化策略</strong></h4><ol>
+<li>增大sort_buffer_size参数的设置</li>
+<li>增大max_length_for_sort_data参数的设置</li>
+<li>order by时select * 是大忌。只查询需要字段，这点非常重要<ul>
+<li>当查询的字段大小总和小于max_length_for_sort_data而且排序字段不是TEXT|BLOB类型时，会用改进后的算法——单路排序，否则用老算法——多路排序</li>
+<li>两种算法的数据都有可能超出sort_buffer的容量，超出之后，会创建tmp文件进行合并排序，导致多次I/O，但是用单路排序算法的风险会更大一些，所以要提高sort_buffer_size。</li>
+</ul>
+</li>
+<li>尝试提高sort_buffer_size<ul>
+<li>不管哪种算法，    提高这个参数都会提高效率，当然，要根据系统的能力提高，因为这个参数是针对每个进程的。</li>
+</ul>
+</li>
+<li>尝试提高max_length_for_sort_data<ul>
+<li>提高这个参数，会增加用改进算法的概率，但是如果设的太高，数据总容量超出sort_buffer_size的概率就增大，明显症状是高的磁盘I/O活动和低处理器使用率。</li>
+</ul>
+</li>
+</ol>
+<h4 id="为排序使用索引"><a href="#为排序使用索引" class="headerlink" title="为排序使用索引"></a><strong>为排序使用索引</strong></h4><ul>
+<li>mysql有两种排序方式：文件排序或扫描有序索引排序</li>
+<li>mysql能够为排序与查询使用相同的索引<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">key a<span class="constructor">_b_c(<span class="params">a</span>,<span class="params">b</span>,<span class="params">c</span>)</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>order by能使用索引最左前缀</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">order</span> <span class="title">by</span> a</span><br><span class="line">- <span class="keyword">order</span> <span class="title">by</span> a,b</span><br><span class="line">- <span class="keyword">order</span> <span class="title">by</span> a,b,c</span><br><span class="line">- <span class="keyword">order</span> <span class="title">by</span> a DESC,b DESC,c DESC</span><br></pre></td></tr></table></figure>
+
+<p>如果where使用索引的最左前缀定义为常量，则order by能使用索引</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">where</span> a = <span class="keyword">const</span> <span class="keyword">order</span> <span class="keyword">by</span> b,c</span><br><span class="line">- <span class="keyword">where</span> a = <span class="keyword">const</span> <span class="keyword">and</span> b = <span class="keyword">const</span> <span class="keyword">order</span> <span class="keyword">by</span> c</span><br><span class="line">- <span class="keyword">where</span> a = <span class="keyword">const</span> <span class="keyword">and</span> b &gt; <span class="keyword">const</span> <span class="keyword">order</span> <span class="keyword">by</span> b,c</span><br></pre></td></tr></table></figure>
+
+<p>不能使用索引进行排序</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- <span class="keyword">order</span> <span class="keyword">by</span> a asc, b desc, c desc    <span class="comment">/*排序不一致*/</span></span><br><span class="line">- <span class="keyword">where</span> g = const <span class="keyword">order</span> <span class="keyword">by</span> b,c      <span class="comment">/*丢失a索引*/</span></span><br><span class="line">- <span class="keyword">where</span> a = const <span class="keyword">order</span> <span class="keyword">by</span> c        <span class="comment">/*丢失b索引*/</span></span><br><span class="line">- <span class="keyword">where</span> a = const <span class="keyword">order</span> <span class="keyword">by</span> a, d     <span class="comment">/*d不是索引的一部分*/</span></span><br><span class="line">- <span class="keyword">where</span> a <span class="keyword">in</span>(<span class="params">...</span><span class="params">...</span>) <span class="keyword">order</span> <span class="keyword">by</span> b,c   <span class="comment">/*对于排序来说，多个相等条件也是范围条件*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="group-by关键字优化"><a href="#group-by关键字优化" class="headerlink" title="group by关键字优化"></a><strong>group by关键字优化</strong></h3><ol>
+<li>groupby实质是先排序后进行分组，遵照索引建的最佳左前缀</li>
+<li>当无法使用索引列，增大max_length_for_sort_data参数的设置+增大sort_buffer_size参数的设置</li>
+<li>where高于having,能写在where限定的条件就不要去having限定了。</li>
+</ol>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/06/19/Nginx/19、nginx 之 location 配置/" class="pre-post btn btn-default" title='19、nginx 之 location 配置'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            19、nginx 之 location 配置</span>
+    </a>
+    
+    
+    <a href="/2016/06/18/Mysql/79、mysql 之索引优化/" class="next-post btn btn-default" title='79、mysql 之索引优化'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            79、mysql 之索引优化</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之查询优化"><span class="toc-text">mysql 之查询优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#小表驱动大表"><span class="toc-text">小表驱动大表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Case"><span class="toc-text">Case</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#order-by关键字优化"><span class="toc-text">order by关键字优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#优化策略"><span class="toc-text">优化策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#为排序使用索引"><span class="toc-text">为排序使用索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#group-by关键字优化"><span class="toc-text">group by关键字优化</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

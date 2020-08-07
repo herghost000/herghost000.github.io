@@ -1,0 +1,494 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Nginx">
+
+
+<meta name="description" content="nginx 之内存及磁盘资源的分配HTTP body只存储到磁盘文件中1client_body_in_file_only on|clean|off; #默认： client_body_in_fi...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    8、nginx 之内存及磁盘资源的分配 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="8、nginx 之内存及磁盘资源的分配">
+            
+            8、nginx 之内存及磁盘资源的分配
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Nginx/">Nginx</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/06/08</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1521</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="nginx-之内存及磁盘资源的分配"><a href="#nginx-之内存及磁盘资源的分配" class="headerlink" title="nginx 之内存及磁盘资源的分配"></a><strong>nginx 之内存及磁盘资源的分配</strong></h2><h3 id="HTTP-body只存储到磁盘文件中"><a href="#HTTP-body只存储到磁盘文件中" class="headerlink" title="HTTP body只存储到磁盘文件中"></a><strong>HTTP body只存储到磁盘文件中</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">client_body_in_file_only</span> <span class="literal">on</span>|clean|<span class="literal">off</span>; <span class="comment">#默认： client_body_in_file_only off;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>此指令禁用NGINX缓冲区并将请求体存储在临时文件中。 文件包含纯文本数据。 该指令在NGINX配置的http，server和location区块使用。 可选值有：</p>
+<ul>
+<li>off:该值将禁用文件写入</li>
+<li>clean：请求body将被写入文件。 该文件将在处理请求后删除。</li>
+<li>on: 请求正文将被写入文件。 处理请求后，将不会删除该文件。</li>
+</ul>
+<p>默认情况下，指令值为关闭。 如下：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">client_body_in_file_only</span> clean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="HTTP-body尽量写入到一个内存buffer中"><a href="#HTTP-body尽量写入到一个内存buffer中" class="headerlink" title="HTTP body尽量写入到一个内存buffer中"></a><strong>HTTP body尽量写入到一个内存buffer中</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">client_body_in_single_buffer</span> <span class="literal">on</span>|<span class="literal">off</span>; <span class="comment">#默认： client_body_in_single_buffer off;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>是否将请求体完整的存储在一块连续的内存中，默认为off，如果此指令被设置为on，则nginx会保证请求体在不大于client_body_buffer_size设置的值时，被存放在一块连续的内存中，但超过大小时会被整个写入一个临时文件；</p>
+<h3 id="存储HTTP头部的内存buffer大小"><a href="#存储HTTP头部的内存buffer大小" class="headerlink" title="存储HTTP头部的内存buffer大小"></a><strong>存储HTTP头部的内存buffer大小</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">client_header_buffer_size</span> size; <span class="comment">#默认： client_header_buffer_size 1k;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>此指令与client_body_buffer_size类似。 它为请求头分配一个缓冲区。 如果请求头大小大于指定的缓冲区，则使用large_client_header_buffers指令分配更大的缓冲区。如下例子：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http&#123;</span><br><span class="line">    client_header_buffer_size <span class="number">1</span>m<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="存储超大HTTP头部的内存buffer大小"><a href="#存储超大HTTP头部的内存buffer大小" class="headerlink" title="存储超大HTTP头部的内存buffer大小"></a><strong>存储超大HTTP头部的内存buffer大小</strong></h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">large_client_header_buffers number size; #默认： large_client_header_buffers <span class="number">4</span> <span class="number">8</span>k;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>large_client_header_buffers定义了Nginx接收一个超大HTTP头部请求的buffer个数和每个 buffer的大小。如果HTTP请求行（如GET/index HTTP/1.1）的大小超过上面的单个buffer，则 返回”Request URI too large”(414)。请求中一般会有许多header，每一个header的大小也不能超 过单个buffer的大小，否则会返回”Bad request”(400)。当然，请求行和请求头部的总和也不可 以超过buffer个数*buffer大小。</p>
+<h3 id="存储HTTP-body的内存buffer大小"><a href="#存储HTTP-body的内存buffer大小" class="headerlink" title="存储HTTP body的内存buffer大小"></a><strong>存储HTTP body的内存buffer大小</strong></h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client_body_buffer_size size; #默认： client_body_buffer_size <span class="number">8</span>k/<span class="number">16</span>k;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>上面配置项定义了Nginx接收HTTP body的内存缓冲区大小。也就是说，HTTP body会先 接收到指定的这块缓存中，之后才决定是否写入磁盘。</p>
+<p>如果用户请求中含有HTTP头部Content-Length，并且其标识的长度小于定义 的buffer大小，那么Nginx会自动降低本次请求所使用的内存buffer，以降低内存消耗。</p>
+<h3 id="HTTP包体的临时存放目录"><a href="#HTTP包体的临时存放目录" class="headerlink" title="HTTP包体的临时存放目录"></a><strong>HTTP包体的临时存放目录</strong></h3><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client_body_temp_path dir-path<span class="comment">[level1<span class="comment">[level2<span class="comment">[level3]</span>]</span>]</span> #默认： client_body_temp_path client_body_temp;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>上面配置项定义HTTP body存放的临时目录。在接收HTTP body时，如果body的大小大于 client_body_buffer_size，则会以一个递增的整数命名并存放到client_body_temp_path指定的目 录中。后面跟着的level1、level2、level3，是为了防止一个目录下的文件数量太多，从而导 致性能下降，因此使用了level参数，这样可以按照临时文件名最多再加三层目录。例如：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">client_body_temp_path optnginx/client_temp <span class="number">1</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果新上传的HTTP包体使用00000123456作为临时文件名，就会被存放在这个目录中。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optnginx/client_temp/<span class="number">6</span>/<span class="number">45</span>/<span class="number">00000123456</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="connection-pool-size"><a href="#connection-pool-size" class="headerlink" title="connection_pool_size"></a><strong>connection_pool_size</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">connection_pool_size</span> size; <span class="comment">#connection_pool_size 256;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>Nginx对于每个建立成功的TCP连接会预先分配一个内存池，上面的size配置项将指定这个内存池的初始大小，用于减少内核对于小块内存的分配次数。需慎重设置，因为更大 的size会使服务器消耗的内存增多，而更小的size则会引发更多的内存分配次数。</p>
+<h3 id="request-pool-size"><a href="#request-pool-size" class="headerlink" title="request_pool_size"></a><strong>request_pool_size</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">request_pool_size</span> size; <span class="comment">#默认： request_pool_size 4k;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>Nginx开始处理HTTP请求时，将会为每个请求都分配一个内存池，size配置项将指定这个内存池的初始大小，用于减少内核对于小块内存的分配次数。TCP连接关闭时会销毁 connection_pool_size指定的连接内存池，HTTP请求结束时会销毁request_pool_size指定的 HTTP请求内存池，但它们的创建、销毁时间并不一致，因为一个TCP连接可能被复用于多个HTTP请求。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/06/08/Mysql/69、mysql 之自然语言全文搜索/" class="pre-post btn btn-default" title='69、mysql 之自然语言全文搜索'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            69、mysql 之自然语言全文搜索</span>
+    </a>
+    
+    
+    <a href="/2016/06/07/Mysql/68、mysql 之FULLTEXT索引/" class="next-post btn btn-default" title='68、mysql 之FULLTEXT索引'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            68、mysql 之FULLTEXT索引</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx-之内存及磁盘资源的分配"><span class="toc-text">nginx 之内存及磁盘资源的分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-body只存储到磁盘文件中"><span class="toc-text">HTTP body只存储到磁盘文件中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-body尽量写入到一个内存buffer中"><span class="toc-text">HTTP body尽量写入到一个内存buffer中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储HTTP头部的内存buffer大小"><span class="toc-text">存储HTTP头部的内存buffer大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储超大HTTP头部的内存buffer大小"><span class="toc-text">存储超大HTTP头部的内存buffer大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#存储HTTP-body的内存buffer大小"><span class="toc-text">存储HTTP body的内存buffer大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP包体的临时存放目录"><span class="toc-text">HTTP包体的临时存放目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#connection-pool-size"><span class="toc-text">connection_pool_size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#request-pool-size"><span class="toc-text">request_pool_size</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

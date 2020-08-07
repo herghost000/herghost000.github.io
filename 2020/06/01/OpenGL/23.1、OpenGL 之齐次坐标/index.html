@@ -1,0 +1,487 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="OpenGL">
+
+
+<meta name="description" content="OpenGL 之齐次坐标在欧几里得几何空间里，两条平行线永远都不会相交。但是在投影空间中，如右图中的两条铁轨在地平线处却是会相交的，因为在无限远处它们看起来相交于一点。
+在欧几里得（或称笛卡尔）...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    23.1、OpenGL 之齐次坐标 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="23.1、OpenGL 之齐次坐标">
+            
+            23.1、OpenGL 之齐次坐标
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/OpenGL/">OpenGL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/OpenGL/">OpenGL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/06/01</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="OpenGL-之齐次坐标"><a href="#OpenGL-之齐次坐标" class="headerlink" title="OpenGL 之齐次坐标"></a><strong>OpenGL 之齐次坐标</strong></h2><p>在欧几里得几何空间里，两条平行线永远都不会相交。但是在投影空间中，如右图中的两条铁轨在地平线处却是会相交的，因为在无限远处它们看起来相交于一点。</p>
+<p>在欧几里得（或称笛卡尔）空间里描述2D/3D 几何物体是很理想的，但在投影空间里面却并不见得。 我们用 </p>
+<p>表示笛卡尔空间中的一个 2D 点，而处于无限远处的点 (∞,∞) 在笛卡尔空间里是没有意义的。投影空间里的两条平行线会在无限远处相交于一点，但笛卡尔空间里面无法搞定这个问题（因为无限远处的点在笛卡尔空间里是没有意义的），因此数学家想出齐次坐标这个点子来了。</p>
+<h3 id="解决办法-其次坐标"><a href="#解决办法-其次坐标" class="headerlink" title="解决办法: 其次坐标"></a><strong>解决办法: 其次坐标</strong></h3><p>由 August Ferdinand Möbius 提出的齐次坐标（Homogeneous coordinates）让我们能够在投影空间里进行图像和几何处理，齐次坐标用 N + 1个分量来描述 N 维坐标。比如，2D 齐次坐标是在笛卡尔坐标(X, Y)的基础上增加一个新分量 w，变成(x, y, w)，其中笛卡尔坐标系中的大X，Y 与齐次坐标中的小x，y有如下对应关系：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">X</span> = x/w</span><br><span class="line"><span class="attr">Y</span> = y/w</span><br></pre></td></tr></table></figure>
+
+<p>笛卡尔坐标中的点 (1, 2) 在齐次坐标中就是 (1, 2, 1) 。如果这点移动到无限远(∞,∞)处，在齐次坐标中就是 (1, 2, 0) ，这样我们就避免了用没意义的”∞” 来描述无限远处的点。</p>
+<h3 id="为什么叫齐次坐标？"><a href="#为什么叫齐次坐标？" class="headerlink" title="为什么叫齐次坐标？"></a><strong>为什么叫齐次坐标？</strong></h3><p>前面提到，我们分别用齐次坐标中的 x 和 y 除以 w 就得到笛卡尔坐标中的 x 和 y，如图所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(x,y,z) = \begin&#123;pmatrix&#125;</span><br><span class="line">   \dfrac&#123;x&#125;&#123;w&#125;, \dfrac&#123;y&#125;&#123;w&#125;</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>仔细观察下面的转换例子，可以发现些有趣的东西：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(1,2,3) = \begin&#123;pmatrix&#125;</span><br><span class="line">   \dfrac&#123;1&#125;&#123;3&#125;, \dfrac&#123;2&#125;&#123;3&#125;</span><br><span class="line">\end&#123;pmatrix&#125;</span><br><span class="line"></span><br><span class="line">(2,4,6) = \begin&#123;pmatrix&#125;</span><br><span class="line">   \dfrac&#123;1&#125;&#123;3&#125;, \dfrac&#123;2&#125;&#123;3&#125;</span><br><span class="line">\end&#123;pmatrix&#125;</span><br><span class="line"></span><br><span class="line">(4,8,12) = \begin&#123;pmatrix&#125;</span><br><span class="line">   \dfrac&#123;1&#125;&#123;3&#125;, \dfrac&#123;2&#125;&#123;3&#125;</span><br><span class="line">\end&#123;pmatrix&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">(1a,2a,3a) = \begin&#123;pmatrix&#125;</span><br><span class="line">   \dfrac&#123;1a&#125;&#123;3a&#125;, \dfrac&#123;2a&#125;&#123;3a&#125;</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   \dfrac&#123;1&#125;&#123;3&#125;, \dfrac&#123;2&#125;&#123;3&#125;</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上图中，点 (1, 2, 3), (2, 4, 6) 和 (4, 8, 12) 对应笛卡尔坐标中的同一点 (1/3, 2/3)。 任意数量积的(1a, 2a, 3a) 始终对应于笛卡尔坐标中的同一点 (1/3, 2/3)。因此这些点是“齐次”的，因为他们始终对应于笛卡尔坐标中的同一点。换句话说，齐次坐标描述缩放不变性</p>
+<h3 id="证明-两平行线可以相交"><a href="#证明-两平行线可以相交" class="headerlink" title="证明: 两平行线可以相交"></a><strong>证明: 两平行线可以相交</strong></h3><p>笛卡尔坐标系中，对于如下两个直线方程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;cases&#125;</span><br><span class="line">   Ax + By + C = 0 \\</span><br><span class="line">   Ax + By + D = 0</span><br><span class="line">\end&#123;cases&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 C ≠ D，以上方程组无解；如果 C = D，那这两条线就是同一条线了。</p>
+<p>下面我们用 x/w, y/w 代替 x, y 放到投影空间里来求解：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;cases&#125;</span><br><span class="line">   A\dfrac&#123;x&#125;&#123;w&#125; + B\dfrac&#123;y&#125;&#123;w&#125; + C = 0 \\</span><br><span class="line">   \\</span><br><span class="line">   A\dfrac&#123;y&#125;&#123;w&#125; + B\dfrac&#123;y&#125;&#123;w&#125; + D = 0</span><br><span class="line">\end&#123;cases&#125; \to </span><br><span class="line">\begin&#123;cases&#125;</span><br><span class="line">   Ax + By + Cw = 0 \\</span><br><span class="line">   Ax + By + Dw = 0</span><br><span class="line">\end&#123;cases&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们就可以在 C ≠ D 的情况得到一组解 (x, y, 0)，代入得 (C - D)w = 0，因为 C ≠ D，所以 w = 0。因而，两条平行线相交于投影空间中无限远处的一点(x, y, 0)。</p>
+<p>齐次坐标在计算机图形学中是有用的，将 3D 场景投影到 2D 平面的过程中就用到它了。</p>
+<h3 id="引入齐次坐标的意义"><a href="#引入齐次坐标的意义" class="headerlink" title="引入齐次坐标的意义"></a><strong>引入齐次坐标的意义</strong></h3><p><a href="https://blog.csdn.net/zhuiqiuzhuoyue583/article/details/95230246" target="_blank" rel="noopener">https://blog.csdn.net/zhuiqiuzhuoyue583/article/details/95230246</a></p>
+<p>前面我们提到了图像的缩放变换和旋转变换，可以用矩阵乘法的形式来表达变换后的像素位置映射关系。</p>
+<p>那么，对于平移变换呢？平移变换表示的是位置变化的概念。如下图所示，一个图像矩形从中心点[x1,y1]平移到了中心点[x2,y2]</p>
+<p>处，整体大小和角度都没有变化。在x方向和y方向上分别平移了tx和ty大小。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195447429.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3podWlxaXV6aHVveXVlNTgz,size_16,color_FFFFFF,t_70" alt="image"></p>
+<p>显然：</p>
+<p><img src="https://img-blog.csdnimg.cn/20191128183226185.png" alt="image"></p>
+<p>这对于图像中的每一个点都是成立的。写成矩阵的形式就是：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195557402.png" alt="image"></p>
+<p>我们再把前面的缩放变换和旋转变换的矩阵形式写出来：<br>缩放变换：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195629532.png" alt="image"></p>
+<p>旋转变换：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195654665.png" alt="image"></p>
+<p>我们注意到，缩放变换和旋转变换都可以表示成矩阵乘法的形式。实际上，图像的几何变换通常不是单一的，也就是说经常性的缩放、旋转、平移一起变换。例如先放大2倍，然后旋转45度，然后再缩小0.5倍。那么就可以表示成矩阵乘法串接的形式：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195711704.png" alt="image"></p>
+<p>这样，不管有多少次变换，都可以用矩阵乘法来实现。但是平移变换呢？从前面看到，平移变换并不是矩阵乘法的形式，而是矩阵加法的形式！</p>
+<p>那能不能把缩放变换、旋转变换、平移变换统一成矩阵乘法的形式呢，这样不管进行多少次变换，都可以表示成矩阵连乘的形式，将极大的方便计算和降低运算量。</p>
+<p>这种方法就是“升维”，引入“齐次坐标”，将图像从平面2D坐标变成3D坐标。我们看看平移变换的矩阵形式：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195738723.png" alt="image"></p>
+<p>将其升维，变成3维，上式就可以表示成：</p>
+<p><img src="https://img-blog.csdnimg.cn/2019070919580975.png" alt="image"></p>
+<p>这是个非常优美的地方，学习过矩阵乘法的同学可以算一下右边的式子，是否最终结果与前面是一样的。</p>
+<p>这样，平移变换通过升维后的齐次坐标，也变成了矩阵乘法的形式。当然缩放变换和旋转变换的矩阵形式也得改一改，统一变成3维的形式。<br>缩放变换：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195829745.png" alt="image"></p>
+<p>旋转变换：</p>
+<p><img src="https://img-blog.csdnimg.cn/20190709195847774.png" alt="image"></p>
+<p>终于统一了。以后所有的变换，不管怎样变换，变换多少次，都可以表示成一连串的矩阵相乘了，这是多么的方便。</p>
+<p>这就是引入齐次坐标的作用，把各种变换都统一了起来，即 把缩放，旋转，平移等变换都统一起来，都表示成一连串的矩阵相乘的形式。保证了形式上的线性一致性。</p>
+<p>简短的解释：</p>
+<p>齐次坐标就是将一个原本是n维的向量用一个n+1维向量来表示。</p>
+<pre><code>许多图形应用涉及到几何变换，主要包括平移、旋转、缩放。以矩阵表达式来计算这些变换时，平移是矩阵相加，旋转和缩放则是矩阵相乘，综合起来可以表示为 x=R∗X+t（注：因为习惯的原因，实际使用时一般使用变化矩阵左乘向量）(R 旋转缩放矩阵，t 为平移矩阵，X为原向量，x 为变换后的向量)。</code></pre><p>引入齐次坐标的目的主要是合并矩阵运算中的乘法和加法，表示为x=P∗X的形式。即它提供了用矩阵运算把二维、三维甚至高维空间中的一个点集从一个坐标系变换到另一个坐标系的有效方法。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/06/01/LinearAlgebra/70、LinearAlgebra 之华而不实的行列式的代数表达/" class="pre-post btn btn-default" title='70、LinearAlgebra 之华而不实的行列式的代数表达'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            70、LinearAlgebra 之华而不实的行列式的代数表达</span>
+    </a>
+    
+    
+    <a href="/2020/06/01/LinearAlgebra/69、LinearAlgebra 之行式就是列式/" class="next-post btn btn-default" title='69、LinearAlgebra 之行式就是列式'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            69、LinearAlgebra 之行式就是列式</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL-之齐次坐标"><span class="toc-text">OpenGL 之齐次坐标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决办法-其次坐标"><span class="toc-text">解决办法: 其次坐标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么叫齐次坐标？"><span class="toc-text">为什么叫齐次坐标？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#证明-两平行线可以相交"><span class="toc-text">证明: 两平行线可以相交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引入齐次坐标的意义"><span class="toc-text">引入齐次坐标的意义</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

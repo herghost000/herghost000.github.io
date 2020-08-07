@@ -1,0 +1,506 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Cocos Creator">
+
+
+<meta name="description" content="cocos creator 之缓动系统cc.tween简介
+功能类似于 cc.Action（动作系统）
+cc.tween 提供了链式创建的方法
+可以对任何对象进行操作
+可以对对象的任意属性进行缓...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    37、cocos creator 之缓动系统cc.tween |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="37、cocos creator 之缓动系统cc.tween">
+            
+            37、cocos creator 之缓动系统cc.tween
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Cocos-Creator/">Cocos Creator</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Cocos-Creator/">Cocos Creator</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/01/10</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                575</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="cocos-creator-之缓动系统cc-tween"><a href="#cocos-creator-之缓动系统cc-tween" class="headerlink" title="cocos creator 之缓动系统cc.tween"></a><strong>cocos creator 之缓动系统cc.tween</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><ul>
+<li>功能类似于 cc.Action（动作系统）</li>
+<li>cc.tween 提供了链式创建的方法</li>
+<li>可以对任何对象进行操作</li>
+<li>可以对对象的任意属性进行缓动</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">cc</span><span class="selector-class">.tween</span>(<span class="selector-tag">this</span><span class="selector-class">.node</span>)</span><br><span class="line">    <span class="selector-class">.to</span>(1, &#123; <span class="attribute">position</span>: cc.<span class="built_in">v2</span>(100, 100), rotation: <span class="number">360</span> &#125;)</span><br><span class="line">    <span class="selector-class">.to</span>(1, &#123; <span class="attribute">scale</span>: <span class="number">2</span> &#125;)</span><br><span class="line">    <span class="selector-class">.start</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><ul>
+<li><p>to</p>
+</li>
+<li><p>添加一个对属性进行绝对值计算的 action</p>
+</li>
+<li><p>第一个参数为持续时间</p>
+</li>
+<li><p>第二个参数为变化属性</p>
+</li>
+<li><p>第三个参数为配置项，包括progress、easing</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cc.tween(<span class="keyword">this</span>.node)</span><br><span class="line">    <span class="comment">// 0s 时，node 的 scale 还是 1</span></span><br><span class="line">    .to(<span class="number">1</span>, &#123; scale: <span class="number">2</span> &#125;)</span><br><span class="line">    <span class="comment">// 1s 时，执行完第一个 action，scale 为 2</span></span><br><span class="line">    .to(<span class="number">1</span>, &#123; scale: <span class="number">3</span> &#125;)</span><br><span class="line">    <span class="comment">// 2s 时，执行完第二个 action，scale 为 3</span></span><br><span class="line">    .start()</span><br><span class="line">    <span class="comment">// 调用 start 开始执行 cc.tween</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>by</p>
+</li>
+<li><p>添加一个对属性进行相对值计算的 action</p>
+</li>
+<li><p>第一个参数为持续时间</p>
+</li>
+<li><p>第二个参数为变化属性</p>
+</li>
+<li><p>第三个参数为配置项，包括progress、easing</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cc.tween(<span class="keyword">node</span><span class="title">)</span></span><br><span class="line"><span class="title">  .to</span>(<span class="number">1</span>, &#123;scale: <span class="number">2</span>&#125;)      // <span class="keyword">node</span>.<span class="title">scale</span> === <span class="number">2</span></span><br><span class="line">  .by(<span class="number">1</span>, &#123;scale: <span class="number">2</span>&#125;)      // <span class="keyword">node</span>.<span class="title">scale</span> === <span class="number">4</span> (<span class="number">2</span>+<span class="number">2</span>)</span><br><span class="line">  .by(<span class="number">1</span>, &#123;scale: <span class="number">1</span>&#125;)      // <span class="keyword">node</span>.<span class="title">scale</span> === <span class="number">5</span></span><br><span class="line">  .to(<span class="number">1</span>, &#123;scale: <span class="number">2</span>&#125;)      // <span class="keyword">node</span>.<span class="title">scale</span> === <span class="number">2</span></span><br><span class="line">  .<span class="literal">start</span>()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>缓动任意对象的任意属性</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123; <span class="variable">a:</span> <span class="number">0</span> &#125;</span><br><span class="line"><span class="keyword">cc</span>.tween(obj)</span><br><span class="line">  .<span class="keyword">to</span>(<span class="number">1</span>, &#123; <span class="variable">a:</span> <span class="number">100</span> &#125;)</span><br><span class="line">  .start()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>clone</p>
+</li>
+<li><p>克隆当前 tween</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 先创建一个缓动作为模板</span><br><span class="line"><span class="keyword">let</span> tween = <span class="keyword">cc</span>.tween().<span class="keyword">to</span>(<span class="number">4</span>, &#123; scale: <span class="number">2</span> &#125;)</span><br><span class="line"></span><br><span class="line">// 复制 tween，并使用节点 Canvas/cocos 作为 target</span><br><span class="line">tween.clone(<span class="keyword">cc</span>.<span class="keyword">find</span>(<span class="string">'Canvas/cocos'</span>)).start()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>then</p>
+</li>
+<li><p>插入其他的缓动到队列中</p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let scale = cc.tween().to(1, &#123; <span class="attribute">scale</span>: 2 &#125;)</span><br><span class="line">let rotate = cc<span class="variable">.tween</span>()<span class="variable">.to</span>(1, &#123; rotation: 90&#125;)</span><br><span class="line">let move = cc<span class="variable">.tween</span>()<span class="variable">.to</span>(1, &#123; position: cc<span class="variable">.v</span>3(100, 100, 100)&#125;)</span><br><span class="line"></span><br><span class="line">// 先缩放再旋转</span><br><span class="line">cc<span class="variable">.tween</span>(this<span class="variable">.node</span>)<span class="variable">.then</span>(scale)<span class="variable">.then</span>(rotate)</span><br><span class="line">// 先缩放再移动</span><br><span class="line">cc<span class="variable">.tween</span>(this<span class="variable">.node</span>)<span class="variable">.then</span>(scale)<span class="variable">.then</span>(move)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>call</p>
+</li>
+<li><p>回调</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">cc</span><span class="selector-class">.tween</span>(this.node)</span><br><span class="line">    <span class="selector-class">.to</span>(<span class="number">2</span>, &#123; <span class="attribute">rotation</span>: <span class="number">90</span>&#125;)</span><br><span class="line">    <span class="selector-class">.to</span>(<span class="number">1</span>, &#123; <span class="attribute">scale</span>: <span class="number">2</span>&#125;)</span><br><span class="line">    <span class="comment">// 当前面的动作都执行完毕后才会调用这个回调函数</span></span><br><span class="line">    <span class="selector-class">.call</span>(() =&gt; &#123; <span class="selector-tag">cc</span><span class="selector-class">.log</span>(<span class="string">'This is a callback'</span>) &#125;)</span><br><span class="line">    <span class="selector-class">.start</span>()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>parallel</p>
+</li>
+<li><p>并行执行缓动</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">let t = cc.tween;</span><br><span class="line">t(<span class="keyword">this</span>.node)</span><br><span class="line">    <span class="comment">// 同时执行两个 cc.tween</span></span><br><span class="line">    .parallel(</span><br><span class="line">        t().to(<span class="number">1</span>, &#123; scale: <span class="number">2</span> &#125;),</span><br><span class="line">        t().to(<span class="number">2</span>, &#123; position: cc.v2(<span class="number">100</span>, <span class="number">100</span>) &#125;)</span><br><span class="line">    )</span><br><span class="line">    .call(() =&gt; &#123;</span><br><span class="line">        console.log(<span class="string">'All tweens finished.'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    .start()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>repeat</p>
+</li>
+<li><p>重复执行</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">cc</span><span class="selector-class">.tween</span>(this.node)</span><br><span class="line">    <span class="selector-class">.by</span>(<span class="number">1</span>, &#123; <span class="attribute">scale</span>: <span class="number">1</span> &#125;)</span><br><span class="line">    <span class="comment">// 对前一个 by 重复执行 10次</span></span><br><span class="line">    <span class="selector-class">.repeat</span>(<span class="number">10</span>)</span><br><span class="line">    <span class="comment">// 最后 node.scale === 11</span></span><br><span class="line">    <span class="selector-class">.start</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以这样用</span></span><br><span class="line"><span class="selector-tag">cc</span><span class="selector-class">.tween</span>(this.node)</span><br><span class="line">    <span class="selector-class">.repeat</span>(<span class="number">10</span>,</span><br><span class="line">        cc.tween().by(<span class="number">1</span>, &#123; <span class="attribute">scale</span>: <span class="number">1</span> &#125;)</span><br><span class="line">    )</span><br><span class="line">    <span class="selector-class">.start</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一直重复执行下去</span></span><br><span class="line"><span class="selector-tag">cc</span><span class="selector-class">.tween</span>(this.node)</span><br><span class="line">    <span class="selector-class">.by</span>(<span class="number">1</span>, &#123; <span class="attribute">scale</span>: <span class="number">1</span> &#125;)</span><br><span class="line">    <span class="selector-class">.repeatForever</span>()</span><br><span class="line">    <span class="selector-class">.start</span>()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>delay</p>
+</li>
+<li><p>延迟执行</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cc.tween(<span class="keyword">this</span>.node)</span><br><span class="line">    <span class="comment">// 延迟 1s</span></span><br><span class="line">    .delay(<span class="number">1</span>)</span><br><span class="line">    .to(<span class="number">1</span>, &#123; scale: <span class="number">2</span> &#125;)</span><br><span class="line">    <span class="comment">// 再延迟 1s</span></span><br><span class="line">    .delay(<span class="number">1</span>)</span><br><span class="line">    .to(<span class="number">1</span>, &#123; scale: <span class="number">3</span> &#125;)</span><br><span class="line">    .start()</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/01/10/Cocos Creator/38、cocos creator 之计时器/" class="pre-post btn btn-default" title='38、cocos creator 之计时器'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            38、cocos creator 之计时器</span>
+    </a>
+    
+    
+    <a href="/2019/01/09/Cocos Creator/36、cocos creator 之动作回调/" class="next-post btn btn-default" title='36、cocos creator 之动作回调'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            36、cocos creator 之动作回调</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cocos-creator-之缓动系统cc-tween"><span class="toc-text">cocos creator 之缓动系统cc.tween</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

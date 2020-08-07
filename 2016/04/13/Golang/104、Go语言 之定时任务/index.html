@@ -1,0 +1,551 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="定时任务格式
+
+
+字段名
+是否必须
+允许的值
+允许的特定字符
+
+
+
+秒(Seconds)
+是
+0-59
+* / , -
+
+
+分(Minute)
+是
+0-59
+* / , -
+
+
+时(Hours)...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    104、Go语言 之定时任务 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="104、Go语言 之定时任务">
+            
+            104、Go语言 之定时任务
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/13</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1577</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a><strong>定时任务</strong></h2><h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a><strong>格式</strong></h3><table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>是否必须</th>
+<th>允许的值</th>
+<th>允许的特定字符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>秒(Seconds)</td>
+<td>是</td>
+<td>0-59</td>
+<td>* / , -</td>
+</tr>
+<tr>
+<td>分(Minute)</td>
+<td>是</td>
+<td>0-59</td>
+<td>* / , -</td>
+</tr>
+<tr>
+<td>时(Hours)</td>
+<td>是</td>
+<td>0-23</td>
+<td>* / , -</td>
+</tr>
+<tr>
+<td>日(Day of month)</td>
+<td>是</td>
+<td>1-31</td>
+<td>* / , - ?</td>
+</tr>
+<tr>
+<td>月(Month)</td>
+<td>是</td>
+<td>1-12 或 JAN-DEC</td>
+<td>* / , -</td>
+</tr>
+<tr>
+<td>星期(Day of week)</td>
+<td>是</td>
+<td>0-6 或 SUM-SAT</td>
+<td>* / , - ?</td>
+</tr>
+</tbody></table>
+<h3 id="特殊字符说明"><a href="#特殊字符说明" class="headerlink" title="特殊字符说明"></a><strong>特殊字符说明</strong></h3><h4 id="星号（-）"><a href="#星号（-）" class="headerlink" title="星号（*）"></a><strong>星号（*）</strong></h4><p>星号表示cron表达式将匹配该字段的所有值，比如，在上面表达式’月’中使用星号，就表示每个月</p>
+<h4 id="斜线（-）"><a href="#斜线（-）" class="headerlink" title="斜线（/）"></a><strong>斜线（/）</strong></h4><p>斜杠用于描述范围的增量，比如’3-59/15’这个表达式在表示从现在的第三分钟开始和往后的每15分钟，到第59分钟为止。表现形式为”* \ / …”，等同于”N-MAX / m”，即在该字段范围内的增量。即从N开始，使用增量 m 直到 MAX 结束，它没有重复</p>
+<h4 id="逗号（-）"><a href="#逗号（-）" class="headerlink" title="逗号（,）"></a><strong>逗号（,）</strong></h4><p>逗号用于分隔列表中的项，比如，在上表的’星期几’中使用 “MON,WED,FRI” 表示星期一、星期三和星期五</p>
+<h4 id="连字符"><a href="#连字符" class="headerlink" title="连字符 (-)"></a><strong>连字符 (-)</strong></h4><p>连字符用于定义范围。例如，9-17表示包括上午9点至下午5点在内的每小时</p>
+<h4 id="问好"><a href="#问好" class="headerlink" title="问好 (?)"></a><strong>问好 (?)</strong></h4><p>表示不指定值，可以来代替 “*”</p>
+<h3 id="预定义的表达式"><a href="#预定义的表达式" class="headerlink" title="预定义的表达式"></a><strong>预定义的表达式</strong></h3><table>
+<thead>
+<tr>
+<th>输入</th>
+<th>描述</th>
+<th>等式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@yearly (or @annually)</td>
+<td>每年1月1日午夜跑步一次</td>
+<td>0 0 0 1 1 *</td>
+</tr>
+<tr>
+<td>@monthly</td>
+<td>每个月第一天的午夜跑一次</td>
+<td>0 0 0 1 * *</td>
+</tr>
+<tr>
+<td>@weekly</td>
+<td>每周周六的午夜运行一次</td>
+<td>0 0 0 * * 0</td>
+</tr>
+<tr>
+<td>@daily (or @midnight)</td>
+<td>每天午夜跑一次</td>
+<td>0 0 0 * * *</td>
+</tr>
+<tr>
+<td>@hourly</td>
+<td>每小时运行一次</td>
+<td>0 0 * * * *</td>
+</tr>
+</tbody></table>
+<h3 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a><strong>成员方法</strong></h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将 job 加入 Cron 中</span></span><br><span class="line"><span class="comment">// 如上所述，该方法只是简单的通过 FuncJob 类型强制转换 cmd，然后调用 AddJob 方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(<span class="built_in">c</span> *Cron)</span></span> <span class="type">AddFunc</span>(spec string, cmd <span class="function"><span class="keyword">func</span><span class="params">()</span></span>) error</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 job 加入 Cron 中</span></span><br><span class="line"><span class="comment">// 通过 Parse 函数解析 cron 表达式 spec 的到调度器实例(Schedule)，之后调用 c.Schedule 方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(<span class="built_in">c</span> *Cron)</span></span> <span class="type">AddJob</span>(spec string, cmd <span class="type">Job</span>) error</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当前 Cron 总所有 Entities 的快照</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(<span class="built_in">c</span> *Cron)</span></span> <span class="type">Entries</span>() []*<span class="type">Entry</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过两个参数实例化一个 Entity，然后加入当前 Cron 中</span></span><br><span class="line"><span class="comment">// 注意：如果当前 Cron 未运行，则直接将该 entity 加入 Cron 中；</span></span><br><span class="line"><span class="comment">// 否则，通过 add 这个成员 channel 将 entity 加入正在运行的 Cron 中</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(<span class="built_in">c</span> *Cron)</span></span> <span class="type">Schedule</span>(schedule <span class="type">Schedule</span>, cmd <span class="type">Job</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新启动一个 goroutine 运行当前 Cron</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(<span class="built_in">c</span> *Cron)</span></span> <span class="type">Start</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过给 stop 成员发送一个 struct&#123;&#125;&#123;&#125; 来停止当前 Cron，同时将 running 置为 false</span></span><br><span class="line"><span class="comment">// 从这里知道，stop 只是通知 Cron 停止，因此往 channel 发一个值即可，而不关心值是多少</span></span><br><span class="line"><span class="comment">// 所以，成员 stop 定义为空 struct</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(<span class="built_in">c</span> *Cron)</span></span> <span class="type">Stop</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><h4 id="示例一"><a href="#示例一" class="headerlink" title="示例一"></a><strong>示例一</strong></h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line"></span><br><span class="line">	<span class="string">"github.com/robfig/cron"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">c</span> := cron.<span class="type">New</span>()</span><br><span class="line"></span><br><span class="line">	<span class="built_in">c</span>.<span class="type">AddFunc</span>(<span class="string">"*/1 * * * * *"</span>, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		fmt.<span class="type">Println</span>(<span class="string">"every 1 seconds executing"</span>)</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="built_in">c</span>.<span class="type">Start</span>()</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">c</span>.<span class="type">Stop</span>()</span><br><span class="line"></span><br><span class="line">	select &#123;</span><br><span class="line">	<span class="keyword">case</span> &lt;-time.<span class="type">After</span>(time.<span class="type">Second</span> * <span class="number">10</span>):</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="示例二"><a href="#示例二" class="headerlink" title="示例二"></a><strong>示例二</strong></h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line"></span><br><span class="line">    <span class="string">"github.com/robfig/cron"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> TestJob <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t TestJob)</span> <span class="title">Run</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"testJob1..."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Test2Job <span class="keyword">struct</span> &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t Test2Job)</span> <span class="title">Run</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"testJob2..."</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//启动多个任务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    i := <span class="number">0</span></span><br><span class="line">    c := cron.New()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//AddFunc</span></span><br><span class="line">    spec := <span class="string">"*/5 * * * * ?"</span></span><br><span class="line"></span><br><span class="line">    c.AddFunc(spec, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        i++</span><br><span class="line">        log.Println(<span class="string">"cron running:"</span>, i)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//AddJob方法</span></span><br><span class="line">    c.AddJob(spec, TestJob&#123;&#125;)</span><br><span class="line">    c.AddJob(spec, Test2Job&#123;&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//启动计划任务</span></span><br><span class="line">    c.Start()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//关闭着计划任务, 但是不能关闭已经在执行中的任务.</span></span><br><span class="line">    <span class="keyword">defer</span> c.Stop()</span><br><span class="line">    <span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/13/Mysql/13、mysql 之比较函数和操作符/" class="pre-post btn btn-default" title='13、mysql 之比较函数和操作符'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            13、mysql 之比较函数和操作符</span>
+    </a>
+    
+    
+    <a href="/2016/04/12/Mysql/12、mysql 之安全等于判断NULL/" class="next-post btn btn-default" title='12、mysql 之安全等于判断NULL'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            12、mysql 之安全等于判断NULL</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#定时任务"><span class="toc-text">定时任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#格式"><span class="toc-text">格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊字符说明"><span class="toc-text">特殊字符说明</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#星号（-）"><span class="toc-text">星号（*）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#斜线（-）"><span class="toc-text">斜线（/）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#逗号（-）"><span class="toc-text">逗号（,）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连字符"><span class="toc-text">连字符 (-)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#问好"><span class="toc-text">问好 (?)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#预定义的表达式"><span class="toc-text">预定义的表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成员方法"><span class="toc-text">成员方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#示例一"><span class="toc-text">示例一</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#示例二"><span class="toc-text">示例二</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

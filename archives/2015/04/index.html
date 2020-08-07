@@ -1,0 +1,3265 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="稀土,Vue.js,微信小程序,Kotlin,RxJava,React Native,Wireshark,敏捷开发,Bootstrap,OKHttp,正则表达式,WebGL,Webpack,Docker,MVVM">
+
+
+<meta name="description" content="记录与分享笔记">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    归档：2015/4 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content ">
+                    <div id="main">
+    <div class="timebox">
+        <div class="timeline">
+            <ul>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                <h2>
+                    2015
+                </h2>
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        07<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/07/JavaScript/51、js android ios互相调用/" title="51、js android ios互相调用" target="_blank">
+                        51、js android ios互相调用</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        06<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/06/JavaScript/50、倒计时/" title="50、倒计时" target="_blank">
+                        50、倒计时</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        05<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/05/JavaScript/49、判断滚动到底部/" title="49、判断滚动到底部" target="_blank">
+                        49、判断滚动到底部</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        04<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/04/JavaScript/48、处理事件的一些兼容写法/" title="48、处理事件的一些兼容写法" target="_blank">
+                        48、处理事件的一些兼容写法</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        03<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/03/JavaScript/47、getElementsByClassName兼容/" title="47、getElementsByClassName兼容" target="_blank">
+                        47、getElementsByClassName兼容</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        02<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/02/JavaScript/46、在线执行与运行代码/" title="46、在线执行与运行代码" target="_blank">
+                        46、在线执行与运行代码</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        01<span>
+                            06月</span>
+                    </h3>
+                    <a href="/2015/06/01/JavaScript/45、移除dom/" title="45、移除dom" target="_blank">
+                        45、移除dom</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        31<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/31/JavaScript/44、动态添加样式表规则/" title="44、动态添加样式表规则" target="_blank">
+                        44、动态添加样式表规则</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        30<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/30/JavaScript/43、左滑删除(滑动删除)/" title="43、左滑删除(滑动删除)" target="_blank">
+                        43、左滑删除(滑动删除)</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        29<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/29/JavaScript/42、dom操作/" title="42、dom操作" target="_blank">
+                        42、dom操作</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        28<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/28/JavaScript/40、获取元素样式宽高/" title="40、获取元素样式宽高" target="_blank">
+                        40、获取元素样式宽高</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        27<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/27/JavaScript/39、对象url参数互转/" title="39、对象url参数互转" target="_blank">
+                        39、对象url参数互转</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        26<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/26/JavaScript/38、ifram加载完成判断/" title="38、ifram加载完成判断" target="_blank">
+                        38、ifram加载完成判断</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        25<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/25/JavaScript/37、判断用户是否安装广告拦截AdBlock/" title="37、判断用户是否安装广告拦截AdBlock" target="_blank">
+                        37、判断用户是否安装广告拦截AdBlock</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        24<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/24/JavaScript/36、实现简单的mvc/" title="36、实现简单的mvc" target="_blank">
+                        36、实现简单的mvc</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        23<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/23/JavaScript/35、使用 generator 模拟 async、await/" title="35、使用 generator 模拟 async、await" target="_blank">
+                        35、使用 generator 模拟 async、await</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        22<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/22/JavaScript/34、（页面状态监听）html5API实现手机后退键监听/" title="34、（页面状态监听）html5API实现手机后退键监听" target="_blank">
+                        34、（页面状态监听）html5API实现手机后退键监听</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        21<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/21/JavaScript/33、js实现图片cover显示/" title="33、js实现图片cover显示" target="_blank">
+                        33、js实现图片cover显示</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        20<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/20/JavaScript/32、requirejs main.js/" title="32、requirejs main.js" target="_blank">
+                        32、requirejs main.js</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        19<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/19/JavaScript/31、深拷贝/" title="31、深拷贝" target="_blank">
+                        31、深拷贝</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        18<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/18/JavaScript/30、监听div大小变化/" title="30、监听div大小变化" target="_blank">
+                        30、监听div大小变化</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        17<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/17/JavaScript/29、js下载文件/" title="29、js下载文件" target="_blank">
+                        29、js下载文件</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        16<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/16/JavaScript/28、创建数组方式/" title="28、创建数组方式" target="_blank">
+                        28、创建数组方式</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        15<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/15/JavaScript/27、类型判断/" title="27、类型判断" target="_blank">
+                        27、类型判断</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        14<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/14/JavaScript/26、截取html指定长度文本/" title="26、截取html指定长度文本" target="_blank">
+                        26、截取html指定长度文本</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        13<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/13/JavaScript/25、用于创建函数的库/" title="25、用于创建函数的库" target="_blank">
+                        25、用于创建函数的库</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        12<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/12/JavaScript/24、公共js的第一种写法/" title="24、公共js的第一种写法" target="_blank">
+                        24、公共js的第一种写法</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        11<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/11/JavaScript/22、实现双向数据绑定之vue版/" title="22、实现双向数据绑定之vue版" target="_blank">
+                        22、实现双向数据绑定之vue版</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        10<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/10/JavaScript/21、实现双向数据绑定之jquery/" title="21、实现双向数据绑定之jquery" target="_blank">
+                        21、实现双向数据绑定之jquery</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        09<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/09/JavaScript/20、base64编解码/" title="20、base64编解码" target="_blank">
+                        20、base64编解码</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        08<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/08/JavaScript/18、位移运算符/" title="18、位移运算符" target="_blank">
+                        18、位移运算符</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        07<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/07/JavaScript/17、DataModel之实现java中的bean/" title="17、DataModel之实现java中的bean" target="_blank">
+                        17、DataModel之实现java中的bean</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        06<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/06/JavaScript/16、跨域之隐藏iframe无刷新提交/" title="16、跨域之隐藏iframe无刷新提交" target="_blank">
+                        16、跨域之隐藏iframe无刷新提交</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        05<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/05/JavaScript/15、跨域之window.postMessage/" title="15、跨域之window.postMessage" target="_blank">
+                        15、跨域之window.postMessage</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        04<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/04/JavaScript/14、兼容every/" title="14、兼容every" target="_blank">
+                        14、兼容every</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        03<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/03/JavaScript/13、兼容some/" title="13、兼容some" target="_blank">
+                        13、兼容some</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        02<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/02/JavaScript/12、兼容filter/" title="12、兼容filter" target="_blank">
+                        12、兼容filter</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="hide">
+                    
+                    <h3>
+                        01<span>
+                            05月</span>
+                    </h3>
+                    <a href="/2015/05/01/JavaScript/11、兼容forEach/" title="11、兼容forEach" target="_blank">
+                        11、兼容forEach</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        30<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/30/JavaScript/10、兼容map/" title="10、兼容map" target="_blank">
+                        10、兼容map</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        29<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/29/JavaScript/8、获取远程图片宽高/" title="8、获取远程图片宽高" target="_blank">
+                        8、获取远程图片宽高</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        28<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/28/JavaScript/7、手机端键盘遮挡问题/" title="7、手机端键盘遮挡问题" target="_blank">
+                        7、手机端键盘遮挡问题</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        27<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/27/JavaScript/6、多环境下支持自己的js/" title="6、多环境下支持自己的js" target="_blank">
+                        6、多环境下支持自己的js</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        26<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/26/JavaScript/5、加减号（+-）的用法/" title="5、加减号（+-）的用法" target="_blank">
+                        5、加减号（+-）的用法</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        25<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/25/JavaScript/4、函数的申明与执行/" title="4、函数的申明与执行" target="_blank">
+                        4、函数的申明与执行</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        24<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/24/JavaScript/3、float计算精确度解决/" title="3、float计算精确度解决" target="_blank">
+                        3、float计算精确度解决</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        23<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/23/JavaScript/2、js淡隐淡出轮播图/" title="2、js淡隐淡出轮播图" target="_blank">
+                        2、js淡隐淡出轮播图</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                <li class="">
+                    
+                    <h3>
+                        22<span>
+                            04月</span>
+                    </h3>
+                    <a href="/2015/04/22/JavaScript/1、js实现无缝滚动轮播图/" title="1、js实现无缝滚动轮播图" target="_blank">
+                        1、js实现无缝滚动轮播图</a>
+                </li>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+                </main>
+                
+                    
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/search.js?rev=@@hash"></script>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

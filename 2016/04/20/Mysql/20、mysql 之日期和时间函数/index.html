@@ -1,0 +1,861 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之日期和时间函数
+
+
+名称
+描述
+
+
+
+ADDDATE()
+将时间值（间隔）添加到日期值
+
+
+ADDTIME()
+添加时间
+
+
+CONVERT_TZ()
+从一个时区转换到另一个时区
+...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    20、mysql 之日期和时间函数 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="20、mysql 之日期和时间函数">
+            
+            20、mysql 之日期和时间函数
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/20</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1570</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之日期和时间函数"><a href="#mysql-之日期和时间函数" class="headerlink" title="mysql 之日期和时间函数"></a><strong>mysql 之日期和时间函数</strong></h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ADDDATE()</td>
+<td>将时间值（间隔）添加到日期值</td>
+</tr>
+<tr>
+<td>ADDTIME()</td>
+<td>添加时间</td>
+</tr>
+<tr>
+<td>CONVERT_TZ()</td>
+<td>从一个时区转换到另一个时区</td>
+</tr>
+<tr>
+<td>CURDATE()</td>
+<td>返回当前日期</td>
+</tr>
+<tr>
+<td>CURRENT_DATE()， CURRENT_DATE</td>
+<td>同义词CURDATE（）</td>
+</tr>
+<tr>
+<td>CURRENT_TIME()， CURRENT_TIME</td>
+<td>CURTIME（）的同义词</td>
+</tr>
+<tr>
+<td>CURRENT_TIMESTAMP()， CURRENT_TIMESTAMP</td>
+<td>NOW（）的同义词</td>
+</tr>
+<tr>
+<td>CURTIME()</td>
+<td>返回当前时间</td>
+</tr>
+<tr>
+<td>DATE()</td>
+<td>提取日期或日期时间表达式的日期部分</td>
+</tr>
+<tr>
+<td>DATE_ADD()</td>
+<td>将时间值（间隔）添加到日期值</td>
+</tr>
+<tr>
+<td>DATE_FORMAT()</td>
+<td>格式化指定的日期</td>
+</tr>
+<tr>
+<td>DATE_SUB()</td>
+<td>从日期中减去一个时间值（间隔）</td>
+</tr>
+<tr>
+<td>DATEDIFF()</td>
+<td>减去两个日期</td>
+</tr>
+<tr>
+<td>DAY()</td>
+<td>DAYOFMONTH（）的同义词</td>
+</tr>
+<tr>
+<td>DAYNAME()</td>
+<td>返回星期几的名字</td>
+</tr>
+<tr>
+<td>DAYOFMONTH()</td>
+<td>返回月份的一天（0-31）</td>
+</tr>
+<tr>
+<td>DAYOFWEEK()</td>
+<td>返回参数的周日指数</td>
+</tr>
+<tr>
+<td>DAYOFYEAR()</td>
+<td>返回今年的一天（1-366）</td>
+</tr>
+<tr>
+<td>EXTRACT()</td>
+<td>提取日期的一部分</td>
+</tr>
+<tr>
+<td>FROM_DAYS()</td>
+<td>将日期编号转换为日期</td>
+</tr>
+<tr>
+<td>FROM_UNIXTIME()</td>
+<td>将Unix时间戳格式化为日期</td>
+</tr>
+<tr>
+<td>GET_FORMAT()</td>
+<td>返回日期格式字符串</td>
+</tr>
+<tr>
+<td>HOUR()</td>
+<td>提取小时</td>
+</tr>
+<tr>
+<td>LAST_DAY</td>
+<td>返回参数的月份的最后一天</td>
+</tr>
+<tr>
+<td>LOCALTIME()， LOCALTIME</td>
+<td>NOW（）的同义词</td>
+</tr>
+<tr>
+<td>LOCALTIMESTAMP， LOCALTIMESTAMP()</td>
+<td>NOW（）的同义词</td>
+</tr>
+<tr>
+<td>MAKEDATE()</td>
+<td>从年份和日期创建一个日期</td>
+</tr>
+<tr>
+<td>MAKETIME()</td>
+<td>从小时，分钟，秒创建时间</td>
+</tr>
+<tr>
+<td>MICROSECOND()</td>
+<td>从参数中返回微秒</td>
+</tr>
+<tr>
+<td>MINUTE()</td>
+<td>从参数中返回一分钟</td>
+</tr>
+<tr>
+<td>MONTH()</td>
+<td>从过去的日期中返回月份</td>
+</tr>
+<tr>
+<td>MONTHNAME()</td>
+<td>返回月份的名称</td>
+</tr>
+<tr>
+<td>NOW()</td>
+<td>返回当前日期和时间</td>
+</tr>
+<tr>
+<td>PERIOD_ADD()</td>
+<td>添加期间到一个年份</td>
+</tr>
+<tr>
+<td>PERIOD_DIFF()</td>
+<td>返回期间之间的月数</td>
+</tr>
+<tr>
+<td>QUARTER()</td>
+<td>从日期参数中返回季度</td>
+</tr>
+<tr>
+<td>SEC_TO_TIME()</td>
+<td>将秒转换为“HH：MM：SS”格式</td>
+</tr>
+<tr>
+<td>SECOND()</td>
+<td>返回第二个（0-59）</td>
+</tr>
+<tr>
+<td>STR_TO_DATE()</td>
+<td>将字符串转换为日期</td>
+</tr>
+<tr>
+<td>SUBDATE()</td>
+<td>用三个参数调用DATE_SUB（）的同义词</td>
+</tr>
+<tr>
+<td>SUBTIME()</td>
+<td>减去时间</td>
+</tr>
+<tr>
+<td>SYSDATE()</td>
+<td>返回函数执行的时间</td>
+</tr>
+<tr>
+<td>TIME()</td>
+<td>提取传递的表达式的时间部分</td>
+</tr>
+<tr>
+<td>TIME_FORMAT()</td>
+<td>格式为时间</td>
+</tr>
+<tr>
+<td>TIME_TO_SEC()</td>
+<td>返回转换为秒的参数</td>
+</tr>
+<tr>
+<td>TIMEDIFF()</td>
+<td>减去时间</td>
+</tr>
+<tr>
+<td>TIMESTAMP()</td>
+<td>使用单个参数，该函数返回日期或日期时间表达式; 有两个论点，即论据的总和</td>
+</tr>
+<tr>
+<td>TIMESTAMPADD()</td>
+<td>将时间间隔添加到日期时间表达式中</td>
+</tr>
+<tr>
+<td>TIMESTAMPDIFF()</td>
+<td>从日期时间表达式中减去一个时间间隔</td>
+</tr>
+<tr>
+<td>TO_DAYS()</td>
+<td>返回转换为天的日期参数</td>
+</tr>
+<tr>
+<td>TO_SECONDS()</td>
+<td>返回自Year 0以来转换为秒数的日期或日期时间参数</td>
+</tr>
+<tr>
+<td>UNIX_TIMESTAMP()</td>
+<td>返回一个Unix时间戳</td>
+</tr>
+<tr>
+<td>UTC_DATE()</td>
+<td>返回当前的UTC日期</td>
+</tr>
+<tr>
+<td>UTC_TIME()</td>
+<td>返回当前UTC时间</td>
+</tr>
+<tr>
+<td>UTC_TIMESTAMP()</td>
+<td>返回当前的UTC日期和时间</td>
+</tr>
+<tr>
+<td>WEEK()</td>
+<td>返回周数</td>
+</tr>
+<tr>
+<td>WEEKDAY()</td>
+<td>返回周日指数</td>
+</tr>
+<tr>
+<td>WEEKOFYEAR()</td>
+<td>返回日期的日历周（1-53）</td>
+</tr>
+<tr>
+<td>YEAR()</td>
+<td>归还年份</td>
+</tr>
+<tr>
+<td>YEARWEEK()</td>
+<td>返回一年和一周</td>
+</tr>
+</tbody></table>
+<h3 id="FROM-UNIXTIME"><a href="#FROM-UNIXTIME" class="headerlink" title="FROM_UNIXTIME"></a><strong>FROM_UNIXTIME</strong></h3><ul>
+<li>时间戳转日期字符串<figure class="highlight cos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT FROM_UNIXTIME('<span class="number">1579001518</span>') <span class="comment">// 2020-01-14 19:31:58</span></span><br><span class="line">select FROM_UNIXTIME(<span class="number">1545711900</span>,'<span class="built_in">%Y</span>-<span class="built_in">%m</span>-<span class="built_in">%d</span> <span class="built_in">%T</span>') <span class="comment">// 2018-12-25 12:25:00</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="DATE-FORMAT"><a href="#DATE-FORMAT" class="headerlink" title="DATE_FORMAT"></a><strong>DATE_FORMAT</strong></h3><table>
+<thead>
+<tr>
+<th>符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%a</td>
+<td>简称周日名（Sun.. Sat）</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>简称月名（Jan.. Dec）</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>月，数字（0.. 12）</td>
+</tr>
+<tr>
+<td>%D</td>
+<td>这个月的一天，英语后缀（0th， 1st，2nd， 3rd，…）</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>数字（00.. 31）</td>
+</tr>
+<tr>
+<td>%e</td>
+<td>数字（0.. 31）</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>微秒（000000.. 999999）</td>
+</tr>
+<tr>
+<td>%H</td>
+<td>小时（00.. 23）</td>
+</tr>
+<tr>
+<td>%h</td>
+<td>小时（01.. 12）</td>
+</tr>
+<tr>
+<td>%I</td>
+<td>小时（01.. 12）</td>
+</tr>
+<tr>
+<td>%i</td>
+<td>分钟，数字（00.. 59）</td>
+</tr>
+<tr>
+<td>%j</td>
+<td>一年中的某一天（001.. 366）</td>
+</tr>
+<tr>
+<td>%k</td>
+<td>小时（0.. 23）</td>
+</tr>
+<tr>
+<td>%l</td>
+<td>小时（1.. 12）</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>月份名称（January.. December）</td>
+</tr>
+<tr>
+<td>%m</td>
+<td>月，数字（00.. 12）</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>AM 要么 PM</td>
+</tr>
+<tr>
+<td>%r</td>
+<td>时间，12小时（hh:mm:ss后面 AM还是PM）</td>
+</tr>
+<tr>
+<td>%S</td>
+<td>秒（00.. 59）</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>秒（00.. 59）</td>
+</tr>
+<tr>
+<td>%T</td>
+<td>时间，24小时（hh:mm:ss）</td>
+</tr>
+<tr>
+<td>%U</td>
+<td>周（00.. 53），星期日是一周中的第一天; WEEK()模式0</td>
+</tr>
+<tr>
+<td>%u</td>
+<td>星期（00.. 53），星期一是星期的第一天; WEEK()模式1</td>
+</tr>
+<tr>
+<td>%V</td>
+<td>周（01.. 53），星期日是一周中的第一天; WEEK()模式2; 使用%X</td>
+</tr>
+<tr>
+<td>%v</td>
+<td>星期（01.. 53），星期一是星期的第一天; WEEK()模式3; 使用%x</td>
+</tr>
+<tr>
+<td>%W</td>
+<td>平日名称（Sunday.. Saturday）</td>
+</tr>
+<tr>
+<td>%w</td>
+<td>星期几（0星期日.. 6=星期六）</td>
+</tr>
+<tr>
+<td>%X</td>
+<td>星期日是一周中的第一天的星期几，数字，四位数; 使用%V</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>星期几，星期一是一周中的第一天，数字，四位数; 使用%v</td>
+</tr>
+<tr>
+<td>%Y</td>
+<td>年份，数字，四位数字</td>
+</tr>
+<tr>
+<td>%y</td>
+<td>年份，数字（两位数字）</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>一个文字%字符</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>x，对于上面没有列出的任何 “ x”</td>
+</tr>
+<tr>
+<td><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT DATE_FORMAT('<span class="number">2009-10-04</span> 22:23:00', '%W %M %Y');</span><br><span class="line">        -&gt; 'Sunday October <span class="number">2009</span>'</span><br><span class="line">mysql&gt; SELECT DATE_FORMAT('<span class="number">2007-10-04</span> 22:23:00', '%H:%i:%s');</span><br><span class="line">        -&gt; '22:23:00'</span><br><span class="line">mysql&gt; SELECT DATE_FORMAT('<span class="number">1900-10-04</span> 22:23:00',</span><br><span class="line">    -&gt;                 '%D %y %a %d %m %b %j');</span><br><span class="line">        -&gt; '4th 00 Thu 04 10 Oct 277'</span><br><span class="line">mysql&gt; SELECT DATE_FORMAT('<span class="number">1997-10-04</span> 22:23:00',</span><br><span class="line">    -&gt;                 '%H %k %I %r %T %S %w');</span><br><span class="line">        -&gt; '22 22 10 10:23:00 PM 22:23:00 00 6'</span><br><span class="line">mysql&gt; SELECT DATE_FORMAT('<span class="number">1999-01-01</span>', '%X %V');</span><br><span class="line">        -&gt; '<span class="number">1998</span> 52'</span><br><span class="line">mysql&gt; SELECT DATE_FORMAT('<span class="number">2006-06-00</span>', '%d');</span><br><span class="line">        -&gt; '00'</span><br></pre></td></tr></table></figure></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="NOW"><a href="#NOW" class="headerlink" title="NOW"></a><strong>NOW</strong></h3><ul>
+<li>当前日期时间<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NOW</span>(); // 2020-01-14 19:36:34</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="UNIX-TIMESTAMP"><a href="#UNIX-TIMESTAMP" class="headerlink" title="UNIX_TIMESTAMP"></a><strong>UNIX_TIMESTAMP</strong></h3><ul>
+<li>日期转时间戳<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">select</span> <span class="title">UNIX_TIMESTAMP</span>(<span class="params"><span class="string">'2018-12-25 12:25:00'</span></span>)</span>; <span class="comment">// 1545711900</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/21/Mysql/21、mysql 之 Group By Having分组查询/" class="pre-post btn btn-default" title='21、mysql 之 Group By Having分组查询'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            21、mysql 之 Group By Having分组查询</span>
+    </a>
+    
+    
+    <a href="/2016/04/19/Mysql/19、mysql 之数字函数和操作符/" class="next-post btn btn-default" title='19、mysql 之数字函数和操作符'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            19、mysql 之数字函数和操作符</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之日期和时间函数"><span class="toc-text">mysql 之日期和时间函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FROM-UNIXTIME"><span class="toc-text">FROM_UNIXTIME</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DATE-FORMAT"><span class="toc-text">DATE_FORMAT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NOW"><span class="toc-text">NOW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UNIX-TIMESTAMP"><span class="toc-text">UNIX_TIMESTAMP</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

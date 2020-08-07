@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之依赖注入inject库前面己经对反射的基本概念和相关 API 进行了讲解，本节结合一个非常著名的包 inject 展开讲解，inject 借助反射提供了对 2 种类型实体的注入：函数...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    92、Go语言 之依赖注入inject库 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="92、Go语言 之依赖注入inject库">
+            
+            92、Go语言 之依赖注入inject库
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/01</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1589</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之依赖注入inject库"><a href="#Go语言-之依赖注入inject库" class="headerlink" title="Go语言 之依赖注入inject库"></a><strong>Go语言 之依赖注入inject库</strong></h2><p>前面己经对反射的基本概念和相关 API 进行了讲解，本节结合一个非常著名的包 inject 展开讲解，inject 借助反射提供了对 2 种类型实体的注入：函数和结构。Go 著名的 Web 框架 martini 的依赖注入使用的就是这个包。</p>
+<h3 id="依赖注入和控制反转"><a href="#依赖注入和控制反转" class="headerlink" title="依赖注入和控制反转"></a><strong>依赖注入和控制反转</strong></h3><p>在介绍 inject 之前先简单介绍“依赖注入”和“控制反转”的概念。正常情况下，对函数或方法的调用是调用方的主动直接行为，调用方清楚地知道被调的函数名是什么，参数有哪些类型，直接主动地调用；包括对象的初始化也是显式地直接初始化。</p>
+<p>所谓的“控制反转”就是将这种主动行为变成间接的行为，主调方不是直接调用函数或对象，而是借助框架代码进行间接的调用和初始化，这种行为我们称为“控制反转”，控制反转可以解藕调用方和被调方。</p>
+<p>“库”和“框架”能很好地解释“控制反转”的概念。一般情况下，使用库的程序是程序主动地调用库的功能，但使用框架的程序常常由框架驱动整个程序，在框架下写的业务代码是被框架驱动的，这种模式就是“控制反转”。</p>
+<p>“依赖注入”是实现“控制反转”的一种方法，如果说“控制反转”是一种设计思想，那么“依赖注入”就是这种思想的一种实现，通过注入的参数或实例的方式实现控制反转。如果没有特殊说明，我们通常说的“依赖注入”和“控制反转”是一个东西。</p>
+<p>大家可能会疑惑，为什么不直接光明正大地调用，而非要拐弯抹角地进行间接调用，控制反转的价值在哪里呢？一句话“解耦”，有了控制反转就不需要调用者将代码写死，可以让控制反转的框架代码读取配置，动态地构建对象，这一点在 Java 的 Spring 框架中体现得尤为突出。</p>
+<p>控制反转是解决复杂问题一种方法，特别是在 Web 框架中为路由和中间件的灵活注入提供了很好的方法。但是软件开发没有银弹，当问题足够复杂时，应该考虑的是服务拆分，而不是把复杂的逻辑用一个“大盒子”装起来，看起来干净了，但也只是看起来干净，实现还是很复杂，这也是使用框架带来的副作用。</p>
+<h3 id="inject-实践"><a href="#inject-实践" class="headerlink" title="inject 实践"></a><strong>inject 实践</strong></h3><p>inject 是 Go语言依赖注入的实现，它实现了对结构（struct）和函数的依赖注入。在介绍具体实现之前，先来想一个问题，如何通过一个字符串类型的函数名调用函数。Go 没有 Java 中的 Class.forName 方法可以通过类名直接构造对象，所以这种方法是行不通的，能想到的方法就是使用 map 实现一个字符串到函数的映射，代码如下：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func fl() &#123;</span><br><span class="line"><span class="code">    println ("fl")</span></span><br><span class="line">&#125;</span><br><span class="line">func f2 () &#123;</span><br><span class="line"><span class="code">    println ("f2")</span></span><br><span class="line">&#125;</span><br><span class="line">funcs := make(map[string] func ())</span><br><span class="line">funcs ["fl"] = fl</span><br><span class="line">funcs ["f2"] = fl</span><br><span class="line">funcs [<span class="string">"fl"</span>](<span class="link"></span>)</span><br><span class="line">funcs [<span class="string">"f2"</span>](<span class="link"></span>)</span><br></pre></td></tr></table></figure>
+
+<p>但是这有个缺陷，就是 map 的 Value 类型被写成 func()，不同参数和返回值的类型的函数并不能通用。将 map 的 Value 定义为 interface{} 空接口类型是否能解决该问题？可以解决该问题，但需要借助类型断言或反射来实现，通过类型断言实现等于又绕回去了，反射是一种可行的办法。inject 包借助反射实现函数的注入调用，下面通过一个例子来看一下。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"github.com/codegangsta/inject"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">type</span> Sl <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line"><span class="keyword">type</span> S2 <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Format</span><span class="params">(name <span class="keyword">string</span>, company S1, level S2, age <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"name ＝ %s, company=%s, level=%s, age ＝ %d!\n"</span>, name, company, level, age)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">//控制实例的创建</span></span><br><span class="line">    inj := inject.New()</span><br><span class="line">    <span class="comment">//实参注入</span></span><br><span class="line">    inj.Map(<span class="string">"tom"</span>)</span><br><span class="line">    inj.MapTo(<span class="string">"tencent"</span>, (*S1) (<span class="literal">nil</span>))</span><br><span class="line">    inj.MapTo(<span class="string">"T4"</span>, (*S2) (<span class="literal">nil</span>))</span><br><span class="line">    inj.Map(<span class="number">23</span>)</span><br><span class="line">    <span class="comment">//函数反转调用</span></span><br><span class="line">    inj.Invoke(Format)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">name</span>=tom, <span class="attribute">cornpany</span>=tencent, <span class="attribute">level</span>=T4, <span class="attribute">age</span>=23!</span><br></pre></td></tr></table></figure>
+
+<p>可见 inject 提供了一种注入参数调用函数的通用功能，inject.New() 相当于创建了一个控制实例，由其来实现对函数的注入调用。inject 包不但提供了对函数的注入，还实现了对 struct 类型的注入，看下一个示例。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"github.com/codegangsta/inject"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">type</span> S1 <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line"><span class="keyword">type</span> S2 <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line"><span class="keyword">type</span> Staff <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="keyword">string</span> <span class="string">`inject`</span></span><br><span class="line">    Company S1 <span class="string">`inject`</span></span><br><span class="line">    Level S2 <span class="string">`inject`</span></span><br><span class="line">    Age <span class="keyword">int</span> <span class="string">`inject`</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">//创建被注入实例</span></span><br><span class="line">    s := Staff &#123;&#125;</span><br><span class="line">    <span class="comment">//控制实例的创建</span></span><br><span class="line">    inj :＝ inject.New()</span><br><span class="line">    <span class="comment">//初始化注入值</span></span><br><span class="line">    inj.Map (<span class="string">"tom"</span>)</span><br><span class="line">    inj.MapTo (<span class="string">"tencent"</span>, (*S1) (<span class="literal">nil</span>))</span><br><span class="line">    inj.MapTo (<span class="string">"T4"</span>,(＊S2) (<span class="literal">nil</span>))</span><br><span class="line">    inj.Map(<span class="number">23</span>)</span><br><span class="line">    <span class="comment">//实现对 struct 注入</span></span><br><span class="line">    inj.Apply (&amp;s)</span><br><span class="line">    <span class="comment">//打印结果</span></span><br><span class="line">    fmt.Printf (<span class="string">"s ＝ %v\n"</span>, s)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">s</span> = &#123;tom tencent T4 <span class="number">23</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 inject 提供了一种对结构类型的通用注入方法。至此，我们仅仅从宏观层面了解 iniect 能做什么，下面从源码实现角度来分析 inject。</p>
+<h3 id="inject-原理分析"><a href="#inject-原理分析" class="headerlink" title="inject 原理分析"></a><strong>inject 原理分析</strong></h3><p>inject 包只有 178 行代码（包括注释），却提供了一个完美的依赖注入实现，下面采用自顶向下的方法分析其实现原理。<br>入口函数 New<br>inject.New() 函数构建一个具体类型 injector 实例作为内部注入引擎，返回的是一个 Injector 类型的接口。这里也体现了一种面向接口的设计思想：对外暴露接口方法，对外隐藏内部实现。示例如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">New</span><span class="params">()</span></span> <span class="type">Injector</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;injector &#123;</span><br><span class="line">        values : make(<span class="built_in">map</span>[<span class="built_in">reflect</span>.<span class="type">Type</span>)<span class="built_in">reflect</span>.<span class="type">Value</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接口设计<br>下面来看一下具体的接口设计，Injector 暴露了所有方法给外部使用者，这些方法又可以归纳为两大类。第一类方法是对参数注入进行初始化，将结构类型的字段的注入和函数的参数注入统一成一套方法实现；第二类是专用注入实现，分别是生成结构对象和调用函数方法。</p>
+<p>在代码设计上，inject 将接口的粒度拆分得很细，将多个接口组合为一个大的接口，这也符合 Go 的 Duck 类型接口设计的原则。injector 按照上述方法拆分为三个接口。示例如下：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">Injector</span> interface &#123;</span><br><span class="line">    //抽象生成注入结构实例的接口</span><br><span class="line">    <span class="type">Applicator</span></span><br><span class="line">    //抽象函数调用的接口</span><br><span class="line">    <span class="type">Invoker</span></span><br><span class="line">    //抽象注入参数的接口</span><br><span class="line">    <span class="type">TypeMapper</span></span><br><span class="line">    //实现一个注入实例链， 下游的能覆盖上游的类型</span><br><span class="line">    <span class="type">SetParent(Injector)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>TypeMapper 接口实现对注入参数操作的汇总，包括设置和查找相关的类型和值的方法。注意：无论函数的实参，还是结构的字段，在 inject 内部，都存放在 map[reflect.Type]reflect.Value 类型的 map 里面，具体实现在后面介绍 injector 时会讲解。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">type TypeMapper <span class="keyword">interface</span> &#123;</span><br><span class="line">    <span class="comment">//如下三个方法是设直参数</span></span><br><span class="line">    Map(<span class="keyword">interface</span>&#123;&#125;) TypeMapper</span><br><span class="line">    MapTo(<span class="keyword">interface</span>&#123;&#125;, <span class="keyword">interface</span>&#123;&#125;) TypeMapper</span><br><span class="line">    Set(<span class="built_in">ref</span>lect.Type, <span class="built_in">ref</span>lect.Value) TypeMapper</span><br><span class="line">    <span class="comment">//查找参数</span></span><br><span class="line">    Get(<span class="built_in">ref</span>lect.Type) <span class="built_in">ref</span>lect.Value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Invoker 接口中 Invoke 方法是对被注入实参函数的调用：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Invoker<span class="built_in"> interface </span>&#123;</span><br><span class="line">    Invoke (interface&#123;&#125;) ([]reflect.Value, error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Applicator 接口中 Apply 方法实现对结构的注入：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Applicator<span class="built_in"> interface </span>&#123;</span><br><span class="line">    Apply(interface&#123;&#125;) error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面梳理了整个 inject 包的处理流程：<br>通过 inject.New() 创建注入引擎，注入引擎被隐藏，返回的是 Injector 接口类型变量。<br>调用 TypeMapper 接口（Injector 内嵌 TypeMapper）的方法注入 struct 的字段值或函数的实参值。<br>调用 Invoker 方法执行被注入的函数，或者调用 Applicator 接口方法获得被注入后的结构实例。</p>
+<h4 id="内部实现"><a href="#内部实现" class="headerlink" title="内部实现"></a><strong>内部实现</strong></h4><p>下面具体看一下 inject 内部注入引擎 injector 的实现，首先看一下 injector 的数据结构。</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> injector struct &#123;</span><br><span class="line">    values map[reflect.<span class="type">Type</span>]reflect.<span class="type">Value</span></span><br><span class="line">    parent <span class="type">Injector</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>values 里面存放的可以是被注入 struct 的字段类型和值，也可以是函数实参的类型和值。注意：values 是以 reflect.Type 为 Key 的 map，如果一个结构的字段类型相同，则后面注入的参数会覆盖前面的参数，规避办法是使用 MapTo 方法，通过抽象出一个接口类型来避免被覆盖。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func (<span class="selector-tag">i</span> *injector) MapTo (val interface&#123;&#125;, ifacePtr interface&#123;&#125;) TypeMapper &#123;</span><br><span class="line">    <span class="selector-tag">i</span><span class="selector-class">.values</span>[InterfaceOf(ifacePtr)] = reflect<span class="selector-class">.ValueOf</span> (val)</span><br><span class="line">    return i</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>injector 里面的 parent 的作用是实现多个注入引擎，其构成了一个链。</p>
+<p>下面重点分析 injector 对函数的注入实现。示例如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(inj *injector)</span> <span class="title">Invoke</span><span class="params">(f <span class="keyword">interface</span>&#123;&#125;)</span> <span class="params">([]reflect.Value, error)</span></span> &#123;</span><br><span class="line">    <span class="comment">//获取函数类型的 Type</span></span><br><span class="line">    t := reflect.TypeOf(f)</span><br><span class="line">    <span class="comment">//构造一个存放函数实参 Value 值的数纽</span></span><br><span class="line">    <span class="keyword">var</span> in = <span class="built_in">make</span>([]reflect.Value, t.NumIn())</span><br><span class="line">    <span class="comment">//使用反射获取函数实参 reflect.Type，逐个去 injector 中查找注入的 Value 值</span></span><br><span class="line">    <span class="keyword">for</span> i := O; i &lt; t.NumIn(); i++ &#123;</span><br><span class="line">        argType := t.In(i)</span><br><span class="line">        val := inj.Get(argType)</span><br><span class="line">        <span class="keyword">if</span> !val.IsValid() &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span>, fmt.Errorf(<span class="string">"Value not found for type %v"</span>, argType)</span><br><span class="line">        &#125;</span><br><span class="line">        in[i] = val</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//反射调用函数</span></span><br><span class="line">    <span class="keyword">return</span> reflect.ValueOf(f).Call(in), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>inject 对函数注入调用实现很简洁，就是从 injector 里面获取函数实参，然后调用函数。</p>
+<p>通过对 inject 包的分析，认识到其“短小精悍”、功能强大，这些实现的基础是依靠反射。但同时注意到包含反射的代码相对来说复杂难懂，虽然 inject 的实现只有短短 200 行代码，但阅读起来并不是很流畅。所以说反射是一把双刃剑，好用但代码不好读。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/01/Mysql/1、mysql 之启动、停止、重启服务/" class="pre-post btn btn-default" title='1、mysql 之启动、停止、重启服务'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            1、mysql 之启动、停止、重启服务</span>
+    </a>
+    
+    
+    <a href="/2016/03/31/Golang/91、Go语言 之通过反射reflect调用函数/" class="next-post btn btn-default" title='91、Go语言 之通过反射reflect调用函数'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            91、Go语言 之通过反射reflect调用函数</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之依赖注入inject库"><span class="toc-text">Go语言 之依赖注入inject库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖注入和控制反转"><span class="toc-text">依赖注入和控制反转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#inject-实践"><span class="toc-text">inject 实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#inject-原理分析"><span class="toc-text">inject 原理分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#内部实现"><span class="toc-text">内部实现</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

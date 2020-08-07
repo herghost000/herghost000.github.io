@@ -1,0 +1,532 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Cocos Creator">
+
+
+<meta name="description" content="cocos creator 之动画系统Cocos Creator的动画系统除了基础的平移动画、旋转动画、缩放动画和逐帧动画(又名序列帧动画)以外,还支持在动画过程修改任意节点组件的组件属性值,以...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    39、cocos creator 之动画系统 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="39、cocos creator 之动画系统">
+            
+            39、cocos creator 之动画系统
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Cocos-Creator/">Cocos Creator</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Cocos-Creator/">Cocos Creator</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/01/10</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                575</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="cocos-creator-之动画系统"><a href="#cocos-creator-之动画系统" class="headerlink" title="cocos creator 之动画系统"></a><strong>cocos creator 之动画系统</strong></h2><p>Cocos Creator的动画系统除了基础的平移动画、旋转动画、缩<br>放动画和逐帧动画(又名序列帧动画)以外,还支持在动画过程修改<br>任意节点组件的组件属性值,以及任意编辑时间曲线和移动轨迹编辑<br>等,实现无代码化高效、细腻的动画创作与修改。</p>
+<h3 id="动画系统与动作系统区别"><a href="#动画系统与动作系统区别" class="headerlink" title="动画系统与动作系统区别"></a><strong>动画系统与动作系统区别</strong></h3><ul>
+<li>动作系统针对游戏运行时才能确定</li>
+<li>动画系统针对固定动画，比如游戏开始一个小方块移动到屏幕中间</li>
+</ul>
+<h3 id="动画编辑器"><a href="#动画编辑器" class="headerlink" title="动画编辑器"></a><strong>动画编辑器</strong></h3><ul>
+<li>动画组件: Animation组件,动画同样也是组件,需要被添加到需要动画控制的节点上</li>
+<li>动画剪辑: Clip文件,动画的保存文件。动画组件播放的内容保存至动画剪辑。</li>
+<li>动画编辑器: 动画编辑器是动画剪辑属性检查器的延伸,是用来编辑动画剪辑的唯一手段。</li>
+</ul>
+<p><strong>动画组件控制节点的子节点时,子节点不可以重名,否则将只能控制同名子节点中第一个</strong></p>
+<h3 id="动画编辑器界面"><a href="#动画编辑器界面" class="headerlink" title="动画编辑器界面"></a><strong>动画编辑器界面</strong></h3><p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zkmR8MJ6F4gXzHrZ9QtiEEGN4qCWyicBRjcSpfLKAE1g5X4N5RJn3QL1kCBgDqJKDg!!/b&bo=jwNTAQAAAAADB*w!&rf=viewer_4" alt="image"></p>
+<ul>
+<li>按钮控制区: 动画编辑器常用功能按钮,从左至右依次是“开始<br>编辑按钮″”返回第一帧按钮″”上一帧按钮″‘播放、暂停按钮<br>下一帧按钮″“新建动画剪辑按钮”和“插入动画事件按钮”。</li>
+<li>时间轴与自定义事件: 显示时间,时间表示格式为“秒:帧”,比<br>如时间显示“1:05″代表1秒零5帧,具体时间与帧速率有关。右侧部分可用鼠标滚轮缩放时间比例。自定义事件也显示在此</li>
+<li>节点区: 动画剪辑需要控制的节点。这里是以动画组件所依附的节点为根节点。选中节点,下方属性区会显示该节点对应需要控制的属性。</li>
+<li>属性区: 动画控制属性。动画控制其实际控制的内容是节点属性<br>或节点上组件属性,如位置、旋转或缩放等。在节点区选中节点<br>后,在属性区添加或修改相应属性。</li>
+<li>帧预览区: 展示每个节点在各个时间段是否有关键帧。光标移至<br>帧预览区,可按住“空格”键,按住鼠标左键拖曳可左右移动帧<br>预览区。</li>
+<li>关键帧区: 展示每个属性的关键帧,通过点击选中的关键帧进行<br>修改。光标移至关键帧区,可按住“空格″键,按住鼠标左键拖<br>曳可左右移动关键帧区</li>
+<li>动画剪辑属性: 动画剪辑的基本属性,包括 Sample(帧速率)<br>即每秒动画帧数,默认为60帧秒,可以和游戏帧速率不一致;<br>Speed(播放速度),正常速度的倍数,默认是1; Duration(持<br>续时间),当前动画剪辑在速度为1时持续时间; Real Time(真<br>实时间),动画剪辑从开始播放到结束真正结束时间,播放速度<br>会计算在内; Wrap Mode(循环模式),不循环、不断循环、来<br>回往复等方式</li>
+</ul>
+<h3 id="编辑动画"><a href="#编辑动画" class="headerlink" title="编辑动画"></a><strong>编辑动画</strong></h3><ol>
+<li>在任何一个组件上添加Animation组件</li>
+<li>点击动画编辑器</li>
+<li>点击新建 Clip 文件</li>
+<li>点击左上角打开编辑模式</li>
+<li>点击属性列表 Add Property</li>
+<li>选择y</li>
+<li>拖动预览时间轴到0</li>
+<li>在属性列表区点击y属性右侧菜单按钮选择插入关键帧</li>
+<li>拖动预览时间轴到1:00</li>
+<li>属性检查器区域修改节点y属性值</li>
+<li>你会看到帧预览区0为一个蓝色⚪点，1:00为蓝色⚪，0到1:00之间则有一条蓝色柱线连接(补间连线)</li>
+<li>拖动预览时间轴从0到1:00，你会看到动画效果</li>
+</ol>
+<h3 id="编辑逐帧动画"><a href="#编辑逐帧动画" class="headerlink" title="编辑逐帧动画"></a><strong>编辑逐帧动画</strong></h3><p>在cc.Sprite.spriteFrame属性轨道的合适时间位置添加<br>关键帧。逐帧动画的关键帧间隔通常—致,并且间隔最短不低于1帧<br>所用时间,最长不超过1/12秒(5帧)(人眼视觉残像保留时间)。</p>
+<h4 id="必备资源-点我下载图集"><a href="#必备资源-点我下载图集" class="headerlink" title="必备资源 点我下载图集"></a><strong>必备资源</strong> <a href="https://github.com/cocos-creator/example-cases/blob/master/assets/res/atlas/sheep.png" target="_blank" rel="noopener">点我下载图集</a></h4><p>下面实现官方小山羊奔跑的逐帧动画</p>
+<ol>
+<li>新建Sprite精灵组件并在上面添加Animation组件</li>
+<li>点击动画编辑器</li>
+<li>点击新建 Clip 文件</li>
+<li>点击左上角打开编辑模式</li>
+<li>点击属性列表 Add Property</li>
+<li>选择cc.Sprite.spriteFrame</li>
+<li>拖动预览时间轴到0</li>
+<li>在属性列表区点击cc.Sprite.spriteFrame属性右侧菜单按钮选择插入关键帧</li>
+<li>将图集中的sheep_run_0移入到Sprite组件上的Sprite Frame属性上</li>
+<li>拖动预览时间轴到0:10</li>
+<li>将图集中的sheep_run_1移入到Sprite组件上的Sprite Frame属性上</li>
+<li>拖动预览时间轴到0:20</li>
+<li>将图集中的sheep_run_2移入到Sprite组件上的Sprite Frame属性上</li>
+<li>拖动预览时间轴到0:30</li>
+<li>将图集中的sheep_run_3移入到Sprite组件上的Sprite Frame属性上</li>
+<li>拖动预览时间轴到0:40</li>
+<li>将图集中的sheep_run_3移入到Sprite组件上的Sprite Frame属性上</li>
+<li>勾选WrapMode为Loop</li>
+<li>将Clip 文件移动到Animation组件上的Default Clip属性上</li>
+<li>勾选Animation组件上的Play On Load</li>
+<li>查看效果</li>
+</ol>
+<h3 id="非均速动画"><a href="#非均速动画" class="headerlink" title="非均速动画"></a><strong>非均速动画</strong></h3><p>双击补间连线可以看到编辑窗口，可以选择许多的预设曲线或自定义，这里没什么好说的了</p>
+<h3 id="动画事件"><a href="#动画事件" class="headerlink" title="动画事件"></a><strong>动画事件</strong></h3><ol>
+<li>拖动预览时间轴到你想触发事件的位置</li>
+<li>点击左上角按钮区插入帧事件</li>
+<li>帧预览区上方出现白色小矩形</li>
+<li>双击白色小矩形并添加触发事件的名称，支持传入参数。</li>
+<li>当事件触发时，会遍历此节点所有组件的所有方法以匹配。</li>
+</ol>
+<h3 id="动态注册动画事件"><a href="#动态注册动画事件" class="headerlink" title="动态注册动画事件"></a><strong>动态注册动画事件</strong></h3><p>目前支持的回调事件有：</p>
+<ul>
+<li>play : 开始播放时</li>
+<li>stop : 停止播放时</li>
+<li>pause : 暂停播放时</li>
+<li>resume : 恢复播放时</li>
+<li>lastframe : 假如动画循环次数大于 1，当动画播放到最后一帧时</li>
+<li>finished : 动画播放完成时</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> animation = <span class="keyword">this</span>.node.getComponent(cc.Animation);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册</span></span><br><span class="line">animation.on(<span class="string">'play'</span>,      <span class="keyword">this</span>.onPlay,        <span class="keyword">this</span>);</span><br><span class="line">animation.on(<span class="string">'stop'</span>,      <span class="keyword">this</span>.onStop,        <span class="keyword">this</span>);</span><br><span class="line">animation.on(<span class="string">'lastframe'</span>, <span class="keyword">this</span>.onLastFrame,   <span class="keyword">this</span>);</span><br><span class="line">animation.on(<span class="string">'finished'</span>,  <span class="keyword">this</span>.onFinished,    <span class="keyword">this</span>);</span><br><span class="line">animation.on(<span class="string">'pause'</span>,     <span class="keyword">this</span>.onPause,       <span class="keyword">this</span>);</span><br><span class="line">animation.on(<span class="string">'resume'</span>,    <span class="keyword">this</span>.onResume,      <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 取消注册</span></span><br><span class="line">animation.off(<span class="string">'play'</span>,      <span class="keyword">this</span>.onPlay,        <span class="keyword">this</span>);</span><br><span class="line">animation.off(<span class="string">'stop'</span>,      <span class="keyword">this</span>.onStop,        <span class="keyword">this</span>);</span><br><span class="line">animation.off(<span class="string">'lastframe'</span>, <span class="keyword">this</span>.onLastFrame,   <span class="keyword">this</span>);</span><br><span class="line">animation.off(<span class="string">'finished'</span>,  <span class="keyword">this</span>.onFinished,    <span class="keyword">this</span>);</span><br><span class="line">animation.off(<span class="string">'pause'</span>,     <span class="keyword">this</span>.onPause,       <span class="keyword">this</span>);</span><br><span class="line">animation.off(<span class="string">'resume'</span>,    <span class="keyword">this</span>.onResume,      <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对单个 cc.AnimationState 注册回调</span></span><br><span class="line"><span class="keyword">var</span> anim1 = animation.getAnimationState(<span class="string">'anim1'</span>);</span><br><span class="line">anim1.on(<span class="string">'lastframe'</span>,    <span class="keyword">this</span>.onLastFrame,      <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="播放-暂停-恢复-停止"><a href="#播放-暂停-恢复-停止" class="headerlink" title="播放 暂停 恢复 停止"></a><strong>播放 暂停 恢复 停止</strong></h3><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">var anim = this.getComponent(cc.Animation);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果没有指定播放哪个动画，并且有设置 defaultClip 的话，则会播放 defaultClip 动画</span></span><br><span class="line">anim.<span class="keyword">play</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定播放 test 动画</span></span><br><span class="line">anim.<span class="keyword">play</span>(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定从 1s 开始播放 test 动画</span></span><br><span class="line">anim.<span class="keyword">play</span>(<span class="string">'test'</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 play 接口播放一个动画时，如果还有其他的动画正在播放，则会先停止其他动画</span></span><br><span class="line">anim.<span class="keyword">play</span>(<span class="string">'test2'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定暂停 test 动画</span></span><br><span class="line">anim.<span class="keyword">pause</span>(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 暂停所有动画</span></span><br><span class="line"><span class="comment">// anim.pause();</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定恢复 test 动画</span></span><br><span class="line">anim.resume(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 恢复所有动画</span></span><br><span class="line"><span class="comment">// anim.resume();</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定停止 test 动画</span></span><br><span class="line">anim.stop(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 停止所有动画</span></span><br><span class="line"><span class="comment">// anim.stop();</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置 test 动画的当前播放时间为 1s</span></span><br><span class="line">anim.setCurrentTime(<span class="number">1</span>, <span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置所有动画的当前播放时间为 1s</span></span><br><span class="line"><span class="comment">// anim.setCurrentTime(1);</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="同时播放多个动画"><a href="#同时播放多个动画" class="headerlink" title="同时播放多个动画"></a><strong>同时播放多个动画</strong></h3><p>Animation 是支持同时播放多个动画的，播放不同的动画并不会影响其他的动画的播放状态，这对于做一些复合动画比较有帮助。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var anim = this.get<span class="constructor">Component(<span class="params">cc</span>.Animation)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 播放第一个动画</span></span><br><span class="line">anim.play<span class="constructor">Additive('<span class="params">position</span>-<span class="params">anim</span>')</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 播放第二个动画</span></span><br><span class="line"><span class="comment">// 使用 playAdditive 播放动画时，不会停止其他动画的播放。如果还有其他动画正在播放，则同时会有多个动画进行播放</span></span><br><span class="line">anim.play<span class="constructor">Additive('<span class="params">rotation</span>-<span class="params">anim</span>')</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="AnimationState"><a href="#AnimationState" class="headerlink" title="AnimationState"></a><strong>AnimationState</strong></h3><ul>
+<li>AnimationClip 作为动画数据的承载</li>
+<li>AnimationState 则是 AnimationClip 在运行时的实例，它将动画数据解析为方便程序中做计算的数值。<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> anim = <span class="keyword">this</span>.getComponent(cc.Animation);</span><br><span class="line"><span class="comment">// play 会返回关联的 AnimationState</span></span><br><span class="line"><span class="keyword">var</span> animState = anim.play(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或是直接获取</span></span><br><span class="line"><span class="keyword">var</span> animState = anim.getAnimationState(<span class="string">'test'</span>);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> anim = this.getComponent(cc.Animation);</span><br><span class="line"><span class="keyword">var</span> animState = anim.play(<span class="string">'test'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画关联的clip</span></span><br><span class="line"><span class="keyword">var</span> clip = animState.clip;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的名字</span></span><br><span class="line"><span class="keyword">var</span> <span class="keyword">name</span> = animState.<span class="keyword">name</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的播放速度</span></span><br><span class="line"><span class="keyword">var</span> speed = animState.speed;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的播放总时长</span></span><br><span class="line"><span class="keyword">var</span> duration = animState.duration;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的播放时间</span></span><br><span class="line"><span class="keyword">var</span> time = animState.time;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的重复次数</span></span><br><span class="line"><span class="keyword">var</span> repeatCount = animState.repeatCount;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的循环模式</span></span><br><span class="line"><span class="keyword">var</span> wrapMode = animState.wrapMode</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画是否正在播放</span></span><br><span class="line"><span class="keyword">var</span> playing = animState.isPlaying;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画是否已经暂停</span></span><br><span class="line"><span class="keyword">var</span> paused = animState.isPaused;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取动画的帧率</span></span><br><span class="line"><span class="keyword">var</span> frameRate = animState.frameRate;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> anim = this.getComponent(<span class="keyword">cc</span>.Animation);</span><br><span class="line"><span class="keyword">var</span> animState = anim.play('<span class="keyword">test</span>');</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置循环模式为 Normal</span></span><br><span class="line">animState.wrapMode = <span class="keyword">cc</span>.WrapMode.Normal;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置循环模式为 Loop</span></span><br><span class="line">animState.wrapMode = <span class="keyword">cc</span>.WrapMode.Loop;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置动画循环次数为2次</span></span><br><span class="line">animState.repeatCount = 2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置动画循环次数为无限次</span></span><br><span class="line">animState.repeatCount = Infinity;</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态创建-Animation-Clip"><a href="#动态创建-Animation-Clip" class="headerlink" title="动态创建 Animation Clip"></a><strong>动态创建 Animation Clip</strong></h3><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var animation = this.node.getComponent(cc.Animation);</span><br><span class="line"><span class="comment">// frames 这是一个 SpriteFrame 的数组.</span></span><br><span class="line">var <span class="keyword">clip</span> = cc.AnimationClip.createWithSpriteFrames(frames, <span class="number">17</span>);</span><br><span class="line"><span class="keyword">clip</span>.name = <span class="string">"anim_run"</span>;</span><br><span class="line"><span class="keyword">clip</span>.wrapMode = cc.WrapMode.Loop;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加帧事件</span></span><br><span class="line"><span class="keyword">clip</span>.events.push(&#123;</span><br><span class="line">    frame: <span class="number">1</span>,               <span class="comment">// 准确的时间，以秒为单位。这里表示将在动画播放到 1s 时触发事件</span></span><br><span class="line">    func: <span class="string">"frameEvent"</span>,     <span class="comment">// 回调函数名称</span></span><br><span class="line">    params: [<span class="number">1</span>, <span class="string">"hello"</span>]    <span class="comment">// 回调参数</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">animation.addClip(<span class="keyword">clip</span>);</span><br><span class="line">animation.<span class="keyword">play</span>(<span class="string">'anim_run'</span>);</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/01/10/Cocos Creator/40、cocos creator 之音乐与音效/" class="pre-post btn btn-default" title='40、cocos creator 之音乐与音效'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            40、cocos creator 之音乐与音效</span>
+    </a>
+    
+    
+    <a href="/2019/01/10/Cocos Creator/38、cocos creator 之计时器/" class="next-post btn btn-default" title='38、cocos creator 之计时器'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            38、cocos creator 之计时器</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cocos-creator-之动画系统"><span class="toc-text">cocos creator 之动画系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#动画系统与动作系统区别"><span class="toc-text">动画系统与动作系统区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动画编辑器"><span class="toc-text">动画编辑器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动画编辑器界面"><span class="toc-text">动画编辑器界面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编辑动画"><span class="toc-text">编辑动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编辑逐帧动画"><span class="toc-text">编辑逐帧动画</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#必备资源-点我下载图集"><span class="toc-text">必备资源 点我下载图集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非均速动画"><span class="toc-text">非均速动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动画事件"><span class="toc-text">动画事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态注册动画事件"><span class="toc-text">动态注册动画事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#播放-暂停-恢复-停止"><span class="toc-text">播放 暂停 恢复 停止</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#同时播放多个动画"><span class="toc-text">同时播放多个动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AnimationState"><span class="toc-text">AnimationState</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态创建-Animation-Clip"><span class="toc-text">动态创建 Animation Clip</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

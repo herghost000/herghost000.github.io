@@ -1,0 +1,571 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之事件调度器它相当于一个定时器，可以在指定的时间点执行一条SQL语句或一个语句块，也可以用于在固定间隔重复执行。事件调度器相当于操作系统中的定时任务(如：Linux中的cron、Wi...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    53、mysql 之事件调度器 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="53、mysql 之事件调度器">
+            
+            53、mysql 之事件调度器
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/05/23</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1537</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之事件调度器"><a href="#mysql-之事件调度器" class="headerlink" title="mysql 之事件调度器"></a><strong>mysql 之事件调度器</strong></h2><p>它相当于一个定时器，可以在指定的时间点执行一条SQL语句或一个语句块，也可以用于在固定间隔重复执行。事件调度器相当于操作系统中的定时任务(如：Linux中的cron、Window中的计划任务)，但MySql的事件调度器可以精确到秒，对于一些实时性要求较高的数据处理非常有用。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a><strong>语法</strong></h3><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">CREATE </span><br><span class="line">    [DEFINER = &#123; user | <span class="type">CURRENT_USER</span> &#125;] </span><br><span class="line">    EVENT </span><br><span class="line">    [<span class="keyword">IF</span> NOT EXISTS] </span><br><span class="line">    event_name </span><br><span class="line">    ON SCHEDULE schedule </span><br><span class="line">    [ON COMPLETION [NOT] PRESERVE] </span><br><span class="line">    [ENABLE | <span class="type">DISABLE</span> | <span class="type">DISABLE</span> ON SLAVE] </span><br><span class="line">    [COMMENT 'comment'] </span><br><span class="line">    DO event_body; </span><br><span class="line">   </span><br><span class="line">schedule: </span><br><span class="line">    AT timestamp [+ INTERVAL interval] ... </span><br><span class="line">  | <span class="type">EVERY</span> interval </span><br><span class="line">    [STARTS timestamp [+ INTERVAL interval] ...] </span><br><span class="line">    [ENDS timestamp [+ INTERVAL interval] ...] </span><br><span class="line">   </span><br><span class="line">interval: </span><br><span class="line">    quantity &#123;YEAR | <span class="type">QUARTER</span> | <span class="type">MONTH</span> | <span class="type">DAY</span> | <span class="type">HOUR</span> | <span class="type">MINUTE</span> | <span class="type"></span></span><br><span class="line"><span class="type">              WEEK</span> | <span class="type">SECOND</span> | <span class="type">YEAR_MONTH</span> | <span class="type">DAY_HOUR</span> | <span class="type">DAY_MINUTE</span> | <span class="type"></span></span><br><span class="line"><span class="type">              DAY_SECOND</span> | <span class="type">HOUR_MINUTE</span> | <span class="type">HOUR_SECOND</span> | <span class="type">MINUTE_SECOND</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>event_name</code> ：创建的<code>event</code>名字（唯一确定的）。</li>
+<li><code>ON SCHEDULE</code>：计划任务。</li>
+<li><code>schedule</code>: 决定<code>event</code>的执行时间和频率（注意时间一定要是将来的时间，过去的时间会出错），有两种形式 <code>AT</code>和<code>EVERY</code>。</li>
+<li><code>[ON COMPLETION [NOT] PRESERVE]</code>： 可选项，默认是<code>ON COMPLETION NOT PRESERVE</code> 即计划任务执行完毕后自动<code>drop</code>该事件；<code>ON COMPLETION  PRESERVE</code>则不会<code>drop</code>掉。</li>
+<li><code>[COMMENT &#39;comment&#39;]</code> ：可选项，<code>comment</code> 用来描述<code>event</code>；相当注释，最大长度<code>64</code>个字节。</li>
+<li><code>[ENABLE | DISABLE]</code> ：设定<code>event</code>的状态，默认<code>ENABLE</code>：表示系统尝试执行这个事件， <code>DISABLE</code>：关闭该事情，可以用<code>alter</code>修改</li>
+<li><code>DO event_body</code>: 需要执行的<code>sql</code>语句（可以是复合语句）。<code>CREATE EVENT</code>在存储过程中使用时合法的。</li>
+</ul>
+<h4 id="interval-表"><a href="#interval-表" class="headerlink" title="interval 表"></a><strong>interval 表</strong></h4><table>
+<thead>
+<tr>
+<th>单位</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>YEAR</td>
+<td>年</td>
+</tr>
+<tr>
+<td>QUARTER</td>
+<td>季度</td>
+</tr>
+<tr>
+<td>MONTH</td>
+<td>月</td>
+</tr>
+<tr>
+<td>DAY</td>
+<td>天</td>
+</tr>
+<tr>
+<td>HOUR</td>
+<td>时</td>
+</tr>
+<tr>
+<td>MINUTE</td>
+<td>分</td>
+</tr>
+<tr>
+<td>WEEK</td>
+<td>周</td>
+</tr>
+<tr>
+<td>SECOND</td>
+<td>秒</td>
+</tr>
+<tr>
+<td>YEAR_MONTH</td>
+<td>年:月</td>
+</tr>
+<tr>
+<td>DAY_HOUR</td>
+<td>日:时</td>
+</tr>
+<tr>
+<td>DAY_MINUTE</td>
+<td>日:分</td>
+</tr>
+<tr>
+<td>DAY_SECOND</td>
+<td>日:秒</td>
+</tr>
+<tr>
+<td>HOUR_MINUTE</td>
+<td>时:分</td>
+</tr>
+<tr>
+<td>HOUR_SECOND</td>
+<td>时:秒</td>
+</tr>
+<tr>
+<td>MINUTE_SECOND</td>
+<td>分:秒</td>
+</tr>
+<tr>
+<td>#### <strong>Every interval</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- EVERY <span class="number">3</span> MONTH STARTS CURRENT_TIMESTAMP + INTERVAL <span class="number">1</span> WEEK 一周以后开始，每隔三个月</span><br><span class="line">- EVERY <span class="number">2</span> WEEK STARTS CURRENT_TIMESTAMP + INTERVAL ‘<span class="number">6</span>:<span class="number">15</span>’ HOUR_MINUTE 六个小时<span class="number">15</span>分钟以后，每隔两周</span><br><span class="line">- EVERY <span class="number">12</span> HOUR STARTS CURRENT_TIMESTAMP + INTERVAL <span class="number">30</span> MINUTE ENDS CURRENT_TIMESTAMP + INTERVAL <span class="number">4</span> WEEK <span class="number">30</span>分钟以后开始，<span class="number">4</span>周后结束，每隔<span class="number">12</span>个小时</span><br></pre></td></tr></table></figure></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a><strong>查看</strong></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">EVENTS</span> <span class="keyword">FROM</span> mysqldemo; </span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'event_scheduler'</span>;</span><br><span class="line"><span class="keyword">SELECT</span> @@event_scheduler;</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">PROCESSLIST</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> information_schema.EVENTS;</span><br><span class="line"><span class="keyword">SELECT</span> EVENT_NAME, LAST_EXECUTED <span class="keyword">FROM</span> information_schema.EVENTS;</span><br></pre></td></tr></table></figure>
+
+<h3 id="开启-关闭"><a href="#开启-关闭" class="headerlink" title="开启/关闭"></a><strong>开启/关闭</strong></h3><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> GLOBAL <span class="comment">event_scheduler = 1</span>;</span><br><span class="line"><span class="keyword">SET</span> @@global.event_scheduler <span class="comment">= 1</span>;</span><br><span class="line"><span class="keyword">SET</span> GLOBAL <span class="comment">event_scheduler = ON</span>;</span><br><span class="line"><span class="keyword">SET</span> @@global.event_scheduler <span class="comment">= ON</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a><strong>删除</strong></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">EVENT</span> [<span class="keyword">IF</span> EXIST] event_name;</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><ol>
+<li><p>事件创建后每小时执行一次</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EVENT</span> myevent</span><br><span class="line">    <span class="keyword">ON</span> SCHEDULE </span><br><span class="line">    <span class="keyword">AT</span> <span class="keyword">CURRENT_TIMESTAMP</span> + <span class="built_in">INTERVAL</span> <span class="number">1</span> <span class="keyword">HOUR</span></span><br><span class="line">    <span class="keyword">DO</span></span><br><span class="line">      <span class="keyword">UPDATE</span> myschema.mytable <span class="keyword">SET</span> mycol = mycol + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从2013-07-30 17:33:43起每一天执行一次p_del_count这个存储过程，并带上参数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EVENT</span> <span class="string">`e_del_tbl_base_count`</span> </span><br><span class="line"><span class="keyword">ON</span> SCHEDULE EVERY <span class="number">1</span> <span class="keyword">DAY</span> STARTS <span class="string">'2013-06-23 17:33:43'</span> </span><br><span class="line"><span class="keyword">ON</span> COMPLETION <span class="keyword">NOT</span> <span class="keyword">PRESERVE</span> <span class="keyword">ENABLE</span> <span class="keyword">DO</span> <span class="keyword">CALL</span> p_del_count (<span class="number">90</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>1小时后执行该事件：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EVENT</span> myevent</span><br><span class="line">    <span class="keyword">ON</span> SCHEDULE <span class="keyword">AT</span> <span class="keyword">CURRENT_TIMESTAMP</span> + <span class="built_in">INTERVAL</span> <span class="number">1</span> <span class="keyword">HOUR</span></span><br><span class="line">    <span class="keyword">DO</span></span><br><span class="line">      <span class="keyword">UPDATE</span> myschema.mytable <span class="keyword">SET</span> mycol = mycol + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="修改事件调度器"><a href="#修改事件调度器" class="headerlink" title="修改事件调度器"></a><strong>修改事件调度器</strong></h3><h4 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a><strong>语法</strong></h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> event_name</span><br><span class="line"><span class="keyword">ON</span> SCHEDULE schedule</span><br><span class="line"><span class="keyword">ON</span> COMPLETION [<span class="keyword">NOT</span>] <span class="keyword">PRESERVE</span></span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TO</span> new_event_name</span><br><span class="line"><span class="keyword">ENABLE</span> | <span class="keyword">DISABLE</span></span><br><span class="line"><span class="keyword">DO</span></span><br><span class="line">  event_body</span><br></pre></td></tr></table></figure>
+
+<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h4><p>以下语句创建一个事件，每分钟将新记录插入messages表中。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EVENT</span> test_event_04</span><br><span class="line"><span class="keyword">ON</span> SCHEDULE EVERY <span class="number">1</span> <span class="keyword">MINUTE</span></span><br><span class="line"><span class="keyword">DO</span></span><br><span class="line">   <span class="keyword">INSERT</span> <span class="keyword">INTO</span> messages(message,created_at)</span><br><span class="line">   <span class="keyword">VALUES</span>(<span class="string">'Test ALTER EVENT statement'</span>,<span class="keyword">NOW</span>());</span><br></pre></td></tr></table></figure>
+
+<h4 id="改变时间表"><a href="#改变时间表" class="headerlink" title="改变时间表"></a><strong>改变时间表</strong></h4><p>要使事件每2分钟运行一次，请使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> test_event_04</span><br><span class="line"><span class="keyword">ON</span> SCHEDULE EVERY <span class="number">2</span> <span class="keyword">MINUTE</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="改变活动体"><a href="#改变活动体" class="headerlink" title="改变活动体"></a><strong>改变活动体</strong></h4><p>您还可以通过指定新逻辑来更改事件的主体，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> test_event_04</span><br><span class="line"><span class="keyword">DO</span></span><br><span class="line">   <span class="keyword">INSERT</span> <span class="keyword">INTO</span> messages(message,created_at)</span><br><span class="line">   <span class="keyword">VALUES</span>(<span class="string">'Message from event'</span>,<span class="keyword">NOW</span>());</span><br></pre></td></tr></table></figure>
+
+<p>您可以等待2分钟并messages再次检查表格：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> messages;</span><br></pre></td></tr></table></figure>
+
+<h4 id="禁用事件"><a href="#禁用事件" class="headerlink" title="禁用事件"></a><strong>禁用事件</strong></h4><p>要禁用事件，请使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> test_event_04</span><br><span class="line"><span class="keyword">DISABLE</span>;</span><br></pre></td></tr></table></figure>
+
+<p>您可以使用以下SHOW EVENTS语句检查事件的状态  ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">EVENTS</span> <span class="keyword">FROM</span> mysqldemo;</span><br></pre></td></tr></table></figure>
+
+<h4 id="启用事件"><a href="#启用事件" class="headerlink" title="启用事件"></a><strong>启用事件</strong></h4><p>要启用已禁用的事件，请ENABLE在ALTER EVENT语句后使用关键字  ，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> test_event_04</span><br><span class="line"><span class="keyword">ENABLE</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="重命名事件"><a href="#重命名事件" class="headerlink" title="重命名事件"></a><strong>重命名事件</strong></h4><p>MySQL没有为您提供  RENAME EVENT语句。幸运的是，您可以使用  ALTER EVENT重命名现有事件，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> test_event_04</span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TO</span> test_event_05;</span><br></pre></td></tr></table></figure>
+
+<h4 id="将事件移动到另一个数据库"><a href="#将事件移动到另一个数据库" class="headerlink" title="将事件移动到另一个数据库"></a><strong>将事件移动到另一个数据库</strong></h4><p>您可以使用以下RENAME TO子句将事件从数据库移动到另一个数据库  ：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">EVENT</span> mysqldemo.test_event_05</span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TO</span> newdb.test_event_05</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/05/23/Redis/23、redis 之缓存雪崩/" class="pre-post btn btn-default" title='23、redis 之缓存雪崩'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            23、redis 之缓存雪崩</span>
+    </a>
+    
+    
+    <a href="/2016/05/22/Mysql/52、mysql 之触发器/" class="next-post btn btn-default" title='52、mysql 之触发器'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            52、mysql 之触发器</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之事件调度器"><span class="toc-text">mysql 之事件调度器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#语法"><span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#interval-表"><span class="toc-text">interval 表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看"><span class="toc-text">查看</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开启-关闭"><span class="toc-text">开启/关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除"><span class="toc-text">删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改事件调度器"><span class="toc-text">修改事件调度器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#语法-1"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#示例-1"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#改变时间表"><span class="toc-text">改变时间表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#改变活动体"><span class="toc-text">改变活动体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#禁用事件"><span class="toc-text">禁用事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启用事件"><span class="toc-text">启用事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重命名事件"><span class="toc-text">重命名事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#将事件移动到另一个数据库"><span class="toc-text">将事件移动到另一个数据库</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

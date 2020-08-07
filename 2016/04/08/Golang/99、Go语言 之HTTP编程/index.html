@@ -1,0 +1,608 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之HTTP编程概述Web工作方式我们平时浏览网页的时候,会打开浏览器，输入网址后按下回车键，然后就会显示出你想要浏览的内容。在这个看似简单的用户行为背后，到底隐藏了些什么呢？
+对于普通...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    99、Go语言 之HTTP编程 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="99、Go语言 之HTTP编程">
+            
+            99、Go语言 之HTTP编程
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/08</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1582</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之HTTP编程"><a href="#Go语言-之HTTP编程" class="headerlink" title="Go语言 之HTTP编程"></a><strong>Go语言 之HTTP编程</strong></h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h3><h4 id="Web工作方式"><a href="#Web工作方式" class="headerlink" title="Web工作方式"></a><strong>Web工作方式</strong></h4><p>我们平时浏览网页的时候,会打开浏览器，输入网址后按下回车键，然后就会显示出你想要浏览的内容。在这个看似简单的用户行为背后，到底隐藏了些什么呢？</p>
+<p>对于普通的上网过程，系统其实是这样做的：浏览器本身是一个客户端，当你输入URL的时候，首先浏览器会去请求DNS服务器，通过DNS获取相应的域名对应的IP，然后通过IP地址找到IP对应的服务器后，要求建立TCP连接，等浏览器发送完HTTP Request（请求）包后，服务器接收到请求包之后才开始处理请求包，服务器调用自身服务，返回HTTP Response（响应）包；客户端收到来自服务器的响应后开始渲染这个Response包里的主体（body），等收到全部的内容随后断开与该服务器之间的TCP连接。</p>
+<p>DNS域名服务器（Domain Name Server）是进行域名(domain name)和与之相对应的IP地址转换的服务器。DNS中保存了一张域名解析表，解析消息的域名。</p>
+<p>一个Web服务器也被称为HTTP服务器，它通过HTTP (HyperText Transfer Protocol 超文本传输协议)协议与客户端通信。这个客户端通常指的是Web浏览器(其实手机端客户端内部也是浏览器实现的)。</p>
+<p>Web服务器的工作原理可以简单地归纳为：</p>
+<ul>
+<li>客户机通过TCP/IP协议建立到服务器的TCP连接</li>
+<li>客户端向服务器发送HTTP协议请求包，请求服务器里的资源文档</li>
+<li>服务器向客户机发送HTTP协议应答包，如果请求的资源包含有动态语言的内容，那么服务器会调用动态语言的解释引擎负责处理“动态内容”，并将处理得到的数据返回给客户端</li>
+<li>客户机与服务器断开。由客户端解释HTML文档，在客户端屏幕上渲染图形结果</li>
+</ul>
+<h4 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a><strong>HTTP协议</strong></h4><p>超文本传输协议(HTTP，HyperText Transfer Protocol)是互联网上应用最为广泛的一种网络协议，它详细规定了浏览器和万维网服务器之间互相通信的规则，通过因特网传送万维网文档的数据传送协议。</p>
+<p>HTTP协议通常承载于TCP协议之上，有时也承载于TLS或SSL协议层之上，这个时候，就成了我们常说的HTTPS。如下图所示：</p>
+<h4 id="地址（URL）"><a href="#地址（URL）" class="headerlink" title="地址（URL）"></a><strong>地址（URL）</strong></h4><p>URL全称为Unique Resource Location，用来表示网络资源，可以理解为网络文件路径。</p>
+<p>基本URL的结构包含模式（协议）、服务器名称（IP地址）、路径和文件名。常见的协议/模式如http、https、ftp等。服务器的名称或IP地址后面有时还跟一个冒号和一个端口号。再后面是到达这个文件的路径和文件本身的名称。如：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://localhost[<span class="string">":"port</span>][<span class="symbol">abs_path</span>]</span><br><span class="line">http://192.168.31.1/html/index</span><br><span class="line">https://pan.baidu.com/</span><br></pre></td></tr></table></figure>
+
+<p>URL的长度有限制，不同的服务器的限制值不太相同，但是不能无限长。</p>
+<h3 id="HTTP报文解析"><a href="#HTTP报文解析" class="headerlink" title="HTTP报文解析"></a><strong>HTTP报文解析</strong></h3><h4 id="请求报文格式-获取请求报文"><a href="#请求报文格式-获取请求报文" class="headerlink" title="请求报文格式,获取请求报文"></a><strong>请求报文格式,获取请求报文</strong></h4><p>为了更直观的看到浏览器发送的请求包，我们借助前面学习的TCP通信模型，编写一个简单的web服务器，只接收浏览器发送的内容，打印查看。<br>服务器测试代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">//创建、监听socket</span></span><br><span class="line">   listenner, err := net.Listen(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8000"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Listen err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> listenner.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">//阻塞等待客户端连接</span></span><br><span class="line">   conn, err := listenner.Accept()</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Accept err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   fmt.Println(conn.RemoteAddr().String(), <span class="string">"连接成功"</span>)       <span class="comment">//连接客户端的网络地址</span></span><br><span class="line"></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)  <span class="comment">//切片缓冲区，接收客户端发送数据</span></span><br><span class="line">   n, err := conn.Read(buf)   <span class="comment">//n 接收数据的长度</span></span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Read err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   result := buf[:n]        <span class="comment">//切片截取</span></span><br><span class="line"></span><br><span class="line">   fmt.Printf(<span class="string">"#\n%s#"</span>, <span class="keyword">string</span>(result))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在浏览器中输入url地址： 127.0.0.1:8000<br>服务器端运行打印结果如下：</p>
+<h4 id="请求报文格式说明"><a href="#请求报文格式说明" class="headerlink" title="请求报文格式说明"></a><strong>请求报文格式说明</strong></h4><p>HTTP 请求报文由请求行、请求头部、空行、请求包体4个部分组成，如下图所示：</p>
+<ol>
+<li>请求行</li>
+</ol>
+<p>请求行由方法字段、URL 字段 和HTTP 协议版本字段 3个部分组成，他们之间使用空格隔开。常用的 HTTP 请求方法有 GET、POST。</p>
+<p>GET：</p>
+<ul>
+<li>当客户端要从服务器中读取某个资源时，使用GET 方法。GET 方法要求服务器将URL 定位的资源放在响应报文的数据部分，回送给客户端，即向服务器请求某个资源。</li>
+<li>使用GET方法时，请求参数和对应的值附加在 URL 后面，利用一个问号(“?”)代表URL 的结尾与请求参数的开始，传递参数长度受限制，因此GET方法不适合用于上传数据。</li>
+<li>通过GET方法来获取网页时，参数会显示在浏览器地址栏上，因此保密性很差。</li>
+</ul>
+<p>POST：</p>
+<ul>
+<li>当客户端给服务器提供信息较多时可以使用POST 方法，POST 方法向服务器提交数据，比如完成表单数据的提交，将数据提交给服务器处理。</li>
+<li>GET 一般用于获取/查询资源信息，POST 会附带用户数据，一般用于更新资源信息。POST 方法将请求参数封装在HTTP 请求数据中，而且长度没有限制，因为POST携带的数据，在HTTP的请求正文中，以名称/值的形式出现，可以传输大量数据。</li>
+</ul>
+<ol start="2">
+<li>请求头部</li>
+</ol>
+<p>请求头部为请求报文添加了一些附加信息，由“名/值”对组成，每行一对，名和值之间使用冒号分隔。请求头部通知服务器有关于客户端请求的信息，典型的请求头有：</p>
+<table>
+<thead>
+<tr>
+<th>请求头</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User-Agent</td>
+<td>请求的浏览器类型</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>客户端可识别的响应内容类型列表，星号“ * ”用于按范围将类型分组，用“ <em>/</em> ”指示可接受全部类型，用“ type/* ”指示可接受 type 类型的所有子类型</td>
+</tr>
+<tr>
+<td>Accept-Language</td>
+<td>客户端可接受的自然语言</td>
+</tr>
+<tr>
+<td>Accept-Encoding</td>
+<td>客户端可接受的编码压缩格式</td>
+</tr>
+<tr>
+<td>Accept-Charset</td>
+<td>可接受的应答的字符集</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>请求的主机名，允许多个域名同处一个IP 地址，即虚拟主机</td>
+</tr>
+<tr>
+<td>connection</td>
+<td>连接方式(close或keepalive)</td>
+</tr>
+<tr>
+<td>Cookie</td>
+<td>存储于客户端扩展字段，向同一域名的服务端发送属于该域的cookie</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>空行</li>
+</ol>
+<p>最后一个请求头之后是一个空行，发送回车符和换行符，通知服务器以下不再有请求头。</p>
+<ol start="4">
+<li>请求包体</li>
+</ol>
+<p>请求包体不在GET方法中使用，而在POST方法中使用。POST方法适用于需要客户填写表单的场合。与请求包体相关的最常使用的是包体类型Content-Type和包体长度Content-Length。</p>
+<p>响应报文格式</p>
+<p>要想获取响应报文，必须先发送请求报文给web服务器。服务器收到并解析浏览器（客户端）发送的请求报文后，借助http协议，回复相对应的响应报文。</p>
+<p>下面我们借助net/http包，创建一个最简单的服务器，给浏览器回发送响应包。首先注册处理函数http.HandleFunc()，设置回调函数handler。而后绑定服务器的监听地址http.ListenAndserve()。</p>
+<p>这个服务器启动后，当有浏览器发送请求，回调函数被调用，会向浏览器回复“hello world”作为网页内容。当然，是按照http协议的格式进行回复。</p>
+<p>创建简单的响应服务器</p>
+<p>服务器示例代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"net/http"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 浏览器访问时，该函数被回调</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handler</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">   w.Write([]<span class="keyword">byte</span>(<span class="string">"hello http"</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 注册处理函数</span></span><br><span class="line">   http.HandleFunc(<span class="string">"/hello"</span>, handler)</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 绑定服务器监听地址</span></span><br><span class="line">   http.ListenAndServe(<span class="string">"127.0.0.1:8000"</span>, <span class="literal">nil</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试：启动服务器。打开浏览器，在URL中写入127.0.0.1:8000/hello，向服务器发送请求。会在浏览器中看到服务器回发的“hello http”。 </p>
+<p>回调函数handler会在浏览器访问服务器时被调用。服务器使用w.Write向浏览器写了“hello http”。</p>
+<p>但服务器是怎样借助http协议将“hello http”字符串写回来的呢，服务器响应报文的具体格式是什么样的呢？</p>
+<p>接下来我们编写一个客户端，模拟浏览器给服务器发送“请求报文”的行为，然后将服务器回发的响应报文打印出来就可以看到了。</p>
+<p>客户端测试示例代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 客户端主动连接服务器</span></span><br><span class="line">   conn, err := net.Dial(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8000"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Dial err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 模拟浏览器，组织一个最简单的请求报文。包含请求行，请求头，空行即可。</span></span><br><span class="line">   requestHttpHeader := <span class="string">"GET /hello HTTP/1.1\r\nHost:127.0.0.1:8000\r\n\r\n"</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// 给服务器发送请求报文</span></span><br><span class="line">   conn.Write([]<span class="keyword">byte</span>(requestHttpHeader))</span><br><span class="line"></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</span><br><span class="line">   <span class="comment">// 读取服务器回复 响应报文</span></span><br><span class="line">   n, err := conn.Read(buf)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Read err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// 打印观察</span></span><br><span class="line">   fmt.Printf(<span class="string">"#\n%s#"</span>, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动程序，测试http的成功响应报文：</p>
+<p>启动程序，测试http的失败响应报文：</p>
+<p>响应报文格式说明<br>HTTP 响应报文由状态行、响应头部、空行、响应包体4个部分组成</p>
+<ol>
+<li>状态行</li>
+</ol>
+<p>状态行由 HTTP 协议版本字段、状态码和状态码的描述文本3个部分组成，他们之间使用空格隔开。<br>状态码：状态码由三位数字组成，第一位数字表示响应的类型，常用的状态码有五大类如下所示：<br>状态码|    含义<br>–|–<br>1xx|    表示服务器已接收了客户端请求，客户端可继续发送请求<br>2xx|    表示服务器已成功接收到请求并进行处理<br>3xx|    表示服务器要求客户端重定向<br>4xx|    表示客户端的请求有非法内容<br>5xx|    表示服务器未能正常处理客户端的请求而出现意外错误</p>
+<p>常见的状态码举例：<br>状态码|    含义<br>–|–<br>200 OK|    客户端请求成功<br>400 Bad Request|    请求报文有语法错误<br>401 Unauthorized|    未授权<br>403 Forbidden|    服务器拒绝服务<br>404 Not Found|    请求的资源不存在<br>500 Internal Server Error|    服务器内部错误<br>503 Server Unavailable|    服务器临时不能处理客户端请求(稍后可能可以)</p>
+<ol start="2">
+<li>响应头部</li>
+</ol>
+<p>响应头可能包括：</p>
+<table>
+<thead>
+<tr>
+<th>响应头</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Location</td>
+<td>Location响应报头域用于重定向接受者到一个新的位置</td>
+</tr>
+<tr>
+<td>Server</td>
+<td>Server 响应报头域包含了服务器用来处理请求的软件信息及其版本</td>
+</tr>
+<tr>
+<td>Vary</td>
+<td>指示不可缓存的请求头列表</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>连接方式</td>
+</tr>
+<tr>
+<td>3. 空行</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>最后一个响应头部之后是一个空行，发送回车符和换行符，通知服务器以下不再有响应头部。<br>4. 响应包体</p>
+<p>服务器返回给客户端的文本信息。</p>
+<h3 id="Go语言HTTP编程"><a href="#Go语言HTTP编程" class="headerlink" title="Go语言HTTP编程"></a><strong>Go语言HTTP编程</strong></h3><p>Go语言标准库内建提供了net/http包，涵盖了HTTP客户端和服务端的具体实现。使用net/http包，我们可以很方便地编写HTTP客户端或服务端的程序。</p>
+<h4 id="HTTP服务端"><a href="#HTTP服务端" class="headerlink" title="HTTP服务端"></a><strong>HTTP服务端</strong></h4><p>示例代码：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//服务端编写的业务逻辑处理程序 —— 回调函数</span></span><br><span class="line">func my<span class="constructor">Handler(<span class="params">w</span> <span class="params">http</span>.ResponseWriter, <span class="params">r</span> <span class="operator">*</span><span class="params">http</span>.Request)</span> &#123;</span><br><span class="line">    fmt.<span class="constructor">Println(<span class="string">"method = "</span>, <span class="params">r</span>.Method)</span> 	<span class="comment">//请求方法</span></span><br><span class="line">    fmt.<span class="constructor">Println(<span class="string">"URL = "</span>, <span class="params">r</span>.URL)</span>		<span class="comment">// 浏览器发送请求文件路径</span></span><br><span class="line">    fmt.<span class="constructor">Println(<span class="string">"header = "</span>, <span class="params">r</span>.Header)</span>		<span class="comment">// 请求头</span></span><br><span class="line">    fmt.<span class="constructor">Println(<span class="string">"body = "</span>, <span class="params">r</span>.Body)</span>		<span class="comment">// 请求包体</span></span><br><span class="line">    fmt.<span class="constructor">Println(<span class="params">r</span>.RemoteAddr, <span class="string">"连接成功"</span>)</span>  	<span class="comment">//客户端网络地址</span></span><br><span class="line"></span><br><span class="line">    w.<span class="constructor">Write([]<span class="params">byte</span>(<span class="string">"hello http"</span>)</span>) 	<span class="comment">//给客户端回复数据</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main<span class="literal">()</span> &#123;</span><br><span class="line">    http.<span class="constructor">HandleFunc(<span class="string">"/hello"</span>, <span class="params">myHandler</span>)</span>	<span class="comment">// 注册处理函数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//该方法用于在指定的 TCP 网络地址 addr 进行监听，然后调用服务端处理程序来处理传入的连接请求。</span></span><br><span class="line">    <span class="comment">//该方法有两个参数：第一个参数 addr 即监听地址；第二个参数表示服务端处理程序，通常为nil</span></span><br><span class="line">    <span class="comment">//当参2为nil时，服务端调用 http.DefaultServeMux 进行处理</span></span><br><span class="line">    http.<span class="constructor">ListenAndServe(<span class="string">"127.0.0.1:8000"</span>, <span class="params">nil</span>)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>浏览器输入url地址：127.0.0.1:8000/hello<br>回调函数myHandler的函数原型固定。func myHandler(w http.ResponseWriter, r *http.Request) 有两个参数：<br>w http.ResponseWriter 和 r *http.Request。w用来“给客户端回发数据”。它是一个interface：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type ResponseWriter<span class="built_in"> interface </span>&#123;</span><br><span class="line">   Header() Header			</span><br><span class="line">   Write([]byte) (int, error)	</span><br><span class="line">   WriteHeader(int)			</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>r 用来“接收客户端发送的数据”。浏览器发送给服务器的http请求包的内容可以借助r来查看。它对应一个结构体：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">type</span> <span class="type">Request</span> struct &#123;</span><br><span class="line">	<span class="type">Method</span> string		// 浏览器请求方法 <span class="type">GET</span>、<span class="type">POST</span>…</span><br><span class="line">	<span class="type">URL</span> *url.<span class="type">URL</span>		// 浏览器请求的访问路径</span><br><span class="line">	……</span><br><span class="line">	<span class="type">Header</span> <span class="type">Header</span>		// 请求头部</span><br><span class="line">	<span class="type">Body</span> io.<span class="type">ReadCloser</span>	// 请求包体</span><br><span class="line">	<span class="type">RemoteAddr</span> string	// 浏览器地址</span><br><span class="line">	……</span><br><span class="line">    	ctx context.<span class="type">Context</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看一下结构体成员：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fmt.<span class="constructor">Println(<span class="string">"Method = "</span>, <span class="params">r</span>.Method)</span></span><br><span class="line">fmt.<span class="constructor">Println(<span class="string">"URL = "</span>, <span class="params">r</span>.URL)</span></span><br><span class="line">fmt.<span class="constructor">Println(<span class="string">"Header = "</span>, <span class="params">r</span>.Header)</span></span><br><span class="line">fmt.<span class="constructor">Println(<span class="string">"Body = "</span>, <span class="params">r</span>.Body)</span></span><br><span class="line">fmt.<span class="constructor">Println(<span class="params">r</span>.RemoteAddr, <span class="string">"连接成功"</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>查看到如下内容：</p>
+<p>练习：<br>    在计算机中选定一个目录，存放jpg、png、txt、mp3、gif、m4a等类型文件。编写一个服务器程序，可以给浏览器提供该目录下文件的访问服务。</p>
+<p>如：目录中存有图片文件：lf.jpg。用户在浏览器中输入：127.0.0.1:8000/lf.jpg 可以查看该图片。</p>
+<h4 id="HTTP客户端"><a href="#HTTP客户端" class="headerlink" title="HTTP客户端"></a><strong>HTTP客户端</strong></h4><p>客户端访问web服务器数据，主要使用func Get(url string) (resp *Response, err error)函数来完成。读到的响应报文数据被保存在 Response 结构体中。</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">Response</span> struct &#123;</span><br><span class="line">   <span class="type">Status</span>     string // e.g. "200 <span class="type">OK</span>"</span><br><span class="line">   <span class="type">StatusCode</span> int    // e.g.  200</span><br><span class="line">   <span class="type">Proto</span>      string // e.g. "<span class="type">HTTP</span>/1.0"</span><br><span class="line">   ……</span><br><span class="line">   <span class="type">Header</span> <span class="type">Header</span></span><br><span class="line">   <span class="type">Body</span> io.<span class="type">ReadCloser</span></span><br><span class="line">   ……</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>服务器发送的响应包体被保存在Body中。可以使用它提供的Read方法来获取数据内容。保存至切片缓冲区中，拼接成一个完整的字符串来查看。<br>结束的时候，需要调用Body中的Close()方法关闭io。<br>示例代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net/http"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 使用Get方法获取服务器响应包数据</span></span><br><span class="line">   <span class="comment">//resp, err := http.Get("http://www.baidu.com")</span></span><br><span class="line">   resp, err := http.Get(<span class="string">"http://127.0.0.1:8000/hello"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Get err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> resp.Body.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 获取服务器端读到的数据</span></span><br><span class="line">   fmt.Println(<span class="string">"Status = "</span>, resp.Status)           <span class="comment">// 状态</span></span><br><span class="line">   fmt.Println(<span class="string">"StatusCode = "</span>, resp.StatusCode)   <span class="comment">// 状态码</span></span><br><span class="line">   fmt.Println(<span class="string">"Header = "</span>, resp.Header)           <span class="comment">// 响应头部</span></span><br><span class="line">   fmt.Println(<span class="string">"Body = "</span>, resp.Body)               <span class="comment">// 响应包体</span></span><br><span class="line"></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)         <span class="comment">// 定义切片缓冲区，存读到的内容</span></span><br><span class="line">   <span class="keyword">var</span> result <span class="keyword">string</span></span><br><span class="line">   <span class="comment">// 获取服务器发送的数据包内容</span></span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      n, err := resp.Body.Read(buf)  <span class="comment">// 读body中的内容。</span></span><br><span class="line">      <span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">         fmt.Println(<span class="string">"Body.Read err:"</span>, err)</span><br><span class="line">         <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">      result += <span class="keyword">string</span>(buf[:n])     <span class="comment">// 累加读到的数据内容</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// 打印从body中读到的所有内容</span></span><br><span class="line">   fmt.Println(<span class="string">"result = "</span>, result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/09/Mysql/9、mysql 之 DECIMAL 数字类型/" class="pre-post btn btn-default" title='9、mysql 之 DECIMAL 数字类型'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            9、mysql 之 DECIMAL 数字类型</span>
+    </a>
+    
+    
+    <a href="/2016/04/08/Mysql/8、mysql 之整型/" class="next-post btn btn-default" title='8、mysql 之整型'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            8、mysql 之整型</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之HTTP编程"><span class="toc-text">Go语言 之HTTP编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Web工作方式"><span class="toc-text">Web工作方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP协议"><span class="toc-text">HTTP协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#地址（URL）"><span class="toc-text">地址（URL）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP报文解析"><span class="toc-text">HTTP报文解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#请求报文格式-获取请求报文"><span class="toc-text">请求报文格式,获取请求报文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#请求报文格式说明"><span class="toc-text">请求报文格式说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Go语言HTTP编程"><span class="toc-text">Go语言HTTP编程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP服务端"><span class="toc-text">HTTP服务端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP客户端"><span class="toc-text">HTTP客户端</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

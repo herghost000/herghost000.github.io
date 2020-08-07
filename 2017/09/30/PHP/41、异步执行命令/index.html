@@ -1,0 +1,464 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="PHP">
+
+
+<meta name="description" content="通过fsockopen
+访问index.php不会阻塞，但是通过fsockopen访问的test.php会造成阻塞
+
+
+test.php阻塞后再次访问index.php，test.php不会执行...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    41、异步执行命令 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="41、异步执行命令">
+            
+            41、异步执行命令
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/PHP/">PHP</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/PHP/">PHP</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2017/09/30</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1042</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h5 id="通过fsockopen"><a href="#通过fsockopen" class="headerlink" title="通过fsockopen"></a>通过fsockopen</h5><blockquote>
+<p>访问index.php不会阻塞，但是通过fsockopen访问的test.php会造成阻塞</p>
+</blockquote>
+<blockquote>
+<p>test.php阻塞后再次访问index.php，test.php不会执行</p>
+</blockquote>
+<p>==注意：fsockopen 访问本地端口会卡死，需要开启两个php服务端测试==</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ignore_user_abort (true);</span><br><span class="line">set_time_limit (<span class="number">30</span>);</span><br><span class="line">$filename = $request-&gt;input(<span class="string">"param"</span>);</span><br><span class="line">$fp = fsockopen(<span class="string">"localhost"</span>, <span class="number">8001</span>, $errno, $errstr, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">if</span> (!$fp) &#123;</span><br><span class="line">    echo <span class="string">"$errstr ($errno)&lt;br /&gt;\n"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    $out = <span class="string">"GET /test?param=&#123;$filename&#125;  / HTTP/1.1\r\n"</span>;</span><br><span class="line">    $out .= <span class="string">"Host: localhost\r\n"</span>;</span><br><span class="line">    $out .= <span class="string">"Connection: Close\r\n\r\n"</span>;</span><br><span class="line">    @stream_set_blocking($fp, <span class="number">0</span>);</span><br><span class="line">    @stream_set_timeout($fp, <span class="number">3</span>);</span><br><span class="line">    fwrite($fp, $out);</span><br><span class="line">    <span class="keyword">sleep</span>(<span class="number">2</span>); <span class="regexp">//</span>等待<span class="number">300</span>ms</span><br><span class="line">    fclose($fp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="通过CURL"><a href="#通过CURL" class="headerlink" title="通过CURL"></a>通过CURL</h5><blockquote>
+<p>访问index.php不会阻塞，但是通过CURL访问的test.php会造成阻塞</p>
+</blockquote>
+<blockquote>
+<p>test.php阻塞后再次访问index.php，test.php不会执行</p>
+</blockquote>
+<p>==注意：CURL 访问本地端口会卡死，需要开启两个php服务端测试==</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ignore_user_abort (<span class="literal">true</span>);</span><br><span class="line">set_time_limit (<span class="number">30</span>);</span><br><span class="line">$curl = curl<span class="constructor">_init()</span>; <span class="comment">// 启动一个CURL会话</span></span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_URL, <span class="string">"localhost:8001/test?param=&#123;$filename&#125;"</span>)</span>;</span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_HEADER, 0)</span>;</span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_TIMEOUT_MS, 10)</span>;</span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_CONNECTTIMEOUT, 1)</span>;</span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_RETURNTRANSFER, <span class="params">true</span>)</span>;</span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_SSL_VERIFYPEER, <span class="params">false</span>)</span>; <span class="comment">// 跳过证书检查</span></span><br><span class="line">curl<span class="constructor">_setopt($<span class="params">curl</span>, CURLOPT_SSL_VERIFYHOST, <span class="params">false</span>)</span>;  <span class="comment">// 从证书中检查SSL加密算法是否存在</span></span><br><span class="line">$tmpInfo = curl<span class="constructor">_exec($<span class="params">curl</span>)</span>;     <span class="comment">//返回api的json对象</span></span><br><span class="line">curl<span class="constructor">_close($<span class="params">curl</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在Linux下要使程序后台运行，可通过&amp;  来实现</li>
+<li>在Windows下，则通过  start来实现</li>
+</ul>
+<h5 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">function</span> <span class="built_in">test</span>(Request <span class="variable">$request</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$taskId</span> = <span class="variable">$request</span>-&gt;input(<span class="string">"param"</span>);</span><br><span class="line">    <span class="variable">$file_path</span> = <span class="string">"task-&#123;<span class="variable">$taskId</span>&#125;.pid"</span>;</span><br><span class="line">    <span class="variable">$taskPid</span> = 0;</span><br><span class="line">    <span class="keyword">if</span> (file_exists(<span class="variable">$file_path</span>)) &#123;</span><br><span class="line">        <span class="variable">$fp</span> = fopen(<span class="variable">$file_path</span>, <span class="string">"r"</span>);</span><br><span class="line">        <span class="variable">$taskPid</span> = fread(<span class="variable">$fp</span>, filesize(<span class="variable">$file_path</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$taskPid</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$taskPid</span>) &#123;</span><br><span class="line">        <span class="variable">$pid</span> = popen(<span class="string">"taskkill /pid &#123;<span class="variable">$taskPid</span>&#125;"</span>, <span class="string">"r"</span>);</span><br><span class="line">        pclose(<span class="variable">$pid</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">return</span> 66684884;</span><br><span class="line">&#125;</span><br><span class="line">public static <span class="keyword">function</span> generateNum()</span><br><span class="line">&#123;</span><br><span class="line">    //strtoupper转换成全大写的</span><br><span class="line">    <span class="variable">$charid</span> = strtoupper(md5(uniqid(mt_rand(), <span class="literal">true</span>)));</span><br><span class="line">    <span class="variable">$uuid</span> = substr(<span class="variable">$charid</span>, 0, 8) . substr(<span class="variable">$charid</span>, 8, 4) . substr(<span class="variable">$charid</span>, 12, 4) . substr(<span class="variable">$charid</span>, 16, 4) . substr(<span class="variable">$charid</span>, 20, 12);</span><br><span class="line">    <span class="built_in">return</span> <span class="variable">$uuid</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public <span class="keyword">function</span> index(Request <span class="variable">$request</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$taskId</span> = self::generateNum();</span><br><span class="line">    <span class="variable">$hookFileName</span> = <span class="string">"task-&#123;<span class="variable">$taskId</span>&#125;.hook"</span>;</span><br><span class="line">    <span class="variable">$pidFilename</span> = <span class="string">"task-&#123;<span class="variable">$taskId</span>&#125;.pid"</span>;</span><br><span class="line">    <span class="variable">$batFilename</span> = <span class="string">"task-&#123;<span class="variable">$taskId</span>&#125;.bat"</span>;</span><br><span class="line">    // <span class="variable">$fp</span> = fopen(<span class="string">"E:/blog/php-script/task-&#123;<span class="variable">$taskId</span>&#125;.php"</span>,<span class="string">'w'</span>);</span><br><span class="line">    // <span class="variable">$filename</span> = <span class="variable">$request</span>-&gt;input(<span class="string">"param"</span>);</span><br><span class="line">    <span class="variable">$status</span> = 0;</span><br><span class="line">    <span class="keyword">if</span> (file_exists(<span class="string">"./&#123;<span class="variable">$hookFileName</span>&#125;"</span>)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (@unlink(<span class="string">"./&#123;<span class="variable">$hookFileName</span>&#125;"</span>)) &#123;</span><br><span class="line">            //<span class="string">"解码已结束"</span></span><br><span class="line">            <span class="variable">$status</span> = 2;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            //<span class="string">"解码未完成"</span></span><br><span class="line">            <span class="variable">$status</span> = 1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        //<span class="string">"解码开始"</span></span><br><span class="line">        <span class="variable">$status</span> = 3;</span><br><span class="line">    &#125;</span><br><span class="line">    switch (<span class="variable">$status</span>) &#123;</span><br><span class="line">        <span class="keyword">case</span> 1:</span><br><span class="line">            <span class="variable">$text</span> = <span class="string">"解码未完成"</span>;</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">        <span class="keyword">case</span> 2:</span><br><span class="line">            <span class="variable">$text</span> = <span class="string">"解码重新开始"</span>;</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">        <span class="keyword">case</span> 3:</span><br><span class="line">            <span class="variable">$text</span> = <span class="string">"解码开始"</span>;</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">        default:</span><br><span class="line">            <span class="variable">$text</span> = <span class="string">"状态异常"</span>;</span><br><span class="line">            <span class="built_in">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$bat</span> = fopen(<span class="string">"&#123;<span class="variable">$batFilename</span>&#125;"</span>, <span class="string">"w"</span>) or die(<span class="string">"Unable to open file!"</span>);</span><br><span class="line">    <span class="variable">$txt</span> = &lt;&lt;&lt;EOF</span><br><span class="line">@ <span class="built_in">echo</span> off</span><br><span class="line">REM get cmd pid</span><br><span class="line"><span class="built_in">set</span> TempFile=%TEMP%\sthUnique.tmp</span><br><span class="line">wmic process <span class="built_in">where</span> (Name=<span class="string">"wmic.exe"</span> AND CommandLine LIKE <span class="string">"%%%TIME%%%"</span>) get ParentProcessId /value | find <span class="string">"ParentProcessId"</span> &gt;%TempFile%</span><br><span class="line"><span class="built_in">set</span> /P _string=&lt;%TempFile%</span><br><span class="line"><span class="built_in">set</span> _pid=%_string:~16%</span><br><span class="line"><span class="built_in">echo</span> %_pid% &gt; &#123;<span class="variable">$pidFilename</span>&#125; 2&gt;&amp;1</span><br><span class="line">:chongfu</span><br><span class="line"><span class="built_in">echo</span> 666</span><br><span class="line">ping 127.0.1 -n <span class="string">"2"</span>&gt;nul</span><br><span class="line">goto chongfu</span><br><span class="line">EOF;</span><br><span class="line">    fwrite(<span class="variable">$bat</span>, <span class="variable">$txt</span>);</span><br><span class="line">    fclose(<span class="variable">$bat</span>);</span><br><span class="line">    <span class="keyword">while</span> (!file_exists(<span class="string">"./&#123;<span class="variable">$batFilename</span>&#125;"</span>));</span><br><span class="line">    <span class="built_in">echo</span> file_exists(<span class="string">"./&#123;<span class="variable">$batFilename</span>&#125;"</span>) ? <span class="string">"yes"</span> : <span class="string">"no"</span>;</span><br><span class="line">    <span class="variable">$pid</span> = popen(<span class="string">"start .\\&#123;<span class="variable">$batFilename</span>&#125; &gt;&gt; &#123;<span class="variable">$hookFileName</span>&#125; 2&gt;&amp;1"</span>, <span class="string">"r"</span>);</span><br><span class="line">    pclose(<span class="variable">$pid</span>);</span><br><span class="line">    <span class="built_in">return</span> <span class="variable">$text</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2018/02/02/Flutter Widget/1、Flutter Widget 之 MaterialApp 主题/" class="pre-post btn btn-default" title='1、Flutter Widget 之 MaterialApp 主题'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            1、Flutter Widget 之 MaterialApp 主题</span>
+    </a>
+    
+    
+    <a href="/2017/09/29/PHP/40、zip压缩/" class="next-post btn btn-default" title='40、zip压缩'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            40、zip压缩</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#通过fsockopen"><span class="toc-text">通过fsockopen</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过CURL"><span class="toc-text">通过CURL</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#windows"><span class="toc-text">windows</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

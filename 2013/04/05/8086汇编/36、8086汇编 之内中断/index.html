@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="8086汇编">
+
+
+<meta name="description" content="内中断内中断: 是CPU内部发生情况后而产生的中断信息，于是CPU便放下手中的活来处理中断例程
+8086CPU会产生主要这么几种内中断:
+
+除法溢出(0号中断)
+单步中断(1号中断)
+执行int...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    36、8086汇编 之内中断 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="36、8086汇编 之内中断">
+            
+            36、8086汇编 之内中断
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/8086汇编/">8086汇编</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/8086汇编/">8086汇编</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2013/04/05</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2681</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h3 id="内中断"><a href="#内中断" class="headerlink" title="内中断"></a><strong>内中断</strong></h3><p>内中断: 是CPU内部发生情况后而产生的中断信息，于是CPU便放下手中的活来处理中断例程</p>
+<p>8086CPU会产生主要这么几种内中断:</p>
+<ol>
+<li>除法溢出(0号中断)</li>
+<li>单步中断(1号中断)</li>
+<li>执行into指令产生的中断(不清楚)</li>
+<li>执行int指令产生的中断(常见的int 21就是属于这种)</li>
+</ol>
+<p>首先，理解清楚什么是中断例程, 中断向量，中断向量表，中断信息，中断类型码等概念</p>
+<ol>
+<li>中断类型码是一个8位的数，也就是0-255的范围，一共256个中断类型码，每一个号码对应一个中断向量</li>
+<li>中断向量里面包含中断例程的入口地址(CS:IP)，其中cs是16位段寄存器，ip也是16位的所以一共4字节</li>
+<li>中断向量表是一张表存储着256个中断向量，而每一个向量存储着一个中断例程的地址，也就是说总共最多会有256个中断例程</li>
+<li>中断信息包含很多信息最重要的就是中断类型码，该码号指出了中断例程的在内存中的置位</li>
+<li>中断例程又称为中断处理程序，是CPU在接收到中断信息后所执行的程序，该程序的入口位于中断向量表中的中断向量里</li>
+</ol>
+<p>总结一下: </p>
+<p>首先中断例程就可以看做程序，这种程序最多只能有256个，这些程序在发生中断后会被CPU调用，每个程序都有一个相对于的入口地址</p>
+<p>这些地址被存放在一张表里叫做中断向量表，因为中断例程最多有256个，所以中断向量表最多也就是256项，而中断向量的地址是如何确定的呢？因为我们只有通过中断向量表才能找到中断例程来处理中断信息</p>
+<p>中断向量表在8086CPU中的位置是固定的，位于0000:0000~0000:03ff这1024字节中，然而我们知道一条中断向量是4字节大小，那中断向量表就有1024 / 4 = 256条中断向量</p>
+<p>当发生中断时，CPU就会就收到中断信息，中断信息里有很多东西， 其中就包括了中断类型码，这是一种8位的码，正好也一共有256个完全覆盖中断向量表，假设我们收到的中断类型码是8的话， 那么我们通过[8 * 4]和[8 *4 + 2]来确定一条中断向量即其cs:ip， 为何是这样? 首先第八号中断类型码，由于中断类型码是从0开始到255，所以第八号实际处于第九个的置位，而每一条中断向量是4个字节，所以要4 * 8这个地址才是第九个位置的开头即cs的置位，因为cs是16位即2字节所以ip就处在4 * 8 + 2这个地方。</p>
+<p>整个过程可以变为:<br>取得终端类型码N-&gt;pushf-&gt;TF和IF置零(为了防止外中断和单步中断的产生)-&gt;push cs push ip-&gt;把cs设置成0000:[8 * 4],ip设置成0000:[8 * 4 + 2]即达到了中断例程的入口执行中断处理程序-&gt;使用iret返回</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">assume</span> <span class="built_in">cs</span>:code</span><br><span class="line">COMMENT !</span><br><span class="line">由于中断例程不可能到达<span class="number">256</span>个那么多，所以中断向量表中还有很多是空的</span><br><span class="line">比如<span class="number">0000</span>:<span class="number">0200</span>~<span class="number">0000</span>:02FF这<span class="number">256</span>个字节，所以便把中断例程放置在这个位置</span><br><span class="line">!</span><br><span class="line"></span><br><span class="line">code <span class="meta">segment</span></span><br><span class="line"><span class="symbol">start:</span></span><br><span class="line"><span class="comment">;安装中断例程</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="number">0</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">es</span>, <span class="built_in">ax</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">di</span>, <span class="number">200h</span>   <span class="comment">;目的地址es:di 即0000:0200,</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="built_in">cs</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ds</span>, <span class="built_in">ax</span> <span class="comment">;源地址ds:si 即do0的偏移地址，也就是中断处理程序</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">si</span>, offset do0  </span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">cx</span>, offset do0end - offset do0 <span class="comment">;中断处理程序的字节数,也就是要转移的数量</span></span><br><span class="line">	<span class="keyword">cld</span> </span><br><span class="line">	<span class="keyword">rep</span> <span class="keyword">movsb</span> <span class="comment">;把中断处理程序安装至0000:0200</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="number">0</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">es</span>, <span class="built_in">ax</span></span><br><span class="line"><span class="comment">;将中断例程的入口地址放置到中断向量表中</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">word</span> <span class="built_in">ptr</span> <span class="built_in">es</span>:[<span class="number">0</span> * <span class="number">4</span>], <span class="number">200h</span> <span class="comment">;将中断处理程序的入口放在0号中断向量中</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">word</span> <span class="built_in">ptr</span> <span class="built_in">es</span>:[<span class="number">0</span> * <span class="number">4</span> + <span class="number">2</span>], <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="number">4c00h</span></span><br><span class="line">	<span class="keyword">int</span> <span class="number">21h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">;中断处理程序</span></span><br><span class="line"><span class="symbol">do0:</span> <span class="comment">;为了防止字符串被覆盖所以将其放在中断例程里</span></span><br><span class="line">	<span class="keyword">jmp</span> short do0start</span><br><span class="line">	<span class="built_in">db</span> <span class="string">'Divide overflow!'</span>, <span class="number">0</span></span><br><span class="line"><span class="symbol">do0start:</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="number">0b800h</span>  <span class="comment">;显存段地址</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">es</span>, <span class="built_in">ax</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">di</span>, <span class="number">160</span> * <span class="number">12</span> + <span class="number">36</span> * <span class="number">2</span> <span class="comment">;第13行中间位置</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ax</span>, <span class="built_in">cs</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">ds</span>, <span class="built_in">ax</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">si</span>, <span class="number">202h</span> <span class="comment">;字符串的偏移地址</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">cx</span>, <span class="number">10h</span> <span class="comment">;字符串数目</span></span><br><span class="line"><span class="symbol">s:</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">bl</span>, [<span class="built_in">si</span>]</span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">es</span>:[<span class="built_in">di</span>], <span class="built_in">bl</span></span><br><span class="line">	<span class="keyword">mov</span> <span class="built_in">es</span>:[<span class="built_in">di</span> + <span class="number">1</span>], <span class="number">2</span></span><br><span class="line">	<span class="keyword">inc</span> <span class="built_in">si</span></span><br><span class="line">	<span class="keyword">add</span> <span class="built_in">di</span>, <span class="number">2</span></span><br><span class="line">	<span class="keyword">loop</span> s</span><br><span class="line">	<span class="keyword">iret</span>  <span class="comment">;返回</span></span><br><span class="line"><span class="symbol">do0end:</span></span><br><span class="line">	<span class="keyword">nop</span></span><br><span class="line">code ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<p>以上是0号中断即除法溢出</p>
+<p>下面说说1号中断即单步中断，单步中断与TF标志位密切相关，如果TF = 1代表开启单步中断，单步中断是什么?</p>
+<p>举个例子用debug.exe程序用t指令观察指令执行时寄存器数值变化时，程序停了下来，原因就是单步中断</p>
+<p>那么如果是这样有一个问题就是TF= 1那进入中断处理程序时不也会一直中断吗？即中断里面中断的循环，实际上这是不会的，因为:</p>
+<p>取得终端类型码N-&gt;pushf-&gt;TF和IF置零(为了防止外中断和单步中断的产生)-&gt;push cs push ip-&gt;把cs设置成0000:[8 * 4],ip设置成0000:[8 * 4 + 2]即达到了中断例程的入口执行中断处理程序-&gt;使用iret返回</p>
+<p>当单步中断产生时候即得到中断类型码1，把标志寄存器入栈后随即将TF置零，前面直到TF = 1时候单步中断才开启，这样进入单步中断处理程序后就不会再有中断产生了。</p>
+<p>最后为何在设置ss:sp即栈段的时候中间不能够夹杂其他代码? </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov ss, FC00h</span><br><span class="line">int ? ;发生了某个中断</span><br><span class="line">;取得终端类型码N-&gt;pushf-&gt;TF和<span class="keyword">IF</span>置零(为了防止外中断和单步中断的产生)-&gt;push cs push ip</span><br><span class="line">;所以改变了栈顶指针的位置使其指向错误位置</span><br><span class="line">mov sp, 10h</span><br></pre></td></tr></table></figure>
+
+<p>这就是原因</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2013/04/06/8086汇编/37、8086汇编 之int中断/" class="pre-post btn btn-default" title='37、8086汇编 之int中断'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            37、8086汇编 之int中断</span>
+    </a>
+    
+    
+    <a href="/2013/04/04/8086汇编/35、8086汇编 之DF标志位与传送指令/" class="next-post btn btn-default" title='35、8086汇编 之DF标志位与传送指令'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            35、8086汇编 之DF标志位与传送指令</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#内中断"><span class="toc-text">内中断</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

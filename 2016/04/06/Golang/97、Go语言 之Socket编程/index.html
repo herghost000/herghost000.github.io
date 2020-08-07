@@ -1,0 +1,668 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之Socket编程什么是SocketSocket，英文含义是【插座、插孔】，一般称之为套接字，用于描述IP地址和端口。可以实现不同程序间的数据通信。Socket起源于Unix，而Uni...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    97、Go语言 之Socket编程 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="97、Go语言 之Socket编程">
+            
+            97、Go语言 之Socket编程
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/06</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1584</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之Socket编程"><a href="#Go语言-之Socket编程" class="headerlink" title="Go语言 之Socket编程"></a><strong>Go语言 之Socket编程</strong></h2><h3 id="什么是Socket"><a href="#什么是Socket" class="headerlink" title="什么是Socket"></a><strong>什么是Socket</strong></h3><p>Socket，英文含义是【插座、插孔】，一般称之为套接字，用于描述IP地址和端口。可以实现不同程序间的数据通信。<br>Socket起源于Unix，而Unix基本哲学之一就是“一切皆文件”，都可以用“打开open –&gt; 读写write/read –&gt; 关闭close”模式来操作。Socket就是该模式的一个实现，网络的Socket数据传输是一种特殊的I/O，Socket也是一种文件描述符。Socket也具有一个类似于打开文件的函数调用：Socket()，该函数返回一个整型的Socket描述符，随后的连接建立、数据传输等操作都是通过该Socket实现的。</p>
+<p>套接字的内核实现较为复杂，不宜在学习初期深入学习，了解到如下结构足矣。</p>
+<p>在TCP/IP协议中，“IP地址+TCP或UDP端口号”唯一标识网络通讯中的一个进程。“IP地址+端口号”就对应一个socket。欲建立连接的两个进程各自有一个socket来标识，那么这两个socket组成的socket pair就唯一标识一个连接。因此可以用Socket来描述网络连接的一对一关系。</p>
+<p>常用的Socket类型有两种：流式Socket（SOCK_STREAM）和数据报式Socket（SOCK_DGRAM）。流式是一种面向连接的Socket，针对于面向连接的TCP服务应用；数据报式Socket是一种无连接的Socket，对应于无连接的UDP服务应用。</p>
+<h3 id="网络应用程序设计模式"><a href="#网络应用程序设计模式" class="headerlink" title="网络应用程序设计模式"></a><strong>网络应用程序设计模式</strong></h3><h4 id="C-S模式"><a href="#C-S模式" class="headerlink" title="C/S模式"></a><strong>C/S模式</strong></h4><p>传统的网络应用设计模式，客户机(client)/服务器(server)模式。需要在通讯两端各自部署客户机和服务器来完成数据通信。</p>
+<h4 id="B-S模式"><a href="#B-S模式" class="headerlink" title="B/S模式"></a><strong>B/S模式</strong></h4><p>浏览器(Browser)/服务器(Server)模式。只需在一端部署服务器，而另外一端使用每台PC都默认配置的浏览器即可完成数据的传输。</p>
+<h4 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h4><p>对于C/S模式来说，其优点明显。客户端位于目标主机上可以保证性能，将数据缓存至客户端本地，从而提高数据传输效率。且，一般来说客户端和服务器程序由一个开发团队创作，所以他们之间所采用的协议相对灵活。可以在标准协议的基础上根据需求裁剪及定制。例如，腾讯所采用的通信协议，即为ftp协议的修改剪裁版。</p>
+<p>因此，传统的网络应用程序及较大型的网络应用程序都首选C/S模式进行开发。如，知名的网络游戏魔兽世界。3D画面，数据量庞大，使用C/S模式可以提前在本地进行大量数据的缓存处理，从而提高观感。</p>
+<p>C/S模式的缺点也较突出。由于客户端和服务器都需要有一个开发团队来完成开发。工作量将成倍提升，开发周期较长。另外，从用户角度出发，需要将客户端安插至用户主机上，对用户主机的安全性构成威胁。这也是很多用户不愿使用C/S模式应用程序的重要原因。</p>
+<p>B/S模式相比C/S模式而言，由于它没有独立的客户端，使用标准浏览器作为客户端，其工作开发量较小。只需开发服务器端即可。另外由于其采用浏览器显示数据，因此移植性非常好，不受平台限制。如早期的偷菜游戏，在各个平台上都可以完美运行。</p>
+<p>B/S模式的缺点也较明显。由于使用第三方浏览器，因此网络应用支持受限。另外，没有客户端放到对方主机上，缓存数据不尽如人意，从而传输数据量受到限制。应用的观感大打折扣。第三，必须与浏览器一样，采用标准http协议进行通信，协议选择不灵活。</p>
+<p>因此在开发过程中，模式的选择由上述各自的特点决定。根据实际需求选择应用程序设计模式。</p>
+<p>TCP的C/S架构</p>
+<table>
+<thead>
+<tr>
+<th>TCP客户端</th>
+<th>动作</th>
+<th>TCP服务端</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>-</td>
+<td>net.Listen()</td>
+</tr>
+<tr>
+<td>net.Dial()</td>
+<td>阻塞等待用户链接-&gt;</td>
+<td>Accept()</td>
+</tr>
+<tr>
+<td>Write()</td>
+<td>数据（请求）-&gt;</td>
+<td>Read()</td>
+</tr>
+<tr>
+<td>Read()</td>
+<td>数据（应答）&lt;-</td>
+<td>Write()</td>
+</tr>
+<tr>
+<td>Close()</td>
+<td>-</td>
+<td>Close()</td>
+</tr>
+</tbody></table>
+<h3 id="简单的C-S模型通信"><a href="#简单的C-S模型通信" class="headerlink" title="简单的C/S模型通信"></a><strong>简单的C/S模型通信</strong></h3><h4 id="Server端："><a href="#Server端：" class="headerlink" title="Server端："></a><strong>Server端：</strong></h4><p>Listen函数：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func Listen(network,<span class="built_in"> address </span>string) (Listener, error)</span><br><span class="line">	network：选用的协议：TCP、UDP， 	如：“tcp”或 “udp”</span><br><span class="line">	address：IP地址+端口号, 			如：“127.0.0.1:8000”或 “:8000”</span><br></pre></td></tr></table></figure>
+
+<p>Listener 接口：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Listener<span class="built_in"> interface </span>&#123;</span><br><span class="line">			Accept() (Conn, error)</span><br><span class="line">			Close() error</span><br><span class="line">			Addr() Addr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Conn 接口：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Conn interface &#123;</span><br><span class="line">	<span class="constructor">Read(<span class="params">b</span> []<span class="params">byte</span>)</span> (n <span class="built_in">int</span>, err error)</span><br><span class="line">	<span class="constructor">Write(<span class="params">b</span> []<span class="params">byte</span>)</span> (n <span class="built_in">int</span>, err error)</span><br><span class="line">	<span class="constructor">Close()</span> error</span><br><span class="line">	<span class="constructor">LocalAddr()</span> Addr</span><br><span class="line">	<span class="constructor">RemoteAddr()</span> Addr</span><br><span class="line">	<span class="constructor">SetDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">	<span class="constructor">SetReadDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">	<span class="constructor">SetWriteDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参看 <a href="https://studygolang.com/pkgdoc" target="_blank" rel="noopener">https://studygolang.com/pkgdoc</a> 中文帮助文档中的demo</p>
+<p>示例代码：</p>
+<p>TCP服务器.go</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 创建监听</span></span><br><span class="line">   listener, err:= net.Listen(<span class="string">"tcp"</span>, <span class="string">":8000"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"listen err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> listener.Close()          <span class="comment">// 主协程结束时，关闭listener</span></span><br><span class="line"></span><br><span class="line">   fmt.Println(<span class="string">"服务器等待客户端建立连接..."</span>)</span><br><span class="line">   <span class="comment">// 等待客户端连接请求</span></span><br><span class="line">   conn, err := listener.Accept()</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"accept err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()             <span class="comment">// 使用结束，断开与客户端链接</span></span><br><span class="line">   fmt.Println(<span class="string">"客户端与服务器连接建立成功..."</span>)</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 接收客户端数据</span></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)        <span class="comment">// 创建1024大小的缓冲区，用于read</span></span><br><span class="line">   n, err := conn.Read(buf)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"read err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   fmt.Println(<span class="string">"服务器读到:"</span>, <span class="keyword">string</span>(buf[:n])) <span class="comment">// 读多少，打印多少。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在整个通信过程中，服务器端有两个socket参与进来，但用于通信的只有 conn 这个socket。它是由 listener创建的。隶属于服务器端。</p>
+<h4 id="Client-端"><a href="#Client-端" class="headerlink" title="Client 端"></a><strong>Client 端</strong></h4><p>Dial函数：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func Dial(network,<span class="built_in"> address </span>string) (Conn, error)</span><br><span class="line">	network：选用的协议：TCP、UDP，如：“tcp”或 “udp”</span><br><span class="line">	address：服务器IP地址+端口号, 如：“121.36.108.11:8000”或 “www.itcast.cn:8000”</span><br></pre></td></tr></table></figure>
+
+<p>Conn 接口：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Conn interface &#123;</span><br><span class="line">	<span class="constructor">Read(<span class="params">b</span> []<span class="params">byte</span>)</span> (n <span class="built_in">int</span>, err error)</span><br><span class="line">	<span class="constructor">Write(<span class="params">b</span> []<span class="params">byte</span>)</span> (n <span class="built_in">int</span>, err error)</span><br><span class="line">	<span class="constructor">Close()</span> error</span><br><span class="line">	<span class="constructor">LocalAddr()</span> Addr</span><br><span class="line">	<span class="constructor">RemoteAddr()</span> Addr</span><br><span class="line">	<span class="constructor">SetDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">	<span class="constructor">SetReadDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">	<span class="constructor">SetWriteDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">// 主动发起连接请求</span></span><br><span class="line">   conn, err := net.Dial(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8000"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Dial err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()         <span class="comment">// 结束时，关闭连接</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// 发送数据</span></span><br><span class="line">   _, err = conn.Write([]<span class="keyword">byte</span>(<span class="string">"Are u ready?"</span>))</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Write err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="并发的C-S模型通信"><a href="#并发的C-S模型通信" class="headerlink" title="并发的C/S模型通信"></a><strong>并发的C/S模型通信</strong></h3><h4 id="并发Server"><a href="#并发Server" class="headerlink" title="并发Server"></a><strong>并发Server</strong></h4><p>现在已经完成了客户端与服务端的通信，但是服务端只能接收一个用户发送过来的数据，怎样接收多个客户端发送过来的数据，实现一个高效的并发服务器呢？</p>
+<p>Accept()函数的作用是等待客户端的链接，如果客户端没有链接，该方法会阻塞。如果有客户端链接，那么该方法返回一个Socket负责与客户端进行通信。所以，每来一个客户端，该方法就应该返回一个Socket与其通信，因此，可以使用一个死循环，将Accept()调用过程包裹起来。<br>需要注意的是，实现并发处理多个客户端数据的服务器，就需要针对每一个客户端连接，单独产生一个Socket，并创建一个单独的goroutine与之完成通信。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//监听</span></span><br><span class="line">    listener, <span class="keyword">err</span> := <span class="keyword">net</span>.Listen(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8001"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        	fmt.Println(<span class="string">"err = "</span>, <span class="keyword">err</span>)</span><br><span class="line">        	<span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    defer listener.<span class="keyword">Close</span>()</span><br><span class="line">    <span class="comment">//接收多个用户</span></span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        	conn, <span class="keyword">err</span> := listener.Accept()</span><br><span class="line">        	<span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">          		fmt.Println(<span class="string">"err = "</span>, <span class="keyword">err</span>)</span><br><span class="line">            		<span class="built_in">return</span></span><br><span class="line">       	 &#125;</span><br><span class="line">       	 <span class="comment">//处理用户请求, 新建一个协程</span></span><br><span class="line">       	 go HandleConn(conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将客户端的数据处理工作封装到HandleConn方法中，需将Accept()返回的Socket传递给该方法，变量conn的类型为：net.Conn。可以使用conn.RemoteAddr()来获取成功与服务器建立连接的客户端IP地址和端口号：<br>Conn 接口：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Conn interface &#123;</span><br><span class="line">	<span class="constructor">Read(<span class="params">b</span> []<span class="params">byte</span>)</span> (n <span class="built_in">int</span>, err error)</span><br><span class="line">	<span class="constructor">Write(<span class="params">b</span> []<span class="params">byte</span>)</span> (n <span class="built_in">int</span>, err error)</span><br><span class="line">	<span class="constructor">Close()</span> error</span><br><span class="line">	<span class="constructor">LocalAddr()</span> Addr</span><br><span class="line">	<span class="constructor">RemoteAddr()</span> Addr</span><br><span class="line">	<span class="constructor">SetDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">	<span class="constructor">SetReadDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">	<span class="constructor">SetWriteDeadline(<span class="params">t</span> <span class="params">time</span>.Time)</span> error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    //获取客户端的网络地址信息</span><br><span class="line">    <span class="keyword">addr </span>:= conn.RemoteAddr().<span class="keyword">String()</span></span><br><span class="line"><span class="keyword"> </span>   fmt.Println(<span class="keyword">addr, </span><span class="string">" conncet sucessful"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>客户端可能持续不断的发送数据，因此接收数据的过程可以放在for循环中，服务端也持续不断的向客户端返回处理后的数据。<br>添加一个限定，如果客户端发送一个“exit”字符串，表示客户端通知服务器不再向服务端发送数据，此时应该结束HandleConn方法，同时关闭与该客户端关联的Socket。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">2048</span>)	 <span class="comment">//创建一个切片，存储客户端发送的数据</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">        <span class="comment">//读取用户数据 </span></span><br><span class="line">        n, err := conn.Read(buf)</span><br><span class="line">        <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            fmt.Println(<span class="string">"err = "</span>, err)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        fmt.Printf(<span class="string">"[%s]: %s\n"</span>, addr, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line">        <span class="keyword">if</span>  <span class="string">"exit"</span> == <span class="keyword">string</span>(buf[:n<span class="number">-2</span>]) &#123; 		<span class="comment">//自己写的客户端测试, 发送时，多了2个字符, "\r\n"</span></span><br><span class="line">            fmt.Println(addr, <span class="string">" exit"</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//服务器处理数据：把客户端数据转大写，再写回给client</span></span><br><span class="line">        conn.Write([]<span class="keyword">byte</span>(strings.ToUpper(<span class="keyword">string</span>(buf[:n]))))</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的代码中，Read()方法获取客户端发送过来的数据，填充到切片buf中，返回的是实际填充的数据的长度，所以将客户端发送过来的数据进行打印，打印的是实际接收到的数据。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.<span class="constructor">Printf(<span class="string">"[%s]: %s\n"</span>, <span class="params">addr</span>, <span class="params">string</span>(<span class="params">buf</span>[:<span class="params">n</span>])</span>).</span><br></pre></td></tr></table></figure>
+
+<p>同时也可以将客户端的网络地址信息打印出来。</p>
+<p>在判断客户端数据是否为“exit”字符串时，要注意，客户端会自动的多发送2个字符：“\r\n”（这在windows系统下代表回车、换行）</p>
+<p>Server使用Write方法将数据写回给客户端，参数类型是 []byte，需使用strings包下的ToUpper函数来完成大小写转换。</p>
+<p>转换的对象即为string(buf[:n])</p>
+<p>综上，HandleConn方法完整定义如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//处理用户请求</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">HandleConn</span><span class="params">(conn net.Conn)</span></span> &#123;</span><br><span class="line"><span class="comment">//函数调用完毕，自动关闭conn</span></span><br><span class="line"><span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">          <span class="comment">//获取客户端的网络地址信息</span></span><br><span class="line">          addr := conn.RemoteAddr().String()</span><br><span class="line">          fmt.Println(addr, <span class="string">" conncet sucessful"</span>)</span><br><span class="line"></span><br><span class="line">          buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">2048</span>)</span><br><span class="line"></span><br><span class="line">          <span class="keyword">for</span> &#123;</span><br><span class="line">                  <span class="comment">//读取用户数据</span></span><br><span class="line">                 n, err := conn.Read(buf)</span><br><span class="line">                 <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">                         fmt.Println(<span class="string">"err = "</span>, err)</span><br><span class="line">                         <span class="keyword">return</span></span><br><span class="line">            		&#125;</span><br><span class="line">            		fmt.Printf(<span class="string">"[%s]: %s\n"</span>,  addr,  <span class="keyword">string</span>(buf[:n]))</span><br><span class="line">            	fmt.Println(<span class="string">"len = "</span>, <span class="built_in">len</span>(<span class="keyword">string</span>(buf[:n])))	</span><br><span class="line"></span><br><span class="line">            		<span class="comment">//if "exit" == string(buf[:n-1]) &#123; 	// nc测试，发送时，只有 \n</span></span><br><span class="line">                 <span class="keyword">if</span>  <span class="string">"exit"</span> == <span class="keyword">string</span>(buf[:n<span class="number">-2</span>]) &#123;	<span class="comment">// 自己写的客户端测试, 发送时，多了2个字符, "\r\n"</span></span><br><span class="line">                        fmt.Println(addr, <span class="string">" exit"</span>)</span><br><span class="line">                        <span class="keyword">return</span></span><br><span class="line">                 &#125;</span><br><span class="line"></span><br><span class="line">                 <span class="comment">//把数据转换为大写，再给用户发送</span></span><br><span class="line">                 conn.Write([]<span class="keyword">byte</span>(strings.ToUpper(<span class="keyword">string</span>(buf[:n]))))</span><br><span class="line">          &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="并发Client"><a href="#并发Client" class="headerlink" title="并发Client"></a><strong>并发Client</strong></h4><p>客户端不仅需要持续的向服务端发送数据，同时也要接收从服务端返回的数据。因此可将发送和接收放到不同的协程中。</p>
+<p>主协程循环接收服务器回发的数据（该数据应已转换为大写），并打印至屏幕；子协程循环从键盘读取用户输入数据，写给服务器。读取键盘输入可使用 os.Stdin.Read(str)。定义切片str，将读到的数据保存至str中。</p>
+<p>这样，客户端也实现了多任务。</p>
+<p>客户端代码实现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">   <span class="string">"os"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">// 主动发起连接请求</span></span><br><span class="line">   conn, err := net.Dial(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8001"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Dial err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close() 		  			<span class="comment">// 客户端终止时，关闭与服务器通信的 socket </span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// 启动子协程，接收用户键盘输入</span></span><br><span class="line">   <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">  	  str := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)   		<span class="comment">// 创建用于存储用户键盘输入数据的切片缓冲区。</span></span><br><span class="line">      <span class="keyword">for</span> &#123;                    			<span class="comment">// 反复读取</span></span><br><span class="line">         n, err :=os.Stdin.Read(str)    	<span class="comment">// 获取用户键盘输入</span></span><br><span class="line">         <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            fmt.Println(<span class="string">"os.Stdin.Read err:"</span>, err)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">         &#125;</span><br><span class="line">         <span class="comment">// 将从键盘读到的数据，发送给服务器</span></span><br><span class="line">         _, err = conn.Write(str[:n])   	<span class="comment">// 读多少，写多少</span></span><br><span class="line">         <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            fmt.Println(<span class="string">"conn.Write err:"</span>, err)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 主协程，接收服务器回发数据，打印至屏幕</span></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)        		<span class="comment">// 定义用于存储服务器回发数据的切片缓冲区</span></span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      n, err := conn.Read(buf)	  		<span class="comment">// 从通信 socket 中读数据，存入切片缓冲区</span></span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">         fmt.Println(<span class="string">"conn.Read err:"</span>, err)</span><br><span class="line">         <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      fmt.Printf(<span class="string">"服务器回发：%s\n"</span>, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TCP通信"><a href="#TCP通信" class="headerlink" title="TCP通信"></a><strong>TCP通信</strong></h3><p>首先客户端主动发起连接、发送请求，然后服务器端响应请求，然后客户端主动关闭连接。两条竖线表示通讯的两端，从上到下表示时间的先后顺序。</p>
+<h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a><strong>三次握手</strong></h4><p>所谓三次握手（Three-Way Handshake）即建立TCP连接，就是指建立一个TCP连接时，需要客户端和服务端总共发送3个包以确认连接的建立。好比两个人在打电话：</p>
+<ul>
+<li>Client:“喂，你听得到吗？”</li>
+<li>Server:“我听得到，你听得到我吗？”</li>
+<li>Client:“我能听到你，今天balabala…”</li>
+</ul>
+<h4 id="建立连接（三次握手）的过程"><a href="#建立连接（三次握手）的过程" class="headerlink" title="建立连接（三次握手）的过程"></a><strong>建立连接（三次握手）的过程</strong></h4><ol>
+<li>客户端发送一个带SYN标志的TCP报文到服务器。这是上图中三次握手过程中的段1。客户端发出SYN位表示连接请求。序号是1000，这个序号在网络通讯中用作临时的地址，每发一个数据字节，这个序号要加1，这样在接收端可以根据序号排出数据包的正确顺序，也可以发现丢包的情况。<br>另外，规定SYN位和FIN位也要占一个序号，这次虽然没发数据，但是由于发了SYN位，因此下次再发送应该用序号1001。<br>mss表示最大段尺寸，如果一个段太大，封装成帧后超过了链路层的最大长度，就必须在IP层分片，为了避免这种情况，客户端声明自己的最大段尺寸，建议服务器端发来的段不要超过这个长度。</li>
+<li>服务器端回应客户端，是三次握手中的第2个报文段，同时带ACK标志和SYN标志。表示对刚才客户端SYN的回应；同时又发送SYN给客户端，询问客户端是否准备好进行数据通讯。<br>服务器发出段2，也带有SYN位，同时置ACK位表示确认，确认序号是1001，表示“我接收到序号1000及其以前所有的段，请你下次发送序号为1001的段”，也就是应答了客户端的连接请求，同时也给客户端发出一个连接请求，同时声明最大尺寸为1024。</li>
+<li>客户必须再次回应服务器端一个ACK报文，这是报文段3。<br>客户端发出段3，对服务器的连接请求进行应答，确认序号是8001。在这个过程中，客户端和服务器分别给对方发了连接请求，也应答了对方的连接请求，其中服务器的请求和应答在一个段中发出。<br>因此一共有三个段用于建立连接，称为“三方握手”。在建立连接的同时，双方协商了一些信息，例如，双方发送序号的初始值、最大段尺寸等。<h4 id="数据传输的过程"><a href="#数据传输的过程" class="headerlink" title="数据传输的过程"></a><strong>数据传输的过程</strong></h4></li>
+<li>客户端发出段4，包含从序号1001开始的20个字节数据。</li>
+<li>服务器发出段5，确认序号为1021，对序号为1001-1020的数据表示确认收到，同时请求发送序号1021开始的数据，服务器在应答的同时也向客户端发送从序号8001开始的10个字节数据。</li>
+<li>客户端发出段6，对服务器发来的序号为8001-8010的数据表示确认收到，请求发送序号8011开始的数据。<br>在数据传输过程中，ACK和确认序号是非常重要的，应用程序交给TCP协议发送的数据会暂存在TCP层的发送缓冲区中，发出数据包给对方之后，只有收到对方应答的ACK段才知道该数据包确实发到了对方，可以从发送缓冲区中释放掉了，如果因为网络故障丢失了数据包或者丢失了对方发回的ACK段，经过等待超时后TCP协议自动将发送缓冲区中的数据包重发。<h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a><strong>四次挥手</strong></h4>所谓四次挥手（Four-Way-Wavehand）即终止TCP连接，就是指断开一个TCP连接时，需要客户端和服务端总共发送4个包以确认连接的断开。在socket编程中，这一过程由客户端或服务器任一方执行close来触发。好比两个人打完电话要挂断：</li>
+</ol>
+<ul>
+<li>Client:“我要说的事情都说完了，我没事了。挂啦？”</li>
+<li>Server:“等下，我还有一个事儿。Balabala…” </li>
+<li>Server:“好了，我没事儿了。挂了啊。”</li>
+<li>Client:“ok！拜拜”<h4 id="关闭连接（四次握手）的过程"><a href="#关闭连接（四次握手）的过程" class="headerlink" title="关闭连接（四次握手）的过程"></a><strong>关闭连接（四次握手）的过程</strong></h4>由于TCP连接是全双工的，因此每个方向都必须单独进行关闭。这原则是当一方完成它的数据发送任务后就能发送一个FIN来终止这个方向的连接。收到一个 FIN只意味着这一方向上没有数据流动，一个TCP连接在收到一个FIN后仍能发送数据。首先进行关闭的一方将执行主动关闭，而另一方执行被动关闭。</li>
+</ul>
+<ol>
+<li>客户端发出段7，FIN位表示关闭连接的请求。</li>
+<li>服务器发出段8，应答客户端的关闭连接请求。</li>
+<li>服务器发出段9，其中也包含FIN位，向客户端发送关闭连接请求。</li>
+<li>客户端发出段10，应答服务器的关闭连接请求。</li>
+</ol>
+<p>建立连接的过程是三次握手，而关闭连接通常需要4个段，服务器的应答和关闭连接请求通常不合并在一个段中，因为有连接半关闭的情况，这种情况下客户端关闭连接之后就不能再发送数据给服务器了，但是服务器还可以发送数据给客户端，直到服务器也关闭连接为止。</p>
+<h3 id="UDP通信"><a href="#UDP通信" class="headerlink" title="UDP通信"></a><strong>UDP通信</strong></h3><p>在之前的案例中，我们一直使用的是TCP协议来编写Socket的客户端与服务端。其实也可以使用UDP协议来编写Socket的客户端与服务端。</p>
+<h4 id="UDP服务器"><a href="#UDP服务器" class="headerlink" title="UDP服务器"></a><strong>UDP服务器</strong></h4><p>由于UDP是“无连接”的，所以，服务器端不需要额外创建监听套接字，只需要指定好IP和port，然后监听该地址，等待客户端与之建立连接，即可通信。</p>
+<p>创建监听地址：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func ResolveUDPAddr(network,<span class="built_in"> address </span>string) (*UDPAddr, error)</span><br></pre></td></tr></table></figure>
+
+<p>创建监听连接：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ListenUDP</span><span class="params">(network string, laddr *UDPAddr)</span> <span class="params">(*UDPConn, error)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>接收udp数据：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *UDPConn)</span> <span class="title">ReadFromUDP</span><span class="params">(b []<span class="keyword">byte</span>)</span> <span class="params">(<span class="keyword">int</span>, *UDPAddr, error)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>写出数据到udp：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *UDPConn)</span> <span class="title">WriteToUDP</span><span class="params">(b []<span class="keyword">byte</span>, addr *UDPAddr)</span> <span class="params">(<span class="keyword">int</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>服务端完整代码实现如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">//创建监听的地址，并且指定udp协议</span></span><br><span class="line">   udp_addr, err := net.ResolveUDPAddr(<span class="string">"udp"</span>, <span class="string">"127.0.0.1:8002"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"ResolveUDPAddr err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   conn, err := net.ListenUDP(<span class="string">"udp"</span>, udp_addr)    <span class="comment">//创建监听链接</span></span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"ListenUDP err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">   n, raddr, err := conn.ReadFromUDP(buf)        <span class="comment">//接收客户端发送过来的数据，填充到切片buf中。</span></span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   fmt.Println(<span class="string">"客户端发送："</span>, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line"></span><br><span class="line">   _, err = conn.WriteToUDP([]<span class="keyword">byte</span>(<span class="string">"nice to see u in udp"</span>), raddr) <span class="comment">//向客户端发送数据</span></span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"WriteToUDP err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UDP客户端"><a href="#UDP客户端" class="headerlink" title="UDP客户端"></a><strong>UDP客户端</strong></h4><p>udp客户端的编写与TCP客户端的编写，基本上是一样的，只是将协议换成udp.代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   conn, err := net.Dial(<span class="string">"udp"</span>, <span class="string">"127.0.0.1:8002"</span>) </span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"net.Dial err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   conn.Write([]<span class="keyword">byte</span>(<span class="string">"Hello! I'm client in UDP!"</span>))</span><br><span class="line"></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">   n, err1 := conn.Read(buf)</span><br><span class="line">   <span class="keyword">if</span> err1 != <span class="literal">nil</span> &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   fmt.Println(<span class="string">"服务器发来："</span>, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="并发"><a href="#并发" class="headerlink" title="并发"></a><strong>并发</strong></h4><p>其实对于UDP而言，服务器不需要并发，只要循环处理客户端数据即可。客户端也等同于TCP通信并发的客户端。<br>服务器：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">// 创建 服务器 UDP 地址结构。指定 IP + port</span></span><br><span class="line">   laddr, err := net.ResolveUDPAddr(<span class="string">"udp"</span>, <span class="string">"127.0.0.1:8003"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"ResolveUDPAddr err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">// 监听 客户端连接</span></span><br><span class="line">   conn, err := net.ListenUDP(<span class="string">"udp"</span>, laddr)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"net.ListenUDP err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">      n, raddr, err := conn.ReadFromUDP(buf)</span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">         fmt.Println(<span class="string">"conn.ReadFromUDP err:"</span>, err)</span><br><span class="line">         <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      fmt.Printf(<span class="string">"接收到客户端[%s]：%s"</span>, raddr, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line"></span><br><span class="line">      conn.WriteToUDP([]<span class="keyword">byte</span>(<span class="string">"I-AM-SERVER"</span>), raddr) <span class="comment">// 简单回写数据给客户端</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"os"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   conn, err := net.Dial(<span class="string">"udp"</span>, <span class="string">"127.0.0.1:8003"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"net.Dial err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line">   <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">      str := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">      <span class="keyword">for</span> &#123;</span><br><span class="line">         n, err := os.Stdin.Read(str) <span class="comment">//从键盘读取内容， 放在str</span></span><br><span class="line">         <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            fmt.Println(<span class="string">"os.Stdin. err1 = "</span>, err)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">         &#125;</span><br><span class="line">         conn.Write(str[:n])       <span class="comment">// 给服务器发送</span></span><br><span class="line">      &#125;</span><br><span class="line">   &#125;()</span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      n, err := conn.Read(buf)</span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">         fmt.Println(<span class="string">"conn.Read err:"</span>, err)</span><br><span class="line">         <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      fmt.Println(<span class="string">"服务器写来："</span>, <span class="keyword">string</span>(buf[:n]))</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UDP与TCP的差异"><a href="#UDP与TCP的差异" class="headerlink" title="UDP与TCP的差异"></a><strong>UDP与TCP的差异</strong></h4><table>
+<thead>
+<tr>
+<th>TCP</th>
+<th>UDP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>面向连接</td>
+<td>面向无连接</td>
+</tr>
+<tr>
+<td>要求系统资源较多</td>
+<td>要求系统资源较少</td>
+</tr>
+<tr>
+<td>TCP程序结构较复杂</td>
+<td>UDP程序结构较简单</td>
+</tr>
+<tr>
+<td>使用流式</td>
+<td>使用数据包式</td>
+</tr>
+<tr>
+<td>保证数据准确性</td>
+<td>不保证数据准确性</td>
+</tr>
+<tr>
+<td>保证数据顺序</td>
+<td>不保证数据顺序</td>
+</tr>
+<tr>
+<td>通讯速度较慢</td>
+<td>通讯速度较快</td>
+</tr>
+</tbody></table>
+<h3 id="文件传输"><a href="#文件传输" class="headerlink" title="文件传输"></a><strong>文件传输</strong></h3><h4 id="流程简析"><a href="#流程简析" class="headerlink" title="流程简析"></a><strong>流程简析</strong></h4><p>借助TCP完成文件的传输，基本思路如下：</p>
+<ol>
+<li>发送方（客户端）向服务端发送文件名，服务端保存该文件名。</li>
+<li>接收方（服务端）向客户端返回一个消息ok，确认文件名保存成功。</li>
+<li>发送方（客户端）收到消息后，开始向服务端发送文件数据。</li>
+<li>接收方（服务端）读取文件内容，写入到之前保存好的文件中。</li>
+</ol>
+<p>首先获取文件名。借助os包中的stat()函数来获取文件属性信息。在函数返回的文件属性中包含文件名和文件大小。Stat参数name传入的是文件访问的绝对路径。FileInfo中的Name()函数可以将文件名单独提取出来。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func Stat(name string) (FileInfo, error) </span><br><span class="line">type FileInfo<span class="built_in"> interface </span>&#123;</span><br><span class="line">   Name() string       </span><br><span class="line">   Size() int64        </span><br><span class="line">   Mode() FileMode     </span><br><span class="line">   ModTime() time.Time </span><br><span class="line">   IsDir() bool        </span><br><span class="line">   Sys() interface&#123;&#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取文件属性示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"os"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   list := os.Args                        <span class="comment">// 获取命令行参数，存入list中</span></span><br><span class="line">   <span class="keyword">if</span> <span class="built_in">len</span>(list) != <span class="number">2</span> &#123;			<span class="comment">// 确保用户输入了一个命令行参数</span></span><br><span class="line">      fmt.Println(<span class="string">"格式为：xxx.go 文件名"</span>)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   fileName := list[<span class="number">1</span>]                   <span class="comment">// 从命令行保存文件名(含路径)</span></span><br><span class="line"></span><br><span class="line">   fileInfo, err := os.Stat(fileName)    <span class="comment">//根据文件名获取文件属性信息 fileInfo</span></span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"os.Stat err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   fmt.Println(<span class="string">"文件name为："</span>, fileInfo.Name())   <span class="comment">// 得到文件名(不含路径)</span></span><br><span class="line">   fmt.Println(<span class="string">"文件size为："</span>, fileInfo.Size())   <span class="comment">// 得到文件大小。单位字节</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="客户端实现"><a href="#客户端实现" class="headerlink" title="客户端实现"></a><strong>客户端实现</strong></h4><p>实现流程大致如下：</p>
+<ol>
+<li>提示用户输入文件名。接收文件名path（含访问路径）</li>
+<li>使用os.Stat()获取文件属性，得到纯文件名（去除访问路径）</li>
+<li>主动连接服务器，结束时关闭连接</li>
+<li>给接收端（服务器）发送文件名conn.Write()</li>
+<li>读取接收端回发的确认数据conn.Read()</li>
+<li>判断是否为“ok”。如果是，封装函数SendFile() 发送文件内容。传参path和conn</li>
+<li>只读Open文件, 结束时Close文件</li>
+<li>循环读文件，读到EOF终止文件读取</li>
+<li>将读到的内容原封不动Write给接收端（服务器）</li>
+</ol>
+<p>代码实现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">   <span class="string">"os"</span></span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"io"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SendFile</span><span class="params">(path <span class="keyword">string</span>, conn net.Conn)</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 以只读方式打开文件</span></span><br><span class="line">   f, err := os.Open(path)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"os.Open err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> f.Close()                   <span class="comment">// 发送结束关闭文件。</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// 循环读取文件，原封不动的写给服务器</span></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      n, err := f.Read(buf)        <span class="comment">// 读取文件内容到切片缓冲中</span></span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">            fmt.Println(<span class="string">"文件发送完毕"</span>)</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            fmt.Println(<span class="string">"f.Read err:"</span>, err)</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      conn.Write(buf[:n])  <span class="comment">// 原封不动写给服务器</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 提示输入文件名</span></span><br><span class="line">   fmt.Println(<span class="string">"请输入需要传输的文件："</span>)</span><br><span class="line">   <span class="keyword">var</span> path <span class="keyword">string</span></span><br><span class="line">   fmt.Scan(&amp;path)</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 获取文件名   fileInfo.Name()</span></span><br><span class="line">   fileInfo, err := os.Stat(path)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"os.Stat err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 主动连接服务器</span></span><br><span class="line">   conn, err := net.Dial(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8005"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"net.Dial err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 给接收端，先发送文件名</span></span><br><span class="line">   _, err = conn.Write([]<span class="keyword">byte</span>(fileInfo.Name()))</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"conn.Write err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 读取接收端回发确认数据 —— ok</span></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">   n, err := conn.Read(buf)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"conn.Read err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 判断如果是ok，则发送文件内容</span></span><br><span class="line">   <span class="keyword">if</span> <span class="string">"ok"</span> == <span class="keyword">string</span>(buf[:n]) &#123;</span><br><span class="line">      SendFile(path, conn)   <span class="comment">// 封装函数读文件，发送给服务器，需要path、conn</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="服务端实现"><a href="#服务端实现" class="headerlink" title="服务端实现"></a><strong>服务端实现</strong></h4><p>实现流程大致如下：</p>
+<ol>
+<li>创建监听listener，程序结束时关闭。</li>
+<li>阻塞等待客户端连接，程序结束时关闭conn。</li>
+<li>读取客户端发送文件名。保存fileName。</li>
+<li>回发“ok”给客户端做应答</li>
+<li>封装函数 RecvFile接收客户端发送的文件内容。传参fileName 和conn</li>
+<li>按文件名Create文件，结束时Close</li>
+<li>循环Read客户端发送的文件内容，当读到EOF说明文件读取完毕。</li>
+<li>将读到的内容原封不动Write到创建的文件中</li>
+</ol>
+<p>代码实现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"net"</span></span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">   <span class="string">"os"</span></span><br><span class="line">   <span class="string">"io"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RecvFile</span><span class="params">(fileName <span class="keyword">string</span>, conn net.Conn)</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 创建新文件</span></span><br><span class="line">   f, err := os.Create(fileName)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Create err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> f.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 接收客户端发送文件内容，原封不动写入文件</span></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">4096</span>)</span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      n, err := conn.Read(buf)</span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">            fmt.Println(<span class="string">"文件接收完毕"</span>)</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            fmt.Println(<span class="string">"Read err:"</span>, err)</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">      f.Write(buf[:n])   <span class="comment">// 写入文件，读多少写多少</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">   <span class="comment">// 创建监听</span></span><br><span class="line">   listener, err := net.Listen(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:8005"</span>)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Listen err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> listener.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 阻塞等待客户端连接</span></span><br><span class="line">   conn, err := listener.Accept()</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Accept err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 读取客户端发送的文件名</span></span><br><span class="line">   buf := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">1024</span>)</span><br><span class="line">   n, err := conn.Read(buf)</span><br><span class="line">   <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">      fmt.Println(<span class="string">"Read err:"</span>, err)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">   &#125;</span><br><span class="line">   fileName := <span class="keyword">string</span>(buf[:n])       <span class="comment">// 保存文件名</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">// 回复 0k 给发送端</span></span><br><span class="line">   conn.Write([]<span class="keyword">byte</span>(<span class="string">"ok"</span>))</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 接收文件内容</span></span><br><span class="line">   RecvFile(fileName, conn)      <span class="comment">// 封装函数接收文件内容， 传fileName 和 conn</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/07/Golang/98、Go语言 之并发聊天室示例/" class="pre-post btn btn-default" title='98、Go语言 之并发聊天室示例'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            98、Go语言 之并发聊天室示例</span>
+    </a>
+    
+    
+    <a href="/2016/04/06/Mysql/6、mysql 之创建表/" class="next-post btn btn-default" title='6、mysql 之创建表'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            6、mysql 之创建表</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之Socket编程"><span class="toc-text">Go语言 之Socket编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Socket"><span class="toc-text">什么是Socket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络应用程序设计模式"><span class="toc-text">网络应用程序设计模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#C-S模式"><span class="toc-text">C/S模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B-S模式"><span class="toc-text">B/S模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优缺点"><span class="toc-text">优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单的C-S模型通信"><span class="toc-text">简单的C/S模型通信</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Server端："><span class="toc-text">Server端：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Client-端"><span class="toc-text">Client 端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并发的C-S模型通信"><span class="toc-text">并发的C/S模型通信</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#并发Server"><span class="toc-text">并发Server</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#并发Client"><span class="toc-text">并发Client</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP通信"><span class="toc-text">TCP通信</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#三次握手"><span class="toc-text">三次握手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#建立连接（三次握手）的过程"><span class="toc-text">建立连接（三次握手）的过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据传输的过程"><span class="toc-text">数据传输的过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四次挥手"><span class="toc-text">四次挥手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭连接（四次握手）的过程"><span class="toc-text">关闭连接（四次握手）的过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP通信"><span class="toc-text">UDP通信</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UDP服务器"><span class="toc-text">UDP服务器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UDP客户端"><span class="toc-text">UDP客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#并发"><span class="toc-text">并发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UDP与TCP的差异"><span class="toc-text">UDP与TCP的差异</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件传输"><span class="toc-text">文件传输</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#流程简析"><span class="toc-text">流程简析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端实现"><span class="toc-text">客户端实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端实现"><span class="toc-text">服务端实现</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

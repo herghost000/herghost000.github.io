@@ -1,0 +1,460 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之操作数据库Go操作Mysql数据库使用Go操作MySQL等数据库，一般有两种方式：
+
+一是使用database/sql接口，直接在代码里硬编码sql语句；
+二是使用gorm，即对象关...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    101、Go语言 之操作数据库 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="101、Go语言 之操作数据库">
+            
+            101、Go语言 之操作数据库
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/10</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1580</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之操作数据库"><a href="#Go语言-之操作数据库" class="headerlink" title="Go语言 之操作数据库"></a><strong>Go语言 之操作数据库</strong></h2><h3 id="Go操作Mysql数据库"><a href="#Go操作Mysql数据库" class="headerlink" title="Go操作Mysql数据库"></a><strong>Go操作Mysql数据库</strong></h3><p>使用<code>Go</code>操作<code>MySQL</code>等数据库，一般有两种方式：</p>
+<ul>
+<li>一是使用<code>database/sql</code>接口，直接在代码里硬编码<code>sql</code>语句；</li>
+<li>二是使用<code>gorm</code>，即对象关系映射的方式在代码里抽象的操作数据库</li>
+</ul>
+<p>一般推荐使用第二种方式。</p>
+<h3 id="使用database-sql接口"><a href="#使用database-sql接口" class="headerlink" title="使用database/sql接口"></a><strong>使用database/sql接口</strong></h3><p><code>Go</code>没有内置的驱动支持任何数据库，但是<code>Go</code>定义了<code>database/sql</code>接口，用户可以基于驱动接口开发相应数据库的驱动。但缺点是，直接用  github.com/go-sql-driver/mysql 访问数据库都是直接写 sql，取出结果然后自己拼成对象，使用上面不是很方便，可读性也不好。</p>
+<h3 id="连接到数据库"><a href="#连接到数据库" class="headerlink" title="连接到数据库"></a><strong>连接到数据库</strong></h3><p>我们以<code>mysql</code>为例，使用 github.com/go-sql-driver/mysql ，首先我们需要导入我们需要的包</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"database/sql"</span></span><br><span class="line">	<span class="literal">_</span> <span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>注意我们导入<code>github.com/go-sql-driver/mysql</code> 前面用了一个”_”,操作其实是引入该包，而不直接使用包里面的函数，而是调用了该包里面的init函数,import的时候其实是执行了该包里面的<code>init</code>函数，初始化了里面的变量，_操作只是说该包引入了，我只初始化里面的 <code>init</code>函数和一些变量，但是往往这些init函数里面是注册自己包里面的引擎，让外部可以方便的使用，就很多实现database/sql的包，在 <code>init</code>函数里面都是调用了<code>sql.Register(name string, driver driver.Driver)</code>注册自己，然后外部就可以使用了。</p>
+<p>我们创建一张user表，并执行CRUD操作（增、删、改、查）。</p>
+<p>代码如下所示：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    <span class="string">"database/sql"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    _ <span class="string">"github.com/go-sql-driver/mysql"</span></span><br><span class="line">    <span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//数据库连接信息</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	USERNAME = <span class="string">"root"</span></span><br><span class="line">	PASSWORD = <span class="string">"123456"</span></span><br><span class="line">	NETWORK = <span class="string">"tcp"</span></span><br><span class="line">	SERVER = <span class="string">"127.0.0.1"</span></span><br><span class="line">	PORT = 3306</span><br><span class="line">	DATABASE = <span class="string">"test"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//user表结构体定义</span></span><br><span class="line"><span class="keyword">type</span> User struct &#123;</span><br><span class="line">	Id int `json:<span class="string">"id"</span> <span class="keyword">form</span>:<span class="string">"id"</span>`</span><br><span class="line">	Username string `json:<span class="string">"username"</span> <span class="keyword">form</span>:<span class="string">"username"</span>`</span><br><span class="line">	Password string `json:<span class="string">"password"</span> <span class="keyword">form</span>:<span class="string">"password"</span>`</span><br><span class="line">	Status int   `json:<span class="string">"status"</span> <span class="keyword">form</span>:<span class="string">"status"</span>`      <span class="comment">// 0 正常状态， 1删除</span></span><br><span class="line">	Createtime int64 `json:<span class="string">"createtime"</span> <span class="keyword">form</span>:<span class="string">"createtime"</span>`</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	conn := fmt.Sprintf(<span class="string">"%s:%s@%s(%s:%d)/%s"</span>,USERNAME, PASSWORD, NETWORK, SERVER, PORT, DATABASE)</span><br><span class="line">	<span class="keyword">DB</span>, <span class="keyword">err</span> := sql.<span class="keyword">Open</span>(<span class="string">"mysql"</span>, conn)</span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">		fmt.Println(<span class="string">"connection to mysql failed:"</span>, <span class="keyword">err</span>)</span><br><span class="line">		<span class="built_in">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">DB</span>.SetConnMaxLifetime(100*time.Second)  <span class="comment">//最大连接周期，超时的连接就close</span></span><br><span class="line">    <span class="keyword">DB</span>.SetMaxOpenConns(100)                <span class="comment">//设置最大连接数</span></span><br><span class="line">    CreateTable(<span class="keyword">DB</span>)</span><br><span class="line">    InsertData(<span class="keyword">DB</span>)</span><br><span class="line">    QueryOne(<span class="keyword">DB</span>)</span><br><span class="line">    QueryMulti(<span class="keyword">DB</span>)</span><br><span class="line">    UpdateData(<span class="keyword">DB</span>)</span><br><span class="line">    DeleteData(<span class="keyword">DB</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func CreateTable(<span class="keyword">DB</span> *sql.<span class="keyword">DB</span>) &#123;</span><br><span class="line">	sql := `CREATE <span class="keyword">TABLE</span> <span class="keyword">IF</span> NOT EXISTS users(</span><br><span class="line">	id INT(4) PRIMARY KEY AUTO_INCREMENT NOT NULL,</span><br><span class="line">	username VARCHAR(64),</span><br><span class="line">	password VARCHAR(64),</span><br><span class="line">	status INT(4),</span><br><span class="line">	createtime INT(10)</span><br><span class="line">	); `</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> _, <span class="keyword">err</span> := <span class="keyword">DB</span>.Exec(sql); <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        fmt.Println(<span class="string">"create table failed:"</span>, <span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">	fmt.Println(<span class="string">"create table successd"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//插入数据</span></span><br><span class="line">func InsertData(<span class="keyword">DB</span> *sql.<span class="keyword">DB</span>) &#123;</span><br><span class="line">    result,<span class="keyword">err</span> := <span class="keyword">DB</span>.Exec(<span class="string">"insert INTO users(username,password) values(?,?)"</span>,<span class="string">"test"</span>,<span class="string">"123456"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil&#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Insert data failed,err:%v"</span>, <span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    lastInsertID,<span class="keyword">err</span> := result.LastInsertId()    <span class="comment">//获取插入数据的自增ID</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Get insert id failed,err:%v"</span>, <span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">"Insert data id:"</span>, lastInsertID)</span><br><span class="line">   </span><br><span class="line">    rowsaffected,<span class="keyword">err</span> := result.RowsAffected()  <span class="comment">//通过RowsAffected获取受影响的行数</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Get RowsAffected failed,err:%v"</span>,<span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">"Affected rows:"</span>, rowsaffected)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询单行</span></span><br><span class="line">func QueryOne(<span class="keyword">DB</span> *sql.<span class="keyword">DB</span>) &#123;</span><br><span class="line">	user := new(User)   <span class="comment">//用new()函数初始化一个结构体对象</span></span><br><span class="line">	row := <span class="keyword">DB</span>.QueryRow(<span class="string">"select id,username,password from users where id=?"</span>, 1)</span><br><span class="line">	<span class="comment">//row.scan中的字段必须是按照数据库存入字段的顺序，否则报错</span></span><br><span class="line">	<span class="keyword">if</span> <span class="keyword">err</span> := row.Scan(&amp;user.Id,&amp;user.Username,&amp;user.Password); <span class="keyword">err</span> != nil &#123;</span><br><span class="line">		fmt.Printf(<span class="string">"scan failed, err:%v\n"</span>, <span class="keyword">err</span>)</span><br><span class="line">		<span class="built_in">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">"Single row data:"</span>, *user)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询多行</span></span><br><span class="line">func QueryMulti(<span class="keyword">DB</span> *sql.<span class="keyword">DB</span>) &#123;</span><br><span class="line">    user := new(User)</span><br><span class="line">    rows, <span class="keyword">err</span> := <span class="keyword">DB</span>.<span class="keyword">Query</span>(<span class="string">"select id,username,password from users where id = ?"</span>, 2)</span><br><span class="line">    </span><br><span class="line">    defer func() &#123;</span><br><span class="line">        <span class="keyword">if</span> rows != nil &#123;</span><br><span class="line">            rows.<span class="keyword">Close</span>()   <span class="comment">//关闭掉未scan的sql连接</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Query failed,err:%v\n"</span>, <span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> rows.Next() &#123;</span><br><span class="line">        <span class="keyword">err</span> = rows.Scan(&amp;user.Id, &amp;user.Username, &amp;user.Password)  <span class="comment">//不scan会导致连接不释放</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">            fmt.Printf(<span class="string">"Scan failed,err:%v\n"</span>, <span class="keyword">err</span>)</span><br><span class="line">            <span class="built_in">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        fmt.Println(<span class="string">"scan successd:"</span>, *user)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//更新数据</span></span><br><span class="line">func UpdateData(<span class="keyword">DB</span> *sql.<span class="keyword">DB</span>)&#123;</span><br><span class="line">    result,<span class="keyword">err</span> := <span class="keyword">DB</span>.Exec(<span class="string">"UPDATE users set password=? where id=?"</span>,<span class="string">"111111"</span>,1)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil&#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Insert failed,err:%v\n"</span>, <span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">"update data successd:"</span>, result)</span><br><span class="line">    </span><br><span class="line">    rowsaffected,<span class="keyword">err</span> := result.RowsAffected()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Get RowsAffected failed,err:%v\n"</span>,<span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">"Affected rows:"</span>, rowsaffected)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除数据</span></span><br><span class="line">func DeleteData(<span class="keyword">DB</span> *sql.<span class="keyword">DB</span>)&#123;</span><br><span class="line">    result,<span class="keyword">err</span> := <span class="keyword">DB</span>.Exec(<span class="string">"delete from users where id=?"</span>,1)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil&#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Insert failed,err:%v\n"</span>,<span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">"delete data successd:"</span>, result)</span><br><span class="line">    </span><br><span class="line">    rowsaffected,<span class="keyword">err</span> := result.RowsAffected()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">err</span> != nil &#123;</span><br><span class="line">        fmt.Printf(<span class="string">"Get RowsAffected failed,err:%v\n"</span>,<span class="keyword">err</span>)</span><br><span class="line">        <span class="built_in">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(<span class="string">"Affected rows:"</span>, rowsaffected)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行程序，输出结果如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> successd</span><br><span class="line"><span class="keyword">Insert</span> <span class="keyword">data</span> <span class="keyword">id</span>: <span class="number">1</span></span><br><span class="line">Affected <span class="keyword">rows</span>: <span class="number">1</span></span><br><span class="line">Single <span class="keyword">row</span> <span class="keyword">data</span>: &#123;<span class="number">1</span> <span class="keyword">test</span> <span class="number">123456</span> <span class="number">0</span> <span class="number">0</span>&#125;</span><br><span class="line"><span class="keyword">update</span> <span class="keyword">data</span> successd: &#123;<span class="number">0xc0000a0000</span> <span class="number">0xc000010280</span>&#125;</span><br><span class="line">Affected <span class="keyword">rows</span>: <span class="number">1</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">data</span> successd: &#123;<span class="number">0xc0000a0000</span> <span class="number">0xc0000102b0</span>&#125;</span><br><span class="line">Affected <span class="keyword">rows</span>: <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>OK，到这里大家是不是觉得这种实现方式很繁琐，假如要修改某个sql语句需要在代码中修改，这样很麻烦，代码设计也比较糟糕。因此这种方式并不推荐使用。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/10/Mysql/10、mysql 之 float double 浮点型/" class="pre-post btn btn-default" title='10、mysql 之 float double 浮点型'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            10、mysql 之 float double 浮点型</span>
+    </a>
+    
+    
+    <a href="/2016/04/09/Golang/100、Go语言 之海量用户即时通讯示例/" class="next-post btn btn-default" title='100、Go语言 之海量用户即时通讯示例'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            100、Go语言 之海量用户即时通讯示例</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之操作数据库"><span class="toc-text">Go语言 之操作数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Go操作Mysql数据库"><span class="toc-text">Go操作Mysql数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用database-sql接口"><span class="toc-text">使用database/sql接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#连接到数据库"><span class="toc-text">连接到数据库</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

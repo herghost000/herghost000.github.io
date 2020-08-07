@@ -1,0 +1,448 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之通过反射reflect获取类型信息在 Go语言中通过调用 reflect.TypeOf 函数，我们可以从一个任何非接口类型的值创建一个 reflect.Type 值。reflect....">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    82、Go语言 之通过反射reflect获取类型信息 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="82、Go语言 之通过反射reflect获取类型信息">
+            
+            82、Go语言 之通过反射reflect获取类型信息
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/03/22</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1599</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之通过反射reflect获取类型信息"><a href="#Go语言-之通过反射reflect获取类型信息" class="headerlink" title="Go语言 之通过反射reflect获取类型信息"></a><strong>Go语言 之通过反射reflect获取类型信息</strong></h2><p>在 Go语言中通过调用 reflect.TypeOf 函数，我们可以从一个任何非接口类型的值创建一个 reflect.Type 值。reflect.Type 值表示着此非接口值的类型。通过此值，我们可以得到很多此非接口类型的信息。当然，我们也可以将一个接口值传递给一个 reflect.TypeOf 函数调用，但是此调用将返回一个表示着此接口值的动态类型的 reflect.Type 值。</p>
+<p>实际上，reflect.TypeOf 函数的唯一参数的类型为 interface{}，reflect.TypeOf 函数将总是返回一个表示着此唯一接口参数值的动态类型的 reflect.Type 值。</p>
+<p>那如何得到一个表示着某个接口类型的 reflect.Type 值呢？我们必须通过下面将要介绍的一些间接途径来达到这一目的。</p>
+<p>类型 reflect.Type 为一个接口类型，它指定了若干方法（<a href="https://studygolang.com/pkgdoc）。" target="_blank" rel="noopener">https://studygolang.com/pkgdoc）。</a> 通过这些方法，我们能够观察到一个 reflect.Type 值所表示的 Go类型的各种信息。这些方法中的有的适用于所有种类（<a href="https://studygolang.com/pkgdoc）" target="_blank" rel="noopener">https://studygolang.com/pkgdoc）</a> 的类型，有的只适用于一种或几种类型。通过不合适的 reflect.Type 属主值调用某个方法将在运行时产生一个恐慌。</p>
+<p>使用 reflect.TypeOf() 函数可以获得任意值的类型对象（reflect.Type），程序通过类型对象可以访问任意值的类型信息。下面通过例子来理解获取类型对象的过程：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"reflect"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Box int</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var a Box</span><br><span class="line">    typeOfA := reflect.TypeOf(a)</span><br><span class="line">    fmt.Println(typeOfA.Name(), typeOfA.Kind())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码输出如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Box</span>  <span class="type">int</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Type方法"><a href="#Type方法" class="headerlink" title="Type方法"></a><strong>Type方法</strong></h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Type interface &#123;</span><br><span class="line">    <span class="comment">// Kind返回该接口的具体分类</span></span><br><span class="line">    <span class="constructor">Kind()</span> Kind</span><br><span class="line">    <span class="comment">// Name返回该类型在自身包内的类型名，如果是未命名类型会返回""</span></span><br><span class="line">    <span class="constructor">Name()</span> <span class="built_in">string</span></span><br><span class="line">    <span class="comment">// PkgPath返回类型的包路径，即明确指定包的import路径，如"encoding/base64"</span></span><br><span class="line">    <span class="comment">// 如果类型为内建类型(string, error)或未命名类型(*T, struct&#123;&#125;, []int)，会返回""</span></span><br><span class="line">    <span class="constructor">PkgPath()</span> <span class="built_in">string</span></span><br><span class="line">    <span class="comment">// 返回类型的字符串表示。该字符串可能会使用短包名（如用base64代替"encoding/base64"）</span></span><br><span class="line">    <span class="comment">// 也不保证每个类型的字符串表示不同。如果要比较两个类型是否相等，请直接用Type类型比较。</span></span><br><span class="line">    <span class="constructor">String()</span> <span class="built_in">string</span></span><br><span class="line">    <span class="comment">// 返回要保存一个该类型的值需要多少字节；类似unsafe.Sizeof</span></span><br><span class="line">    <span class="constructor">Size()</span> uintptr</span><br><span class="line">    <span class="comment">// 返回当从内存中申请一个该类型值时，会对齐的字节数</span></span><br><span class="line">    <span class="constructor">Align()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回当该类型作为结构体的字段时，会对齐的字节数</span></span><br><span class="line">    <span class="constructor">FieldAlign()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 如果该类型实现了u代表的接口，会返回真</span></span><br><span class="line">    <span class="constructor">Implements(<span class="params">u</span> Type)</span> <span class="built_in">bool</span></span><br><span class="line">    <span class="comment">// 如果该类型的值可以直接赋值给u代表的类型，返回真</span></span><br><span class="line">    <span class="constructor">AssignableTo(<span class="params">u</span> Type)</span> <span class="built_in">bool</span></span><br><span class="line">    <span class="comment">// 如该类型的值可以转换为u代表的类型，返回真</span></span><br><span class="line">    <span class="constructor">ConvertibleTo(<span class="params">u</span> Type)</span> <span class="built_in">bool</span></span><br><span class="line">    <span class="comment">// 返回该类型的字位数。如果该类型的Kind不是Int、Uint、Float或Complex，会panic</span></span><br><span class="line">    <span class="constructor">Bits()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回array类型的长度，如非数组类型将panic</span></span><br><span class="line">    <span class="constructor">Len()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回该类型的元素类型，如果该类型的Kind不是Array、Chan、Map、Ptr或Slice，会panic</span></span><br><span class="line">    <span class="constructor">Elem()</span> Type</span><br><span class="line">    <span class="comment">// 返回map类型的键的类型。如非映射类型将panic</span></span><br><span class="line">    <span class="constructor">Key()</span> Type</span><br><span class="line">    <span class="comment">// 返回一个channel类型的方向，如非通道类型将会panic</span></span><br><span class="line">    <span class="constructor">ChanDir()</span> ChanDir</span><br><span class="line">    <span class="comment">// 返回struct类型的字段数（匿名字段算作一个字段），如非结构体类型将panic</span></span><br><span class="line">    <span class="constructor">NumField()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回struct类型的第i个字段的类型，如非结构体或者i不在[0, NumField())内将会panic</span></span><br><span class="line">    <span class="constructor">Field(<span class="params">i</span> <span class="params">int</span>)</span> StructField</span><br><span class="line">    <span class="comment">// 返回索引序列指定的嵌套字段的类型，</span></span><br><span class="line">    <span class="comment">// 等价于用索引中每个值链式调用本方法，如非结构体将会panic</span></span><br><span class="line">    <span class="constructor">FieldByIndex(<span class="params">index</span> []<span class="params">int</span>)</span> StructField</span><br><span class="line">    <span class="comment">// 返回该类型名为name的字段（会查找匿名字段及其子字段），</span></span><br><span class="line">    <span class="comment">// 布尔值说明是否找到，如非结构体将panic</span></span><br><span class="line">    <span class="constructor">FieldByName(<span class="params">name</span> <span class="params">string</span>)</span> (StructField, <span class="built_in">bool</span>)</span><br><span class="line">    <span class="comment">// 返回该类型第一个字段名满足函数match的字段，布尔值说明是否找到，如非结构体将会panic</span></span><br><span class="line">    <span class="constructor">FieldByNameFunc(<span class="params">match</span> <span class="params">func</span>(<span class="params">string</span>)</span> <span class="built_in">bool</span>) (StructField, <span class="built_in">bool</span>)</span><br><span class="line">    <span class="comment">// 如果函数类型的最后一个输入参数是"..."形式的参数，IsVariadic返回真</span></span><br><span class="line">    <span class="comment">// 如果这样，t.In(t.NumIn() - 1)返回参数的隐式的实际类型（声明类型的切片）</span></span><br><span class="line">    <span class="comment">// 如非函数类型将panic</span></span><br><span class="line">    <span class="constructor">IsVariadic()</span> <span class="built_in">bool</span></span><br><span class="line">    <span class="comment">// 返回func类型的参数个数，如果不是函数，将会panic</span></span><br><span class="line">    <span class="constructor">NumIn()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回func类型的第i个参数的类型，如非函数或者i不在[0, NumIn())内将会panic</span></span><br><span class="line">    <span class="constructor">In(<span class="params">i</span> <span class="params">int</span>)</span> Type</span><br><span class="line">    <span class="comment">// 返回func类型的返回值个数，如果不是函数，将会panic</span></span><br><span class="line">    <span class="constructor">NumOut()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回func类型的第i个返回值的类型，如非函数或者i不在[0, NumOut())内将会panic</span></span><br><span class="line">    <span class="constructor">Out(<span class="params">i</span> <span class="params">int</span>)</span> Type</span><br><span class="line">    <span class="comment">// 返回该类型的方法集中方法的数目</span></span><br><span class="line">    <span class="comment">// 匿名字段的方法会被计算；主体类型的方法会屏蔽匿名字段的同名方法；</span></span><br><span class="line">    <span class="comment">// 匿名字段导致的歧义方法会滤除</span></span><br><span class="line">    <span class="constructor">NumMethod()</span> <span class="built_in">int</span></span><br><span class="line">    <span class="comment">// 返回该类型方法集中的第i个方法，i不在[0, NumMethod())范围内时，将导致panic</span></span><br><span class="line">    <span class="comment">// 对非接口类型T或*T，返回值的Type字段和Func字段描述方法的未绑定函数状态</span></span><br><span class="line">    <span class="comment">// 对接口类型，返回值的Type字段描述方法的签名，Func字段为nil</span></span><br><span class="line">    <span class="constructor">Method(<span class="params">int</span>)</span> Method</span><br><span class="line">    <span class="comment">// 根据方法名返回该类型方法集中的方法，使用一个布尔值说明是否发现该方法</span></span><br><span class="line">    <span class="comment">// 对非接口类型T或*T，返回值的Type字段和Func字段描述方法的未绑定函数状态</span></span><br><span class="line">    <span class="comment">// 对接口类型，返回值的Type字段描述方法的签名，Func字段为nil</span></span><br><span class="line">    <span class="constructor">MethodByName(<span class="params">string</span>)</span> (Method, <span class="built_in">bool</span>)</span><br><span class="line">    <span class="comment">// 内含隐藏或非导出方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/03/23/Golang/83、Go语言 之通过反射reflect获取指针指向的元素类型/" class="pre-post btn btn-default" title='83、Go语言 之通过反射reflect获取指针指向的元素类型'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            83、Go语言 之通过反射reflect获取指针指向的元素类型</span>
+    </a>
+    
+    
+    <a href="/2016/03/21/Golang/81、Go语言 之反射reflect规则浅析/" class="next-post btn btn-default" title='81、Go语言 之反射reflect规则浅析'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            81、Go语言 之反射reflect规则浅析</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之通过反射reflect获取类型信息"><span class="toc-text">Go语言 之通过反射reflect获取类型信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Type方法"><span class="toc-text">Type方法</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

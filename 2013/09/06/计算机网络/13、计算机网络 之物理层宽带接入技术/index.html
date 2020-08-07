@@ -1,0 +1,473 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="计算机网络">
+
+
+<meta name="description" content="计算机网络 之物理层宽带接入技术xDSL技术（一般了解）DSL 就是数字用户线(Digital Subscriber Line)的缩写。而 DSL 的前缀 x 则表示在数字用户线上实现的不同宽带...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    13、计算机网络 之物理层宽带接入技术 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="13、计算机网络 之物理层宽带接入技术">
+            
+            13、计算机网络 之物理层宽带接入技术
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/计算机网络/">计算机网络</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/计算机网络/">计算机网络</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2013/09/06</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2527</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="计算机网络-之物理层宽带接入技术"><a href="#计算机网络-之物理层宽带接入技术" class="headerlink" title="计算机网络 之物理层宽带接入技术"></a><strong>计算机网络 之物理层宽带接入技术</strong></h2><h3 id="xDSL技术（一般了解）"><a href="#xDSL技术（一般了解）" class="headerlink" title="xDSL技术（一般了解）"></a><strong>xDSL技术（一般了解）</strong></h3><p>DSL 就是数字用户线(Digital Subscriber Line)的缩写。而 DSL 的前缀 x 则表示在数字用户线上实现的不同宽带方案。<br>xDSL 技术就是用数字技术对现有的模拟电话用户线进行改造，使它能够承载宽带业务。</p>
+<p>虽然标准模拟电话信号的频带被限制在 300<del>3400 kHz 的范围内，但用户线本身实际可通过的信号频率仍然超过 1 MHz。<br>xDSL 技术就把 0</del>4 kHz 低端频谱留给传统电话使用，而把原来没有被利用的高端频谱留给用户上网使用。</p>
+<h3 id="xDSL-的几种类型"><a href="#xDSL-的几种类型" class="headerlink" title="xDSL 的几种类型"></a><strong>xDSL 的几种类型</strong></h3><ul>
+<li>ADSL (Asymmetric Digital Subscriber Line)：非对称数字用户线，非对称指<ul>
+<li>下行（从ISP到用户）带宽远远大于上行带宽</li>
+</ul>
+</li>
+<li>HDSL (High speed DSL)：高速数字用户线</li>
+<li>SDSL (Single-line DSL)：1 对线的数字用户线</li>
+<li>VDSL (Very high speed DSL)：甚高速数字用户线</li>
+<li>DSL ：ISDN 用户线。</li>
+<li>RADSL (Rate-Adaptive DSL)：速率自适应 DSL，是 ADSL 的一个子集，可自动调节线路速率）</li>
+</ul>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vspF06LQxW8klDNU2vMm..is9WodueNNPlZl7tLXLwwp6SYXPZOuE1jIeHGlI*9jn7A!!/b&bo=fwW3AQAAAAADJ84!&rf=viewer_4" alt="image"></p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vskexuBIxmNfnCKoQAXsD8cCudVGIQlP9w5kqQpyPPreLzhiIUPc7utW9jHtkf5GvGA!!/b&bo=IgWOAQAAAAADJ6o!&rf=viewer_4" alt="image"></p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vsoHGr9.8OzTylKIUgyHGW.mpYDAGEc7mvjkwQs2mIwgTF0FlvZle4cifO31RwK0uXQ!!/b&bo=AQNFAgAAAAADF3c!&rf=viewer_4" alt="image"></p>
+<h3 id="ADSL-的极限传输距离"><a href="#ADSL-的极限传输距离" class="headerlink" title="ADSL 的极限传输距离"></a><strong>ADSL 的极限传输距离</strong></h3><p>ADSL 的极限传输距离与数据率以及用户线的线径都有很大的关系（用户线越细，信号传输时的衰减就越大），而所能得到的最高数据传输速率与实际的用户线上的信噪比密切相关。</p>
+<p>例如，0.5 毫米线径的用户线，传输速率为 1.5 ~ 2.0 Mb/s 时可传送 5.5 公里，但当传输速率提高到 6.1 Mb/s 时，传输距离就缩短为 3.7 公里。</p>
+<p>如果把用户线的线径减小到0.4毫米，那么在6.1 Mb/s的传输速率下就只能传送2.7公里</p>
+<h3 id="ADSL-的特点"><a href="#ADSL-的特点" class="headerlink" title="ADSL 的特点"></a><strong>ADSL 的特点</strong></h3><p>上行和下行带宽做成不对称的<br>上行指从用户到 ISP，而下行指从 ISP 到用户<br>ADSL 在用户线（铜线）的两端各安装一个 ADSL 调制解调器。<br>我国目前采用的方案是离散多音调 DMT (Discrete Multi-Tone)调制技术。这里的“多音调”就是“多载波”或“多子信道”的意思。</p>
+<h3 id="DMT-技术"><a href="#DMT-技术" class="headerlink" title="DMT 技术"></a><strong>DMT 技术</strong></h3><p>DMT 调制技术采用频分复用的方法，把 40 kHz 以上一直到 1.1 MHz 的高端频谱划分为许多的子信道，其中 25 个子信道用于上行信道，而 249 个子信道用于下行信道。<br>每个子信道占据 4 kHz 带宽（严格讲是 4.3125 kHz），并使用不同的载波（即不同的音调）进行数字调制。这种做法相当于在一对用户线上使用许多小的调制解调器并行地传送数据。</p>
+<h3 id="ADSL-的数据率"><a href="#ADSL-的数据率" class="headerlink" title="ADSL 的数据率"></a><strong>ADSL 的数据率</strong></h3><p>由于用户线的具体条件往往相差很大（距离、线径、受到相邻用户线的干扰程度等都不同），因此 ADSL 采用自适应调制技术使用户线能够传送尽可能高的数据率。<br>当 ADSL 启动时，用户线两端的 ADSL 调制解调器就测试可用的频率、各子信道受到的干扰情况，以及在每一个频率上测试信号的传输质量。<br>ADSL 不能保证固定的数据率。对于质量很差的用户线甚至无法开通 ADSL。<br>通常下行数据率在 32 kb/s 到 6.4 Mb/s 之间，而上行数据率在 32 kb/s 到 640 kb/s 之间。</p>
+<h3 id="光纤接入技术"><a href="#光纤接入技术" class="headerlink" title="光纤接入技术"></a><strong>光纤接入技术</strong></h3><p>光纤同轴混合网HFC (Hybrid Fiber Coax)</p>
+<ul>
+<li>HFC 网是在目前覆盖面很广的有线电视网 CATV 的基础上开发的一种居民宽带接入网。</li>
+<li>HFC 网除可传送 CATV 外，还提供电话、数据和其他宽带交互型业务。</li>
+<li>HFC网的主干线路采用光纤；</li>
+<li>HFC 网采用结点体系结构 ；</li>
+</ul>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zjbsEAp24UzY1D8hmDJGOwnB00d0EgixNIOAGpkeTz4z8*kJn9j0EhL06TS38RSOYA!!/b&bo=eAO2AQAAAAADB.4!&rf=viewer_4" alt="image"></p>
+<p>HFC 网具有比 CATV 网更宽的频谱，且具有双向传输功能 ；</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vsjZDwVOOdshHdZaV1tI3iiVIlfkXF4E0bf9rZNEEsKr7PLqcNtYbhp8valMR0YE9VQ!!/b&bo=sgPpAAAAAAADF2o!&rf=viewer_4" alt="image"></p>
+<h3 id="FTTx-技术"><a href="#FTTx-技术" class="headerlink" title="FTTx 技术"></a><strong>FTTx 技术</strong></h3><p>FTTx（光纤到……）也是一种实现宽带居民接入网的方案。这里字母 x 可代表不同意思。</p>
+<p>光纤到家 FTTH (Fiber To The Home)：光纤一直铺设到用户家庭可能是居民接入网最后的解决方法。</p>
+<p>光纤到大楼 FTTB (Fiber To The Building)：光纤进入大楼后就转换为电信号，然后用电缆或双绞线分配到各用户。<br>光纤到路边 FTTC (Fiber To The Curb)：从路边到各用户可使用星形结构双绞线作为传输媒体。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2013/09/06/计算机网络/14、计算机网络 之数据链路层概念/" class="pre-post btn btn-default" title='14、计算机网络 之数据链路层概念'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            14、计算机网络 之数据链路层概念</span>
+    </a>
+    
+    
+    <a href="/2013/09/05/计算机网络/12、计算机网络 之物理层数字传输系统/" class="next-post btn btn-default" title='12、计算机网络 之物理层数字传输系统'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            12、计算机网络 之物理层数字传输系统</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算机网络-之物理层宽带接入技术"><span class="toc-text">计算机网络 之物理层宽带接入技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xDSL技术（一般了解）"><span class="toc-text">xDSL技术（一般了解）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xDSL-的几种类型"><span class="toc-text">xDSL 的几种类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ADSL-的极限传输距离"><span class="toc-text">ADSL 的极限传输距离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ADSL-的特点"><span class="toc-text">ADSL 的特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DMT-技术"><span class="toc-text">DMT 技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ADSL-的数据率"><span class="toc-text">ADSL 的数据率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#光纤接入技术"><span class="toc-text">光纤接入技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FTTx-技术"><span class="toc-text">FTTx 技术</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

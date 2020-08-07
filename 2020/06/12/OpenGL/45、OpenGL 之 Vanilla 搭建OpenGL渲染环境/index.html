@@ -1,0 +1,446 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="OpenGL">
+
+
+<meta name="description" content="OpenGL 之 Vanilla 搭建OpenGL渲染环境PIXELFORMATDESCRIPTOR在创建一个图形操作表之前，首先必须设置像素格式。像素格式含有设备绘图界面的属性，这些属性包括绘...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    45、OpenGL 之 Vanilla 搭建OpenGL渲染环境 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="45、OpenGL 之 Vanilla 搭建OpenGL渲染环境">
+            
+            45、OpenGL 之 Vanilla 搭建OpenGL渲染环境
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/OpenGL/">OpenGL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/OpenGL/">OpenGL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/06/12</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="OpenGL-之-Vanilla-搭建OpenGL渲染环境"><a href="#OpenGL-之-Vanilla-搭建OpenGL渲染环境" class="headerlink" title="OpenGL 之 Vanilla 搭建OpenGL渲染环境"></a><strong>OpenGL 之 Vanilla 搭建OpenGL渲染环境</strong></h2><h3 id="PIXELFORMATDESCRIPTOR"><a href="#PIXELFORMATDESCRIPTOR" class="headerlink" title="PIXELFORMATDESCRIPTOR"></a><strong>PIXELFORMATDESCRIPTOR</strong></h3><p>在创建一个图形操作表之前，首先必须设置像素格式。像素格式含有设备绘图界面的属性，这些属性包括绘图界面是用RGBA模式还是颜色表模式，像素缓存是用单缓存还是双缓存，以及颜色位数、深度缓存和模板缓存所用的位数，还有其它一些属性信息。</p>
+<p>每个OpenGL显示设备都支持一种指定的像素格式。一般用一个名为PIXELFORMATDESCRIPTOR的结构来表示某个特殊的像素格式，这个结构包含26个属性信息。</p>
+<h3 id="wglCreateContext"><a href="#wglCreateContext" class="headerlink" title="wglCreateContext"></a><strong>wglCreateContext</strong></h3><p>函数创建一个新的OpenGL渲染描述表,此描述表必须适用于绘制到由hdc返回的设备。这个渲染描述表将有和设备上下文(dc)一样的像素格式。</p>
+<h3 id="wglMakeCurrent"><a href="#wglMakeCurrent" class="headerlink" title="wglMakeCurrent"></a><strong>wglMakeCurrent</strong></h3><p>wglMakeCurrent 函数设定OpenGL当前线程的渲染环境。以后这个线程所有的OpenGL调用都是在这个hdc标识的设备上绘制。你也可以使用wglMakeCurrent 函数来改变调用线程的当前渲染环境，使之不再是当前的渲染环境。</p>
+<h3 id="绘制一个点"><a href="#绘制一个点" class="headerlink" title="绘制一个点"></a><strong>绘制一个点</strong></h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">include</span> &lt;windows.h&gt;</span><br><span class="line">#<span class="keyword">include</span> &lt;gl/<span class="module-access"><span class="module"><span class="identifier">GL</span>.</span></span>h&gt;</span><br><span class="line">#<span class="keyword">include</span> &lt;gl/<span class="module-access"><span class="module"><span class="identifier">GLU</span>.</span></span>h&gt;</span><br><span class="line">#<span class="keyword">include</span> &lt;tchar.h&gt;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib,<span class="string">"opengl32.lib"</span>)</span><br><span class="line">#pragma comment(lib,<span class="string">"glu32.lib"</span>)</span><br><span class="line"></span><br><span class="line">LRESULT CALLBACK <span class="constructor">GLWindowProc(HWND <span class="params">hwnd</span>, UINT <span class="params">msg</span>, WPARAM <span class="params">wParam</span>, LPARAM <span class="params">lParam</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	switch (msg)</span><br><span class="line">	&#123;</span><br><span class="line">	case WM_CLOSE:</span><br><span class="line">		<span class="constructor">PostQuitMessage(0)</span>;</span><br><span class="line">		break;</span><br><span class="line">	&#125;</span><br><span class="line">	return <span class="constructor">DefWindowProc(<span class="params">hwnd</span>, <span class="params">msg</span>, <span class="params">wParam</span>, <span class="params">lParam</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">INT WINAPI <span class="constructor">WinMain(<span class="params">_In_</span> HINSTANCE <span class="params">hInstance</span>, <span class="params">_In_opt_</span> HINSTANCE <span class="params">hPrevInstance</span>, <span class="params">_In_</span> LPSTR <span class="params">lpCmdLine</span>, <span class="params">_In_</span> <span class="params">int</span> <span class="params">nShowCmd</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// 注册窗口类</span></span><br><span class="line">	WNDCLASSEX wndclass;</span><br><span class="line">	wndclass.cbClsExtra = <span class="number">0</span>;</span><br><span class="line">	wndclass.cbSize = sizeof(WNDCLASSEX);</span><br><span class="line">	wndclass.cbWndExtra = <span class="number">0</span>;</span><br><span class="line">	wndclass.hbrBackground = NULL;</span><br><span class="line">	wndclass.hCursor = <span class="constructor">LoadCursor(NULL, IDC_ARROW)</span>;</span><br><span class="line">	wndclass.hIcon = NULL;</span><br><span class="line">	wndclass.hIconSm = NULL;</span><br><span class="line">	wndclass.hInstance = hInstance;</span><br><span class="line">	wndclass.lpfnWndProc = GLWindowProc;</span><br><span class="line">	wndclass.lpszClassName = <span class="constructor">_T(<span class="string">"GLWindow"</span>)</span>;</span><br><span class="line">	wndclass.lpszMenuName = NULL;</span><br><span class="line">	wndclass.style = CS_VREDRAW <span class="pattern-match">| <span class="constructor">CS_HREDRAW</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">ATOM</span> atom = <span class="constructor">RegisterClassEx(&amp;<span class="params">wndclass</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="keyword">if</span> (!atom)</span></span><br><span class="line"><span class="pattern-match">	&#123;</span></span><br><span class="line"><span class="pattern-match">		return 0;</span></span><br><span class="line"><span class="pattern-match">	&#125;</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 创建窗口</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">HWND</span> hwnd = <span class="constructor">CreateWindowEx(NULL, <span class="params">_T</span>(<span class="string">"GLWindow"</span>)</span>, <span class="constructor">_T(<span class="string">"OpenGL Window"</span>)</span>, <span class="constructor">WS_OVERLAPPEDWINDOW</span>,</span></span><br><span class="line"><span class="pattern-match">		100, 100, 800, 600, <span class="constructor">NULL</span>, <span class="constructor">NULL</span>, h<span class="constructor">Instance</span>, <span class="constructor">NULL</span>);</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 得到设备环境句柄</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">HDC</span> dc = <span class="constructor">GetDC(<span class="params">hwnd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 像素结构</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">PIXELFORMATDESCRIPTOR</span> pfd;</span></span><br><span class="line"><span class="pattern-match">	memset(&amp;pfd, 0, sizeof(<span class="constructor">PIXELFORMATDESCRIPTOR</span>));</span></span><br><span class="line"><span class="pattern-match">	pfd.n<span class="constructor">Version</span> = 1;</span></span><br><span class="line"><span class="pattern-match">	pfd.n<span class="constructor">Size</span> = sizeof(<span class="constructor">PIXELFORMATDESCRIPTOR</span>);</span></span><br><span class="line"><span class="pattern-match">	pfd.c<span class="constructor">ColorBits</span> = 32;</span></span><br><span class="line"><span class="pattern-match">	pfd.c<span class="constructor">DepthBits</span> = 24;</span></span><br><span class="line"><span class="pattern-match">	pfd.c<span class="constructor">StencilBits</span> = 8;</span></span><br><span class="line"><span class="pattern-match">	pfd.i<span class="constructor">PixelType</span> = <span class="constructor">PFD_TYPE_RGBA</span>;</span></span><br><span class="line"><span class="pattern-match">	pfd.i<span class="constructor">LayerType</span> = <span class="constructor">PFD_MAIN_PLANE</span>;</span></span><br><span class="line"><span class="pattern-match">	pfd.dw<span class="constructor">Flags</span> = <span class="constructor">PFD_DRAW_TO_WINDOW</span> | <span class="constructor">PFD_SUPPORT_OPENGL</span> | <span class="constructor">PFD_DOUBLEBUFFER</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 提供像素格式描述符并由windows选择系统存在或接近的像素格式</span></span><br><span class="line"><span class="pattern-match">	<span class="built_in">int</span> pixel<span class="constructor">Format</span> = <span class="constructor">ChoosePixelFormat(<span class="params">dc</span>, &amp;<span class="params">pfd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">SetPixelFormat(<span class="params">dc</span>, <span class="params">pixelFormat</span>, &amp;<span class="params">pfd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">HGLRC</span> rc = wgl<span class="constructor">CreateContext(<span class="params">dc</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	wgl<span class="constructor">MakeCurrent(<span class="params">dc</span>, <span class="params">rc</span>)</span>;<span class="operator">/</span><span class="operator">/</span>setup opengl context complete</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span>opengl init</span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">MatrixMode(GL_PROJECTION)</span>; <span class="operator">/</span><span class="operator">/</span> 下一步设置投影矩阵</span></span><br><span class="line"><span class="pattern-match">	glu<span class="constructor">Perspective(45.0f, 800.0f <span class="operator">/</span> 600.0f, 0.1f, 100.0f)</span>;</span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">MatrixMode(GL_MODELVIEW)</span>;</span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">LoadIdentity()</span>; <span class="operator">/</span><span class="operator">/</span> 用一个4×4的单位矩阵来替换模型视图矩阵</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">ClearColor(0.1, 0.4, 0.6, 1.0)</span>;<span class="operator">/</span><span class="operator">/</span>set "clear color" for background</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span>show window</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">ShowWindow(<span class="params">hwnd</span>, SW_SHOW)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">UpdateWindow(<span class="params">hwnd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">MSG</span> msg;</span></span><br><span class="line"><span class="pattern-match">	<span class="keyword">while</span> (<span class="literal">true</span>)</span></span><br><span class="line"><span class="pattern-match">	&#123;</span></span><br><span class="line"><span class="pattern-match">		<span class="keyword">if</span> (<span class="constructor">PeekMessage(&amp;<span class="params">msg</span>, NULL, NULL, NULL, PM_REMOVE)</span>)</span></span><br><span class="line"><span class="pattern-match">		&#123;</span></span><br><span class="line"><span class="pattern-match">			<span class="keyword">if</span> (msg.message <span class="operator">==</span> <span class="constructor">WM_QUIT</span>)</span></span><br><span class="line"><span class="pattern-match">			&#123;</span></span><br><span class="line"><span class="pattern-match">				break;</span></span><br><span class="line"><span class="pattern-match">			&#125;</span></span><br><span class="line"><span class="pattern-match">			<span class="constructor">TranslateMessage(&amp;<span class="params">msg</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">			<span class="constructor">DispatchMessage(&amp;<span class="params">msg</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">		&#125;</span></span><br><span class="line"><span class="pattern-match">		<span class="operator">/</span><span class="operator">/</span>draw scene</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Clear(GL_COLOR_BUFFER_BIT)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Color4ub(255, 255, 255, 255)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">PointSize(20.0f)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Begin(GL_POINTS)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Vertex3f(0.0f, 0.0f, -0.5f)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">End()</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">		<span class="operator">/</span><span class="operator">/</span>present scene</span></span><br><span class="line"><span class="pattern-match">		<span class="constructor">SwapBuffers(<span class="params">dc</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	&#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	return 0;</span></span><br><span class="line"><span class="pattern-match">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="绘制线"><a href="#绘制线" class="headerlink" title="绘制线"></a><strong>绘制线</strong></h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">include</span> &lt;windows.h&gt;</span><br><span class="line">#<span class="keyword">include</span> &lt;gl/<span class="module-access"><span class="module"><span class="identifier">GL</span>.</span></span>h&gt;</span><br><span class="line">#<span class="keyword">include</span> &lt;gl/<span class="module-access"><span class="module"><span class="identifier">GLU</span>.</span></span>h&gt;</span><br><span class="line">#<span class="keyword">include</span> &lt;tchar.h&gt;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib,<span class="string">"opengl32.lib"</span>)</span><br><span class="line">#pragma comment(lib,<span class="string">"glu32.lib"</span>)</span><br><span class="line"></span><br><span class="line">LRESULT CALLBACK <span class="constructor">GLWindowProc(HWND <span class="params">hwnd</span>, UINT <span class="params">msg</span>, WPARAM <span class="params">wParam</span>, LPARAM <span class="params">lParam</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	switch (msg)</span><br><span class="line">	&#123;</span><br><span class="line">	case WM_CLOSE:</span><br><span class="line">		<span class="constructor">PostQuitMessage(0)</span>;</span><br><span class="line">		break;</span><br><span class="line">	&#125;</span><br><span class="line">	return <span class="constructor">DefWindowProc(<span class="params">hwnd</span>, <span class="params">msg</span>, <span class="params">wParam</span>, <span class="params">lParam</span>)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">INT WINAPI <span class="constructor">WinMain(<span class="params">_In_</span> HINSTANCE <span class="params">hInstance</span>, <span class="params">_In_opt_</span> HINSTANCE <span class="params">hPrevInstance</span>, <span class="params">_In_</span> LPSTR <span class="params">lpCmdLine</span>, <span class="params">_In_</span> <span class="params">int</span> <span class="params">nShowCmd</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// 注册窗口类</span></span><br><span class="line">	WNDCLASSEX wndclass;</span><br><span class="line">	wndclass.cbClsExtra = <span class="number">0</span>;</span><br><span class="line">	wndclass.cbSize = sizeof(WNDCLASSEX);</span><br><span class="line">	wndclass.cbWndExtra = <span class="number">0</span>;</span><br><span class="line">	wndclass.hbrBackground = NULL;</span><br><span class="line">	wndclass.hCursor = <span class="constructor">LoadCursor(NULL, IDC_ARROW)</span>;</span><br><span class="line">	wndclass.hIcon = NULL;</span><br><span class="line">	wndclass.hIconSm = NULL;</span><br><span class="line">	wndclass.hInstance = hInstance;</span><br><span class="line">	wndclass.lpfnWndProc = GLWindowProc;</span><br><span class="line">	wndclass.lpszClassName = <span class="constructor">_T(<span class="string">"GLWindow"</span>)</span>;</span><br><span class="line">	wndclass.lpszMenuName = NULL;</span><br><span class="line">	wndclass.style = CS_VREDRAW <span class="pattern-match">| <span class="constructor">CS_HREDRAW</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">ATOM</span> atom = <span class="constructor">RegisterClassEx(&amp;<span class="params">wndclass</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="keyword">if</span> (!atom)</span></span><br><span class="line"><span class="pattern-match">	&#123;</span></span><br><span class="line"><span class="pattern-match">		return 0;</span></span><br><span class="line"><span class="pattern-match">	&#125;</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 创建窗口</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">HWND</span> hwnd = <span class="constructor">CreateWindowEx(NULL, <span class="params">_T</span>(<span class="string">"GLWindow"</span>)</span>, <span class="constructor">_T(<span class="string">"OpenGL Window"</span>)</span>, <span class="constructor">WS_OVERLAPPEDWINDOW</span>,</span></span><br><span class="line"><span class="pattern-match">		100, 100, 800, 600, <span class="constructor">NULL</span>, <span class="constructor">NULL</span>, h<span class="constructor">Instance</span>, <span class="constructor">NULL</span>);</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 得到设备环境句柄</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">HDC</span> dc = <span class="constructor">GetDC(<span class="params">hwnd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 像素结构</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">PIXELFORMATDESCRIPTOR</span> pfd;</span></span><br><span class="line"><span class="pattern-match">	memset(&amp;pfd, 0, sizeof(<span class="constructor">PIXELFORMATDESCRIPTOR</span>));</span></span><br><span class="line"><span class="pattern-match">	pfd.n<span class="constructor">Version</span> = 1;</span></span><br><span class="line"><span class="pattern-match">	pfd.n<span class="constructor">Size</span> = sizeof(<span class="constructor">PIXELFORMATDESCRIPTOR</span>);</span></span><br><span class="line"><span class="pattern-match">	pfd.c<span class="constructor">ColorBits</span> = 32;</span></span><br><span class="line"><span class="pattern-match">	pfd.c<span class="constructor">DepthBits</span> = 24;</span></span><br><span class="line"><span class="pattern-match">	pfd.c<span class="constructor">StencilBits</span> = 8;</span></span><br><span class="line"><span class="pattern-match">	pfd.i<span class="constructor">PixelType</span> = <span class="constructor">PFD_TYPE_RGBA</span>;</span></span><br><span class="line"><span class="pattern-match">	pfd.i<span class="constructor">LayerType</span> = <span class="constructor">PFD_MAIN_PLANE</span>;</span></span><br><span class="line"><span class="pattern-match">	pfd.dw<span class="constructor">Flags</span> = <span class="constructor">PFD_DRAW_TO_WINDOW</span> | <span class="constructor">PFD_SUPPORT_OPENGL</span> | <span class="constructor">PFD_DOUBLEBUFFER</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span> 提供像素格式描述符并由windows选择系统存在或接近的像素格式</span></span><br><span class="line"><span class="pattern-match">	<span class="built_in">int</span> pixel<span class="constructor">Format</span> = <span class="constructor">ChoosePixelFormat(<span class="params">dc</span>, &amp;<span class="params">pfd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">SetPixelFormat(<span class="params">dc</span>, <span class="params">pixelFormat</span>, &amp;<span class="params">pfd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">HGLRC</span> rc = wgl<span class="constructor">CreateContext(<span class="params">dc</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	wgl<span class="constructor">MakeCurrent(<span class="params">dc</span>, <span class="params">rc</span>)</span>;<span class="operator">/</span><span class="operator">/</span>setup opengl context complete</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span>opengl init</span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">MatrixMode(GL_PROJECTION)</span>; <span class="operator">/</span><span class="operator">/</span> 下一步设置投影矩阵</span></span><br><span class="line"><span class="pattern-match">	glu<span class="constructor">Perspective(45.0f, 800.0f <span class="operator">/</span> 600.0f, 0.1f, 100.0f)</span>;</span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">MatrixMode(GL_MODELVIEW)</span>;</span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">LoadIdentity()</span>; <span class="operator">/</span><span class="operator">/</span> 用一个4×4的单位矩阵来替换模型视图矩阵</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	gl<span class="constructor">ClearColor(0.1, 0.4, 0.6, 1.0)</span>;<span class="operator">/</span><span class="operator">/</span>set "clear color" for background</span></span><br><span class="line"><span class="pattern-match">	<span class="operator">/</span><span class="operator">/</span>show window</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">ShowWindow(<span class="params">hwnd</span>, SW_SHOW)</span>;</span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">UpdateWindow(<span class="params">hwnd</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	<span class="constructor">MSG</span> msg;</span></span><br><span class="line"><span class="pattern-match">	<span class="keyword">while</span> (<span class="literal">true</span>)</span></span><br><span class="line"><span class="pattern-match">	&#123;</span></span><br><span class="line"><span class="pattern-match">		<span class="keyword">if</span> (<span class="constructor">PeekMessage(&amp;<span class="params">msg</span>, NULL, NULL, NULL, PM_REMOVE)</span>)</span></span><br><span class="line"><span class="pattern-match">		&#123;</span></span><br><span class="line"><span class="pattern-match">			<span class="keyword">if</span> (msg.message <span class="operator">==</span> <span class="constructor">WM_QUIT</span>)</span></span><br><span class="line"><span class="pattern-match">			&#123;</span></span><br><span class="line"><span class="pattern-match">				break;</span></span><br><span class="line"><span class="pattern-match">			&#125;</span></span><br><span class="line"><span class="pattern-match">			<span class="constructor">TranslateMessage(&amp;<span class="params">msg</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">			<span class="constructor">DispatchMessage(&amp;<span class="params">msg</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">		&#125;</span></span><br><span class="line"><span class="pattern-match">		<span class="operator">/</span><span class="operator">/</span>draw scene</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Clear(GL_COLOR_BUFFER_BIT)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Begin(GL_LINE_STRIP)</span>;<span class="operator">/</span><span class="operator">/</span>start <span class="keyword">to</span> draw something</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Color4ub(255, 0, 0, 255)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Vertex3f(0.0f, 0.0f, -10.0f)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Color4ub(0, 255, 0, 255)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Vertex3f(-5.0f, 0.0f, -10.0f)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Color4ub(0, 0, 255, 255)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">Vertex3f(-5.0f, -2.0f, -10.0f)</span>;</span></span><br><span class="line"><span class="pattern-match">		gl<span class="constructor">End()</span>;<span class="operator">/</span><span class="operator">/</span><span class="keyword">end</span></span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">		<span class="operator">/</span><span class="operator">/</span>present scene</span></span><br><span class="line"><span class="pattern-match">		<span class="constructor">SwapBuffers(<span class="params">dc</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">	&#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">	return 0;</span></span><br><span class="line"><span class="pattern-match">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="三角形"><a href="#三角形" class="headerlink" title="三角形"></a><strong>三角形</strong></h3><p><img src="https://img.it610.com/image/info2/5c759774a2734aabbcefb4b9f08e9293.jpg" alt="image"></p>
+<p><strong>STRIP</strong></p>
+<ul>
+<li>偶数环绕规则 T = [N - 1, N - 2, N]</li>
+<li>奇数环绕规则 T = [N - 2, N - 1, N]</li>
+</ul>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">#include &lt;gl/GL.h&gt;</span><br><span class="line">#include &lt;gl/GLU.h&gt;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib,<span class="string">"opengl32.lib"</span>)</span><br><span class="line">#pragma comment(lib,<span class="string">"glu32.lib"</span>)</span><br><span class="line"></span><br><span class="line">LRESULT CALLBACK GLWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">switch</span> (msg)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> WM_CLOSE:</span><br><span class="line">		PostQuitMessage(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> DefWindowProc(hwnd,msg,wParam,lParam);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">INT WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ <span class="built_in">int</span> nShowCmd)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//register window</span></span><br><span class="line">	WNDCLASSEX wndclass;</span><br><span class="line">	wndclass.cbClsExtra = <span class="number">0</span>;</span><br><span class="line">	wndclass.cbSize = sizeof(WNDCLASSEX);</span><br><span class="line">	wndclass.cbWndExtra = <span class="number">0</span>;</span><br><span class="line">	wndclass.hbrBackground = NULL;</span><br><span class="line">	wndclass.hCursor = LoadCursor(NULL,IDC_ARROW);</span><br><span class="line">	wndclass.hIcon = NULL;</span><br><span class="line">	wndclass.hIconSm = NULL;</span><br><span class="line">	wndclass.hInstance = hInstance;</span><br><span class="line">	wndclass.lpfnWndProc = GLWindowProc;</span><br><span class="line">	wndclass.lpszClassName = L<span class="string">"GLWindow"</span>;</span><br><span class="line">	wndclass.lpszMenuName = NULL;</span><br><span class="line">	wndclass.style = CS_VREDRAW | CS_HREDRAW;</span><br><span class="line">	ATOM atom = RegisterClassEx(&amp;wndclass);</span><br><span class="line">	<span class="keyword">if</span> (!atom)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//create window</span></span><br><span class="line">	HWND hwnd = CreateWindowEx(NULL,L<span class="string">"GLWindow"</span>,L<span class="string">"OpenGL Window"</span>,WS_OVERLAPPEDWINDOW,</span><br><span class="line">		<span class="number">100</span>,<span class="number">100</span>,<span class="number">800</span>,<span class="number">600</span>,NULL,NULL,hInstance,NULL);</span><br><span class="line">	<span class="comment">//create opengl render context</span></span><br><span class="line">	HDC dc = GetDC(hwnd);</span><br><span class="line">	PIXELFORMATDESCRIPTOR pfd;</span><br><span class="line">	memset(&amp;pfd, <span class="number">0</span>, sizeof(PIXELFORMATDESCRIPTOR));</span><br><span class="line">	pfd.nVersion = <span class="number">1</span>;</span><br><span class="line">	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);</span><br><span class="line">	pfd.cColorBits = <span class="number">32</span>;</span><br><span class="line">	pfd.cDepthBits = <span class="number">24</span>;</span><br><span class="line">	pfd.cStencilBits = <span class="number">8</span>;</span><br><span class="line">	pfd.iPixelType = PFD_TYPE_RGBA;</span><br><span class="line">	pfd.iLayerType = PFD_MAIN_PLANE;</span><br><span class="line">	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">int</span> pixelFormat = ChoosePixelFormat(dc, &amp;pfd);</span><br><span class="line">	SetPixelFormat(dc, pixelFormat, &amp;pfd);</span><br><span class="line"></span><br><span class="line">	HGLRC rc = wglCreateContext(dc);</span><br><span class="line">	wglMakeCurrent(dc, rc);<span class="comment">//setup opengl context complete</span></span><br><span class="line">	<span class="comment">//opengl init</span></span><br><span class="line">	glMatrixMode(GL_PROJECTION);<span class="comment">//tell the gpu processer that i would select the projection matrix</span></span><br><span class="line">	gluPerspective(<span class="number">50.0f</span>, <span class="number">800.0f</span> / <span class="number">600.0f</span>, <span class="number">0.1f</span>, <span class="number">1000.0f</span>);<span class="comment">//set some values to projection matrix</span></span><br><span class="line">	glMatrixMode(GL_MODELVIEW);<span class="comment">//tell .... model view matrix</span></span><br><span class="line">	glLoadIdentity();</span><br><span class="line"></span><br><span class="line">	glClearColor(<span class="number">0.1f</span>,<span class="number">0.4f</span>,<span class="number">0.6f</span>,<span class="number">1.0f</span>);<span class="comment">//set "clear color" for background</span></span><br><span class="line">	<span class="comment">//show window</span></span><br><span class="line">	ShowWindow(hwnd, SW_SHOW);</span><br><span class="line">	UpdateWindow(hwnd);</span><br><span class="line">	glEnable(GL_CULL_FACE);</span><br><span class="line">	<span class="comment">//front face : ccw -&gt; counter clock wind </span></span><br><span class="line">	MSG msg;</span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (PeekMessage(&amp;msg,NULL,NULL,NULL,PM_REMOVE))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (msg.message==WM_QUIT)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			TranslateMessage(&amp;msg);</span><br><span class="line">			DispatchMessage(&amp;msg);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//draw scene</span></span><br><span class="line">		glClear(GL_COLOR_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line">		glBegin(GL_TRIANGLE_FAN);<span class="comment">//start to draw something n-2</span></span><br><span class="line"></span><br><span class="line">		glColor4ub(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>);</span><br><span class="line">		glVertex3f(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">-10.0f</span>);</span><br><span class="line"></span><br><span class="line">		glColor4ub(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>, <span class="number">255</span>);</span><br><span class="line">		glVertex3f(<span class="number">-5.0f</span>, <span class="number">-2.0f</span>, <span class="number">-10.0f</span>);</span><br><span class="line"></span><br><span class="line">		glColor4ub(<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>, <span class="number">255</span>);</span><br><span class="line">		glVertex3f(<span class="number">-3.0f</span>, <span class="number">-2.0f</span>, <span class="number">-10.0f</span>);</span><br><span class="line"></span><br><span class="line">		glColor4ub(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>, <span class="number">255</span>);</span><br><span class="line">		glVertex3f(<span class="number">-1.0f</span>, <span class="number">-2.0f</span>, <span class="number">-10.0f</span>);</span><br><span class="line"></span><br><span class="line">		glColor4ub(<span class="number">0</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>);</span><br><span class="line">		glVertex3f(<span class="number">2.0f</span>, <span class="number">-2.0f</span>, <span class="number">-10.0f</span>);</span><br><span class="line"></span><br><span class="line">		glEnd();<span class="comment">//end</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">//present scene</span></span><br><span class="line">		SwapBuffers(dc);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/06/13/OpenGL/46、OpenGL 之深度缓冲详解/" class="pre-post btn btn-default" title='46、OpenGL 之深度缓冲详解'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            46、OpenGL 之深度缓冲详解</span>
+    </a>
+    
+    
+    <a href="/2020/06/12/OpenGL/44、OpenGL 之模型/" class="next-post btn btn-default" title='44、OpenGL 之模型'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            44、OpenGL 之模型</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL-之-Vanilla-搭建OpenGL渲染环境"><span class="toc-text">OpenGL 之 Vanilla 搭建OpenGL渲染环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PIXELFORMATDESCRIPTOR"><span class="toc-text">PIXELFORMATDESCRIPTOR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wglCreateContext"><span class="toc-text">wglCreateContext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wglMakeCurrent"><span class="toc-text">wglMakeCurrent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绘制一个点"><span class="toc-text">绘制一个点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绘制线"><span class="toc-text">绘制线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三角形"><span class="toc-text">三角形</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

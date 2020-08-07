@@ -1,0 +1,506 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之ngram全文解析器内置的MySQL全文解析器使用空格确定单词的开头和结尾。当涉及到诸如中文，日文或韩文等的表意语言时，这是一个限制，因为这些语言不使用单词分隔符。
+为了解决这个问...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    72、mysql 之ngram全文解析器 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="72、mysql 之ngram全文解析器">
+            
+            72、mysql 之ngram全文解析器
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/06/11</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1518</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之ngram全文解析器"><a href="#mysql-之ngram全文解析器" class="headerlink" title="mysql 之ngram全文解析器"></a><strong>mysql 之ngram全文解析器</strong></h2><p>内置的MySQL全文解析器使用空格确定单词的开头和结尾。当涉及到诸如中文，日文或韩文等的表意语言时，这是一个限制，因为这些语言不使用单词分隔符。</p>
+<p>为了解决这个问题，MySQL提供了ngram全文解析器。从版本5.7.6开始，MySQL包含ngram全文解析器作为内置服务器插件，这意味着MySQL在MySQL数据库服务器启动时自动加载此插件。MySQL支持InnoDB和MyISAM存储引擎的ngram全文解析器。</p>
+<p>根据定义，ngram是来自文本序列的许多字符的连续序列。ngram全文解析器的主要功能是将一系列文本标记为一个由n个字符组成的连续序列。</p>
+<p>下面说明了ngram全文解析器如何为不同的n值标记一系列文本：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">n</span> = <span class="number">1</span>: <span class="string">'m'</span>,<span class="string">'y'</span>,<span class="string">'s'</span>,<span class="string">'q'</span>,<span class="string">'l'</span></span><br><span class="line"><span class="attr">n</span> = <span class="number">2</span>: <span class="string">'my'</span>, <span class="string">'ys'</span>, <span class="string">'sq'</span>,<span class="string">'ql'</span> </span><br><span class="line"><span class="attr">n</span> = <span class="number">3</span>: <span class="string">'mys'</span>, <span class="string">'ysq'</span>, <span class="string">'sql'</span></span><br><span class="line"><span class="attr">n</span> = <span class="number">4</span>: <span class="string">'mysq'</span>, <span class="string">'ysql'</span></span><br><span class="line"><span class="attr">n</span> = <span class="number">5</span>: <span class="string">'mysql'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用ngram解析器创建FULLTEXT索引"><a href="#使用ngram解析器创建FULLTEXT索引" class="headerlink" title="使用ngram解析器创建FULLTEXT索引"></a><strong>使用ngram解析器创建FULLTEXT索引</strong></h3><p>要创建一个FULLTEXT索引，使用NGRAM全文解析器，你加WITH PARSER ngram的CREATE TABLE，ALTER TABLE或CREATE INDEX声明。</p>
+<p>例如，以下语句创建新posts表，并将title和body列添加到FULLTEXT使用ngram全文解析器的索引。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> posts;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> posts (</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> PRIMARY <span class="keyword">KEY</span> AUTO_INCREMENT,</span><br><span class="line">    title <span class="built_in">VARCHAR</span>(<span class="number">255</span>),</span><br><span class="line">    <span class="keyword">body</span> <span class="built_in">TEXT</span>,</span><br><span class="line">    FULLTEXT ( title , <span class="keyword">body</span> ) <span class="keyword">WITH</span> PARSER NGRAM</span><br><span class="line">)  <span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> UTF8MB4;</span><br></pre></td></tr></table></figure>
+
+<p>以下INSERT语句在posts表中插入一个新行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">NAMES</span> utf8mb4;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> posts(title,<span class="keyword">body</span>)</span><br><span class="line"><span class="keyword">VALUES</span>(<span class="string">'MySQL全文搜索'</span>,<span class="string">'MySQL提供了具有许多好的功能的内置全文搜索'</span>),</span><br><span class="line">      (<span class="string">'MySQL教程'</span>,<span class="string">'学习MySQL快速，简单和有趣'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>请注意，SET NAMES语句设置客户端和服务器将用于发送和接收数据的字符集; 在这种情况下，它是utf8mb4。</p>
+<p>要查看ngram如何标记文本，请使用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> innodb_ft_aux_table=<span class="string">"mysqldemo/posts"</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    *</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    information_schema.innodb_ft_index_cache</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> doc_id , <span class="keyword">position</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------------+-------------+-----------+--------+----------+</span><br><span class="line">|<span class="string"> WORD   </span>|<span class="string"> FIRST_DOC_ID </span>|<span class="string"> LAST_DOC_ID </span>|<span class="string"> DOC_COUNT </span>|<span class="string"> DOC_ID </span>|<span class="string"> POSITION </span>|</span><br><span class="line">+--------+--------------+-------------+-----------+--------+----------+</span><br><span class="line">|<span class="string"> my     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">        0 </span>|</span><br><span class="line">|<span class="string"> ys     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">        1 </span>|</span><br><span class="line">|<span class="string"> sq     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">        2 </span>|</span><br><span class="line">|<span class="string"> ql     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">        3 </span>|</span><br><span class="line">|<span class="string"> l全    </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">        4 </span>|</span><br><span class="line">|<span class="string"> 全文   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">        5 </span>|</span><br><span class="line">|<span class="string"> 文搜   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">        8 </span>|</span><br><span class="line">|<span class="string"> 搜索   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       11 </span>|</span><br><span class="line">|<span class="string"> ql     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> ys     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> my     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> sq     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      2 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> l提    </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       22 </span>|</span><br><span class="line">|<span class="string"> 提供   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       23 </span>|</span><br><span class="line">|<span class="string"> 供了   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       26 </span>|</span><br><span class="line">|<span class="string"> 了具   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       29 </span>|</span><br><span class="line">|<span class="string"> 具有   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       32 </span>|</span><br><span class="line">|<span class="string"> 有许   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       35 </span>|</span><br><span class="line">|<span class="string"> 许多   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       38 </span>|</span><br><span class="line">|<span class="string"> 多好   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       41 </span>|</span><br><span class="line">|<span class="string"> 好的   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       44 </span>|</span><br><span class="line">|<span class="string"> 的功   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       47 </span>|</span><br><span class="line">|<span class="string"> 功能   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       50 </span>|</span><br><span class="line">|<span class="string"> 能的   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       53 </span>|</span><br><span class="line">|<span class="string"> 的内   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       56 </span>|</span><br><span class="line">|<span class="string"> 内置   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       59 </span>|</span><br><span class="line">|<span class="string"> 文搜   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       60 </span>|</span><br><span class="line">|<span class="string"> 全文   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       60 </span>|</span><br><span class="line">|<span class="string"> 搜索   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       60 </span>|</span><br><span class="line">|<span class="string"> 置全   </span>|<span class="string">            2 </span>|<span class="string">           2 </span>|<span class="string">         1 </span>|<span class="string">      2 </span>|<span class="string">       62 </span>|</span><br><span class="line">|<span class="string"> my     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">        0 </span>|</span><br><span class="line">|<span class="string"> ys     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">        1 </span>|</span><br><span class="line">|<span class="string"> sq     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">        2 </span>|</span><br><span class="line">|<span class="string"> ql     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">        3 </span>|</span><br><span class="line">|<span class="string"> l教    </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">        4 </span>|</span><br><span class="line">|<span class="string"> 教程   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">        5 </span>|</span><br><span class="line">|<span class="string"> 学习   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       12 </span>|</span><br><span class="line">|<span class="string"> 习m    </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       15 </span>|</span><br><span class="line">|<span class="string"> my     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> sq     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> ql     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> ys     </span>|<span class="string">            2 </span>|<span class="string">           3 </span>|<span class="string">         2 </span>|<span class="string">      3 </span>|<span class="string">       18 </span>|</span><br><span class="line">|<span class="string"> l快    </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       22 </span>|</span><br><span class="line">|<span class="string"> 快速   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       23 </span>|</span><br><span class="line">|<span class="string"> 速，   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       26 </span>|</span><br><span class="line">|<span class="string"> ，简   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       29 </span>|</span><br><span class="line">|<span class="string"> 简单   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       32 </span>|</span><br><span class="line">|<span class="string"> 单和   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       35 </span>|</span><br><span class="line">|<span class="string"> 和有   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       38 </span>|</span><br><span class="line">|<span class="string"> 有趣   </span>|<span class="string">            3 </span>|<span class="string">           3 </span>|<span class="string">         1 </span>|<span class="string">      3 </span>|<span class="string">       41 </span>|</span><br><span class="line">+--------+--------------+-------------+-----------+--------+----------+</span><br><span class="line">50 rows in set (0.02 sec)</span><br></pre></td></tr></table></figure>
+
+<p>此查询对于故障排除非常有用。例如，如果单词未包含在搜索结果中，则单词可能未被索引，因为它是一个停用词，或者可能是另一个原因。</p>
+<h3 id="设置ngram令牌大小"><a href="#设置ngram令牌大小" class="headerlink" title="设置ngram令牌大小"></a><strong>设置ngram令牌大小</strong></h3><p>如您所见，前面的示例中，ngram中的令牌大小（n）默认为2.要更改令牌大小，请使用ngram_token_size配置选项，其值介于1和10之间。</p>
+<p>请注意，较小的令牌大小会使较小的全文搜索索引成为可能，因此您可以更快地进行搜索。</p>
+<p>因为ngram_token_size是只读变量，所以您只能使用两个选项设置其值：</p>
+<p>首先，在启动字符串中：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqld <span class="attribute">--ngram_token_size</span>=1</span><br></pre></td></tr></table></figure>
+
+<p>二，在配置文件中：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[mysqld]</span></span><br><span class="line"><span class="attr">ngram_token_size</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="ngram解析器短语搜索"><a href="#ngram解析器短语搜索" class="headerlink" title="ngram解析器短语搜索"></a><strong>ngram解析器短语搜索</strong></h3><p>MySQL将短语搜索转换为ngram短语搜索。例如，”abc”转换为”ab bc”，返回包含”ab bc”和的文档”abc”。</p>
+<p>下面的示例显示了搜索短语搜索中的posts表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    <span class="keyword">id</span>, title, <span class="keyword">body</span></span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    posts</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">    <span class="keyword">MATCH</span> (title , <span class="keyword">body</span>) AGAINST (<span class="string">'搜索'</span> );</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">| id | title             | body                                                        |</span><br><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">|  1 | MySQL全文搜索      | MySQL提供了具有许多好的功能的内置全文搜索                          |</span><br><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">1 row in set (7.74 sec)</span><br></pre></td></tr></table></figure>
+
+<h3 id="用ngram处理搜索结果"><a href="#用ngram处理搜索结果" class="headerlink" title="用ngram处理搜索结果"></a><strong>用ngram处理搜索结果</strong></h3><p>自然语言模式<br>在NATURAL LANGUAGE MODE搜索中，搜索项将转换为ngram值的并集。假设令牌大小为2或bigram，搜索项mysql将转换为my ys sq和ql。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    *</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    posts</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">    <span class="keyword">MATCH</span> (title , <span class="keyword">body</span>) AGAINST (<span class="string">'简单和有趣'</span> <span class="keyword">IN</span> <span class="keyword">natural</span> <span class="keyword">language</span> <span class="keyword">MODE</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----+</span>-------------<span class="code">+-------------------------------------+</span></span><br><span class="line">| id | title       | body                                |</span><br><span class="line"><span class="code">+----+</span>-------------<span class="code">+-------------------------------------+</span></span><br><span class="line">|  2 | MySQL教程   | 学习MySQL快速，简单和有趣           |</span><br><span class="line"><span class="code">+----+</span>-------------<span class="code">+-------------------------------------+</span></span><br><span class="line">1 row in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<h3 id="布尔模式"><a href="#布尔模式" class="headerlink" title="布尔模式"></a><strong>布尔模式</strong></h3><p>在BOOLEAN MODE搜索中，搜索项将转换为ngram短语搜索。例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    *</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    posts</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">    <span class="keyword">MATCH</span> (title , <span class="keyword">body</span>) AGAINST (<span class="string">'简单和有趣'</span> <span class="keyword">IN</span> <span class="built_in">BOOLEAN</span> <span class="keyword">MODE</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----+</span>-------------<span class="code">+-------------------------------------+</span></span><br><span class="line">| id | title       | body                                |</span><br><span class="line"><span class="code">+----+</span>-------------<span class="code">+-------------------------------------+</span></span><br><span class="line">|  2 | MySQL教程   | 学习MySQL快速，简单和有趣           |</span><br><span class="line"><span class="code">+----+</span>-------------<span class="code">+-------------------------------------+</span></span><br><span class="line">1 row in set (0.16 sec)</span><br></pre></td></tr></table></figure>
+
+<h3 id="ngram通配符搜索"><a href="#ngram通配符搜索" class="headerlink" title="ngram通配符搜索"></a><strong>ngram通配符搜索</strong></h3><p>ngram FULLTEXT索引只包含ngrams ，因此它不知道术语的开头。执行通配符搜索时，可能会返回意外结果。</p>
+<p>以下规则适用于使用ngram FULLTEXT搜索索引的通配符搜索：</p>
+<p>如果通配符中的前缀术语短于ngram令牌大小，则查询将返回包含以前缀术语开头的ngram令牌的所有文档。例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    <span class="keyword">id</span>, title, <span class="keyword">body</span></span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    posts</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">    <span class="keyword">MATCH</span> (title , <span class="keyword">body</span>) AGAINST (<span class="string">'my*'</span> );</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">| id | title             | body                                                        |</span><br><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">|  1 | MySQL全文搜索      | MySQL提供了具有许多好的功能的内置全文搜索                          |</span><br><span class="line">|  2 | MySQL教程         | 学习MySQL快速，简单和有趣                                       |</span><br><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">2 rows in set (4.40 sec)</span><br></pre></td></tr></table></figure>
+
+<p>如果通配符中的前缀术语长于ngram令牌大小，MySQL将把前缀术语转换为ngram短语并忽略通配符运算符。请参阅以下示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    <span class="keyword">id</span>, title, <span class="keyword">body</span></span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    posts</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">    <span class="keyword">MATCH</span> (title , <span class="keyword">body</span>) AGAINST (<span class="string">'mysqld*'</span> );</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">| id | title             | body                                                        |</span><br><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">|  1 | MySQL全文搜索     | MySQL提供了具有许多好的功能的内置全文搜索                   |</span><br><span class="line">|  2 | MySQL教程         | 学习MySQL快速，简单和有趣                                   |</span><br><span class="line"><span class="code">+----+</span>-------------------<span class="code">+-------------------------------------------------------------+</span></span><br><span class="line">2 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，术语“ mysqld”被转换成ngram短语：”my” “ys” “sq” “ql” “ld”。因此，将返回包含这些短语之一的所有文档。</p>
+<h3 id="添加或修改-ngram-的索引"><a href="#添加或修改-ngram-的索引" class="headerlink" title="添加或修改 ngram 的索引"></a><strong>添加或修改 ngram 的索引</strong></h3><p>要向FULLTEXT现有表添加索引，可以使用ALTER TABLE或 CREATE INDEX。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> posts <span class="keyword">ADD</span> FULLTEXT <span class="keyword">INDEX</span> ft_index (title,<span class="keyword">body</span>) <span class="keyword">WITH</span> PARSER ngram;</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> FULLTEXT <span class="keyword">INDEX</span> ft_index <span class="keyword">ON</span> posts (<span class="built_in">title</span>,body) <span class="keyword">WITH</span> PARSER ngram;</span><br></pre></td></tr></table></figure>
+
+<h3 id="处理停用词"><a href="#处理停用词" class="headerlink" title="处理停用词"></a><strong>处理停用词</strong></h3><p>ngram解析器排除包含禁用词列表中的停用词的令牌。例如，假设ngram_token_size为2且文档包含”abc”。ngram解析器将文档标记为”ab”和”bc”。如果”b”是一个停用词，ngram将排除两者”ab”，”bc”因为它们包含”b”。</p>
+<p>请注意，如果语言不是英语，则必须定义自己的禁用词列表。此外，长度大于的停用词将ngram_token_size被忽略。</p>
+<p>在本教程中，您学习了如何使用MySQL ngram全文解析器来处理表意语言的全文搜索。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/06/11/Nginx/11、nginx 之对客户端的请求限制/" class="pre-post btn btn-default" title='11、nginx 之对客户端的请求限制'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            11、nginx 之对客户端的请求限制</span>
+    </a>
+    
+    
+    <a href="/2016/06/10/Mysql/71、mysql 之查询扩展/" class="next-post btn btn-default" title='71、mysql 之查询扩展'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            71、mysql 之查询扩展</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之ngram全文解析器"><span class="toc-text">mysql 之ngram全文解析器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用ngram解析器创建FULLTEXT索引"><span class="toc-text">使用ngram解析器创建FULLTEXT索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置ngram令牌大小"><span class="toc-text">设置ngram令牌大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ngram解析器短语搜索"><span class="toc-text">ngram解析器短语搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用ngram处理搜索结果"><span class="toc-text">用ngram处理搜索结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#布尔模式"><span class="toc-text">布尔模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ngram通配符搜索"><span class="toc-text">ngram通配符搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加或修改-ngram-的索引"><span class="toc-text">添加或修改 ngram 的索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理停用词"><span class="toc-text">处理停用词</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

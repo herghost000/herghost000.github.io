@@ -1,0 +1,469 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="JavaScript">
+
+
+<meta name="description" content="什么是base64
+
+base64是用规定的64种字符来表示任意二进制数据的一种编码格式
+而且这64种字符均是可见字符，而之所以要是可见的是因为在不同设备上处理不可见字符时可能发生错误
+通常，电...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    20、base64编解码 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="20、base64编解码">
+            
+            20、base64编解码
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/JavaScript/">JavaScript</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/JavaScript/">JavaScript</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2015/05/09</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1917</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h4 id="什么是base64"><a href="#什么是base64" class="headerlink" title="什么是base64"></a>什么是base64</h4><p><img src="https://note.youdao.com/yws/api/personal/file/CB9D9485414444F29F2A32868390D8E5?method=download&shareKey=4582db516148ce631b2f9e4d29afd063" alt="image"></p>
+<ol>
+<li>base64是用规定的64种字符来表示任意二进制数据的一种编码格式</li>
+<li>而且这64种字符均是可见字符，而之所以要是可见的是因为在不同设备上处理不可见字符时可能发生错误</li>
+<li>通常，电子邮件数据、公钥证书会经常使用。</li>
+</ol>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">编码规则</span><br><span class="line"></span><br><span class="line">我们知道单个字符一般用一个字节就可以表示(中文等其他特殊文字除外),而一个字节由<span class="number">8</span>位二进制数构成。那么base64编码中,是将每<span class="number">6</span>位二进制作为一个单位解析后参照字符集的索引就可以得到编码后的字符。举个例子:</span><br><span class="line"></span><br><span class="line">二进制数据：<span class="number">000001</span> <span class="number">000011</span></span><br><span class="line"></span><br><span class="line">编码后:BD</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">但是我们发现一个问题，就是我们单个字符是<span class="number">8</span>位二进制,而base64编码时需要以<span class="number">6</span>位二进制数位单位进行编码。那么多余的<span class="number">2</span>位怎么去处理呢？看下面的栗子</span><br><span class="line"></span><br><span class="line">未编码的字符串:B</span><br><span class="line">对应的二进制数据: <span class="number">010000</span> <span class="number">10</span></span><br><span class="line">对残缺的二进制进行补足:<span class="number">010000</span> <span class="number">100000</span> <span class="number">000000</span> <span class="number">000000</span></span><br><span class="line">编码后:Qg==</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过上面的栗子我们可以发现，base64编码时会将二进制通过在末尾补0的方式使其位数满足24的倍数。这样刚好能够编码出至少4个字符。从上面的栗子中我们可以看到=号的数量刚好是缺少2个字节数的数量，而g则是因为多余的2位二进制数补了4个0后编码成了g。所以我们就可以看到这样的编码了。如果还不理解再举一些栗子</p>
+</blockquote>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">未编码的字符串:BD</span><br><span class="line"></span><br><span class="line">对应的二进制数据: <span class="number">010000</span> <span class="number">100100</span> <span class="number">0100</span></span><br><span class="line"></span><br><span class="line">对残缺的二进制进行补足:<span class="number">010000</span> <span class="number">100100</span> <span class="number">010000</span> <span class="number">000000</span></span><br><span class="line"></span><br><span class="line">编码后:QkQ=</span><br></pre></td></tr></table></figure>
+
+<p>关于解码</p>
+<p>这里不做详细解释，因为知道编码规则后，反过来就可以实现解码了。</p>
+<p>原生JS实现其编码与解码</p>
+<p>如果对JS熟悉的同学，可能会想到window对象的atob()和btoa()方法。但是只有在较新的游览器中才能使用，面对老的游览器，我们只能靠原生的JS自己造轮子了。</p>
+<p>但是光知道编码原理一定够吗？这里依然存在两个问题:</p>
+<p>如何将字符串解析成二进制数据<br>如何对中文字符进行编码<br>JS解析字符串为二进制数</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#首先在页面中所有的字符串都是基于unicode编码的</span></span><br><span class="line"><span class="meta">#然后js的字符串中刚好有charCodeAt()方法</span></span><br><span class="line"><span class="meta">#返回指定字符的unicode编码对应的数值</span></span><br><span class="line"><span class="meta">#这个数值就是二进制数表示的数值</span></span><br><span class="line"><span class="meta">#我们只需要将其转换为二进制即可</span></span><br><span class="line"><span class="meta">#熟悉c或者c++的同学可能会想到用不断的除2看余数的方式来求#出这个数的二进制表示</span></span><br><span class="line"><span class="meta">#但是在JS已经有现成的方法了。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> str = <span class="string">'ABCD'</span>,</span><br><span class="line">    i,</span><br><span class="line">    len,</span><br><span class="line">    result = <span class="string">''</span>;</span><br><span class="line"><span class="keyword">for</span>( i = <span class="number">0</span> , len = str.length ; i &lt; len ; i++)&#123;</span><br><span class="line">    result += str.charCodeAt(i).toString(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line">console.log(result);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">编码中文字符</span><br><span class="line"></span><br><span class="line">网页中编码格式基本都是UTF<span class="number">-8</span>,然而即便我们用UTF<span class="number">-8</span>格式保存了HTML文件，但是其中的中文字符依然是以UTF<span class="number">-16</span>的形式保存的。所以我们首先要对utf<span class="number">-16</span>的汉字转为utf<span class="number">-8</span>形式保存的汉字</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line">var Base64 = &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// private property</span></span><br><span class="line">    _keyStr: <span class="string">"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// public method for encoding</span></span><br><span class="line">    encode: <span class="keyword">function</span>(input) &#123;</span><br><span class="line">        var output = <span class="string">""</span>;</span><br><span class="line">        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;</span><br><span class="line">        var i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        input = <span class="module-access"><span class="module"><span class="identifier">Base64</span>.</span><span class="module"><span class="identifier">_utf8_encode</span>(</span></span>input);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (i &lt; input.length) &#123;</span><br><span class="line"></span><br><span class="line">            chr1 = input.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span><span class="operator">++</span>)</span>;</span><br><span class="line">            chr2 = input.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span><span class="operator">++</span>)</span>;</span><br><span class="line">            chr3 = input.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span><span class="operator">++</span>)</span>;</span><br><span class="line"></span><br><span class="line">            enc1 = chr1 &gt;&gt; <span class="number">2</span>;</span><br><span class="line">            enc2 = ((chr1 &amp; <span class="number">3</span>) &lt;&lt; <span class="number">4</span>) <span class="pattern-match">| (chr2 &gt;&gt; 4);</span></span><br><span class="line"><span class="pattern-match">            enc3 = ((chr2 &amp; 15) &lt;&lt; 2) | (chr3 &gt;&gt; 6);</span></span><br><span class="line"><span class="pattern-match">            enc4 = chr3 &amp; 63;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            <span class="keyword">if</span> (is<span class="constructor">NaN(<span class="params">chr2</span>)</span>) &#123;</span></span><br><span class="line"><span class="pattern-match">                enc3 = enc4 = 64;</span></span><br><span class="line"><span class="pattern-match">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (is<span class="constructor">NaN(<span class="params">chr3</span>)</span>) &#123;</span></span><br><span class="line"><span class="pattern-match">                enc4 = 64;</span></span><br><span class="line"><span class="pattern-match">            &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            output = output + this.<span class="constructor">_keyStr</span>.<span class="built_in">char</span><span class="constructor">At(<span class="params">enc1</span>)</span> + this.<span class="constructor">_keyStr</span>.<span class="built_in">char</span><span class="constructor">At(<span class="params">enc2</span>)</span> + this.<span class="constructor">_keyStr</span>.<span class="built_in">char</span><span class="constructor">At(<span class="params">enc3</span>)</span> + this.<span class="constructor">_keyStr</span>.<span class="built_in">char</span><span class="constructor">At(<span class="params">enc4</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        return output;</span></span><br><span class="line"><span class="pattern-match">    &#125;,</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">    <span class="operator">/</span><span class="operator">/</span> public <span class="keyword">method</span> for decoding</span></span><br><span class="line"><span class="pattern-match">    decode: <span class="keyword">function</span>(input) &#123;</span></span><br><span class="line"><span class="pattern-match">        var output = "";</span></span><br><span class="line"><span class="pattern-match">        var chr1, chr2, chr3;</span></span><br><span class="line"><span class="pattern-match">        var enc1, enc2, enc3, enc4;</span></span><br><span class="line"><span class="pattern-match">        var i = 0;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        input = input.replace(<span class="operator">/</span>[^<span class="constructor">A</span>-<span class="constructor">Za</span>-z0-9\+\<span class="operator">/</span>\=]<span class="operator">/</span>g, "");</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        <span class="keyword">while</span> (i &lt; input.length) &#123;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            enc1 = this.<span class="constructor">_keyStr</span>.index<span class="constructor">Of(<span class="params">input</span>.<span class="params">charAt</span>(<span class="params">i</span><span class="operator">++</span>)</span>);</span></span><br><span class="line"><span class="pattern-match">            enc2 = this.<span class="constructor">_keyStr</span>.index<span class="constructor">Of(<span class="params">input</span>.<span class="params">charAt</span>(<span class="params">i</span><span class="operator">++</span>)</span>);</span></span><br><span class="line"><span class="pattern-match">            enc3 = this.<span class="constructor">_keyStr</span>.index<span class="constructor">Of(<span class="params">input</span>.<span class="params">charAt</span>(<span class="params">i</span><span class="operator">++</span>)</span>);</span></span><br><span class="line"><span class="pattern-match">            enc4 = this.<span class="constructor">_keyStr</span>.index<span class="constructor">Of(<span class="params">input</span>.<span class="params">charAt</span>(<span class="params">i</span><span class="operator">++</span>)</span>);</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            chr1 = (enc1 &lt;&lt; 2) | (enc2 &gt;&gt; 4);</span></span><br><span class="line"><span class="pattern-match">            chr2 = ((enc2 &amp; 15) &lt;&lt; 4) | (enc3 &gt;&gt; 2);</span></span><br><span class="line"><span class="pattern-match">            chr3 = ((enc3 &amp; 3) &lt;&lt; 6) | enc4;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            output = output + <span class="constructor">String</span>.from<span class="constructor">CharCode(<span class="params">chr1</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            <span class="keyword">if</span> (enc3 != 64) &#123;</span></span><br><span class="line"><span class="pattern-match">                output = output + <span class="constructor">String</span>.from<span class="constructor">CharCode(<span class="params">chr2</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">            &#125;</span></span><br><span class="line"><span class="pattern-match">            <span class="keyword">if</span> (enc4 != 64) &#123;</span></span><br><span class="line"><span class="pattern-match">                output = output + <span class="constructor">String</span>.from<span class="constructor">CharCode(<span class="params">chr3</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">            &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        output = <span class="constructor">Base64</span>.<span class="constructor">_utf8_decode(<span class="params">output</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        return output;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">    &#125;,</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">    <span class="operator">/</span><span class="operator">/</span> <span class="keyword">private</span> <span class="keyword">method</span> for <span class="constructor">UTF</span>-8 encoding</span></span><br><span class="line"><span class="pattern-match">    <span class="constructor">_utf8_encode</span>: <span class="keyword">function</span>(<span class="built_in">string</span>) &#123;</span></span><br><span class="line"><span class="pattern-match">        <span class="built_in">string</span> = <span class="built_in">string</span>.replace(<span class="operator">/</span>\r\n<span class="operator">/</span>g, "\n");</span></span><br><span class="line"><span class="pattern-match">        var utftext = "";</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        for (var n = 0; n &lt; <span class="built_in">string</span>.length; n<span class="operator">++</span>) &#123;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            var c = <span class="built_in">string</span>.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">n</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            <span class="keyword">if</span> (c &lt; 128) &#123;</span></span><br><span class="line"><span class="pattern-match">                utftext += <span class="constructor">String</span>.from<span class="constructor">CharCode(<span class="params">c</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((c &gt; 127) <span class="operator">&amp;&amp;</span> (c &lt; 2048)) &#123;</span></span><br><span class="line"><span class="pattern-match">                utftext += <span class="constructor">String</span>.from<span class="constructor">CharCode((<span class="params">c</span> &gt;&gt; 6)</span> | 192);</span></span><br><span class="line"><span class="pattern-match">                utftext += <span class="constructor">String</span>.from<span class="constructor">CharCode((<span class="params">c</span> &amp; 63)</span> | 128);</span></span><br><span class="line"><span class="pattern-match">            &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="pattern-match">                utftext += <span class="constructor">String</span>.from<span class="constructor">CharCode((<span class="params">c</span> &gt;&gt; 12)</span> | 224);</span></span><br><span class="line"><span class="pattern-match">                utftext += <span class="constructor">String</span>.from<span class="constructor">CharCode(((<span class="params">c</span> &gt;&gt; 6)</span> &amp; 63) | 128);</span></span><br><span class="line"><span class="pattern-match">                utftext += <span class="constructor">String</span>.from<span class="constructor">CharCode((<span class="params">c</span> &amp; 63)</span> | 128);</span></span><br><span class="line"><span class="pattern-match">            &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        return utftext;</span></span><br><span class="line"><span class="pattern-match">    &#125;,</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">    <span class="operator">/</span><span class="operator">/</span> <span class="keyword">private</span> <span class="keyword">method</span> for <span class="constructor">UTF</span>-8 decoding</span></span><br><span class="line"><span class="pattern-match">    <span class="constructor">_utf8_decode</span>: <span class="keyword">function</span>(utftext) &#123;</span></span><br><span class="line"><span class="pattern-match">        var <span class="built_in">string</span> = "";</span></span><br><span class="line"><span class="pattern-match">        var i = 0;</span></span><br><span class="line"><span class="pattern-match">        var c = c1 = c2 = 0;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        <span class="keyword">while</span> (i &lt; utftext.length) &#123;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            c = utftext.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span>)</span>;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">            <span class="keyword">if</span> (c &lt; 128) &#123;</span></span><br><span class="line"><span class="pattern-match">                <span class="built_in">string</span> += <span class="constructor">String</span>.from<span class="constructor">CharCode(<span class="params">c</span>)</span>;</span></span><br><span class="line"><span class="pattern-match">                i<span class="operator">++</span>;</span></span><br><span class="line"><span class="pattern-match">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((c &gt; 191) <span class="operator">&amp;&amp;</span> (c &lt; 224)) &#123;</span></span><br><span class="line"><span class="pattern-match">                c2 = utftext.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span> + 1)</span>;</span></span><br><span class="line"><span class="pattern-match">                <span class="built_in">string</span> += <span class="constructor">String</span>.from<span class="constructor">CharCode(((<span class="params">c</span> &amp; 31)</span> &lt;&lt; 6) | (c2 &amp; 63));</span></span><br><span class="line"><span class="pattern-match">                i += 2;</span></span><br><span class="line"><span class="pattern-match">            &#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="pattern-match">                c2 = utftext.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span> + 1)</span>;</span></span><br><span class="line"><span class="pattern-match">                c3 = utftext.<span class="built_in">char</span><span class="constructor">CodeAt(<span class="params">i</span> + 2)</span>;</span></span><br><span class="line"><span class="pattern-match">                <span class="built_in">string</span> += <span class="constructor">String</span>.from<span class="constructor">CharCode(((<span class="params">c</span> &amp; 15)</span> &lt;&lt; 12) | ((c2 &amp; 63) &lt;&lt; 6) | (c3 &amp; 63));</span></span><br><span class="line"><span class="pattern-match">                i += 3;</span></span><br><span class="line"><span class="pattern-match">            &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">        return <span class="built_in">string</span>;</span></span><br><span class="line"><span class="pattern-match">    &#125;</span></span><br><span class="line"><span class="pattern-match"></span></span><br><span class="line"><span class="pattern-match">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2015/05/10/JavaScript/21、实现双向数据绑定之jquery/" class="pre-post btn btn-default" title='21、实现双向数据绑定之jquery'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            21、实现双向数据绑定之jquery</span>
+    </a>
+    
+    
+    <a href="/2015/05/08/JavaScript/18、位移运算符/" class="next-post btn btn-default" title='18、位移运算符'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            18、位移运算符</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是base64"><span class="toc-text">什么是base64</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

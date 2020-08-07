@@ -1,0 +1,578 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Cocos Creator">
+
+
+<meta name="description" content="cocos creator 之节点系统事件简介鼠标和触摸事件称为节点系统事件
+123456789// 使用枚举类型来注册node.on(cc.Node.EventType.MOUSE_DOWN,...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    17、cocos creator 之节点系统事件 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="17、cocos creator 之节点系统事件">
+            
+            17、cocos creator 之节点系统事件
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Cocos-Creator/">Cocos Creator</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Cocos-Creator/">Cocos Creator</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/01/05</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                580</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="cocos-creator-之节点系统事件"><a href="#cocos-creator-之节点系统事件" class="headerlink" title="cocos creator 之节点系统事件"></a><strong>cocos creator 之节点系统事件</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>鼠标和触摸事件称为节点系统事件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用枚举类型来注册</span></span><br><span class="line">node.on(cc.Node.EventType.MOUSE_DOWN, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Mouse down'</span>);</span><br><span class="line">&#125;, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用事件名来注册</span></span><br><span class="line">node.on(<span class="string">'mousedown'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Mouse down'</span>);</span><br><span class="line">&#125;, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="暂停或恢复节点系统事件"><a href="#暂停或恢复节点系统事件" class="headerlink" title="暂停或恢复节点系统事件"></a><strong>暂停或恢复节点系统事件</strong></h3><p>暂停节点系统事件</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 暂停当前节点上注册的所有节点系统事件，节点系统事件包含触摸和鼠标事件。</span></span><br><span class="line"><span class="comment">// 如果传递参数 true，那么这个 API 将暂停本节点和它的所有子节点上的节点系统事件。</span></span><br><span class="line"><span class="comment">// example</span></span><br><span class="line"><span class="keyword">this</span>.node.pauseSystemEvents();</span><br></pre></td></tr></table></figure>
+
+<p>恢复节点系统事件</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 恢复当前节点上注册的所有节点系统事件，节点系统事件包含触摸和鼠标事件。</span></span><br><span class="line"><span class="comment">// 如果传递参数 true，那么这个 API 将恢复本节点和它的所有子节点上的节点系统事件。</span></span><br><span class="line"><span class="comment">// example</span></span><br><span class="line"><span class="keyword">this</span>.node.resumeSystemEvents();</span><br></pre></td></tr></table></figure>
+
+<h3 id="多点触摸事件"><a href="#多点触摸事件" class="headerlink" title="多点触摸事件"></a><strong>多点触摸事件</strong></h3><p>引擎在 v2.3 版本中新增了多点触摸事件的屏蔽开关，多点触摸事件默认为开启状态。对于有些类型的项目为了防止多点误触，需要屏蔽多点触摸事件，可以通过以下代码进行关闭：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cc.macro.ENABLE_MULTI_TOUCH</span> = <span class="literal">false</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="鼠标事件类型和事件对象"><a href="#鼠标事件类型和事件对象" class="headerlink" title="鼠标事件类型和事件对象"></a><strong>鼠标事件类型和事件对象</strong></h3><p>鼠标事件在桌面平台才会触发，系统提供的事件类型如下：<br>枚举对象定义 |    对应的事件名 | 事件触发的时机<br>–|–|–<br>cc.Node.EventType.MOUSE_DOWN|    mousedown|    当鼠标在目标节点区域按下时触发一次<br>cc.Node.EventType.MOUSE_ENTER|    mouseenter|    当鼠标移入目标节点区域时，不论是否按下<br>cc.Node.EventType.MOUSE_MOVE|    mousemove|    当鼠标在目标节点区域中移动时，不论是否按下<br>cc.Node.EventType.MOUSE_LEAVE|    mouseleave|    当鼠标移出目标节点区域时，不论是否按下<br>cc.Node.EventType.MOUSE_UP|    mouseup|    当鼠标从按下状态松开时触发一次<br>cc.Node.EventType.MOUSE_WHEEL|    mousewheel|    当鼠标滚轮滚动时</p>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>返回值类型</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>getScrollY</td>
+<td>Number</td>
+<td>获取滚轮滚动的 Y 轴距离，只有滚动时才有效</td>
+</tr>
+<tr>
+<td>getLocation</td>
+<td>Object</td>
+<td>获取鼠标位置对象，对象包含 x 和 y 属性</td>
+</tr>
+<tr>
+<td>getLocationX</td>
+<td>Number</td>
+<td>获取鼠标的 X 轴位置</td>
+</tr>
+<tr>
+<td>getLocationY</td>
+<td>Number</td>
+<td>获取鼠标的 Y 轴位置</td>
+</tr>
+<tr>
+<td>getPreviousLocation</td>
+<td>Object</td>
+<td>获取鼠标事件上次触发时的位置对象，对象包含 x 和 y 属性</td>
+</tr>
+<tr>
+<td>getDelta</td>
+<td>Object</td>
+<td>获取鼠标距离上一次事件移动的距离对象，对象包含 x 和 y 属性</td>
+</tr>
+<tr>
+<td>getButton</td>
+<td>Number</td>
+<td>cc.Event.EventMouse.BUTTON_LEFT 或 cc.Event.EventMouse.BUTTON_RIGHT 或  cc.Event.EventMouse.BUTTON_MIDDLE</td>
+</tr>
+</tbody></table>
+<h3 id="触摸事件类型和事件对象"><a href="#触摸事件类型和事件对象" class="headerlink" title="触摸事件类型和事件对象"></a><strong>触摸事件类型和事件对象</strong></h3><ul>
+<li>同时响应移动平台的触摸事件和桌面端的鼠标事件</li>
+<li>需要注意的是，触摸事件支持多点触摸，每个触点都会发送一次事件给事件监听器。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>枚举对象定义</th>
+<th>对应的事件名</th>
+<th>事件触发的时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cc.Node.EventType.TOUCH_START</td>
+<td>touchstart</td>
+<td>当手指触点落在目标节点区域内时</td>
+</tr>
+<tr>
+<td>cc.Node.EventType.TOUCH_MOVE</td>
+<td>touchmove</td>
+<td>当手指在屏幕上移动时</td>
+</tr>
+<tr>
+<td>cc.Node.EventType.TOUCH_END</td>
+<td>touchend</td>
+<td>当手指在目标节点区域内离开屏幕时</td>
+</tr>
+<tr>
+<td>cc.Node.EventType.TOUCH_CANCEL</td>
+<td>touchcancel</td>
+<td>当手指在目标节点区域外离开屏幕时</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>API 名</th>
+<th>类型</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>touch</td>
+<td>cc.Touch</td>
+<td>与当前事件关联的触点对象</td>
+</tr>
+<tr>
+<td>getID</td>
+<td>Number</td>
+<td>获取触点的 ID，用于多点触摸的逻辑判断</td>
+</tr>
+<tr>
+<td>getLocation</td>
+<td>Object</td>
+<td>获取触点位置对象，对象包含 x 和 y 属性</td>
+</tr>
+<tr>
+<td>getLocationX</td>
+<td>Number</td>
+<td>获取触点的 X 轴位置</td>
+</tr>
+<tr>
+<td>getLocationY</td>
+<td>Number</td>
+<td>获取触点的 Y 轴位置</td>
+</tr>
+<tr>
+<td>getPreviousLocation</td>
+<td>Object</td>
+<td>获取触点上一次触发事件时的位置对象，对象包含 x 和 y 属性</td>
+</tr>
+<tr>
+<td>getStartLocation</td>
+<td>Object</td>
+<td>获取触点初始时的位置对象，对象包含 x 和 y 属性</td>
+</tr>
+<tr>
+<td>getDelta</td>
+<td>Object</td>
+<td>获取触点距离上一次事件移动的距离对象，对象包含 x 和 y 属性</td>
+</tr>
+</tbody></table>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/01/05/Cocos Creator/18、cocos creator 之全局系统事件/" class="pre-post btn btn-default" title='18、cocos creator 之全局系统事件'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            18、cocos creator 之全局系统事件</span>
+    </a>
+    
+    
+    <a href="/2019/01/04/Cocos Creator/16、cocos creator 之发射和监听事件/" class="next-post btn btn-default" title='16、cocos creator 之发射和监听事件'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            16、cocos creator 之发射和监听事件</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cocos-creator-之节点系统事件"><span class="toc-text">cocos creator 之节点系统事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#暂停或恢复节点系统事件"><span class="toc-text">暂停或恢复节点系统事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多点触摸事件"><span class="toc-text">多点触摸事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#鼠标事件类型和事件对象"><span class="toc-text">鼠标事件类型和事件对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#触摸事件类型和事件对象"><span class="toc-text">触摸事件类型和事件对象</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之窗口函数从version 8.0开始，MySQL支持在查询中使用窗口函数
+文中的示例用到的建表语句和插值语句如下：
+1234567891011121314151617CREATE ...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    73、mysql 之窗口函数 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="73、mysql 之窗口函数">
+            
+            73、mysql 之窗口函数
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/06/12</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1517</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之窗口函数"><a href="#mysql-之窗口函数" class="headerlink" title="mysql 之窗口函数"></a><strong>mysql 之窗口函数</strong></h2><p>从version 8.0开始，MySQL支持在查询中使用窗口函数</p>
+<p>文中的示例用到的建表语句和插值语句如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> sales(</span><br><span class="line">    sales_employee <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">    fiscal_year <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">    sale <span class="built_in">DECIMAL</span>(<span class="number">14</span>,<span class="number">2</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span>(sales_employee,fiscal_year)</span><br><span class="line">);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> sales(sales_employee,fiscal_year,sale)</span><br><span class="line"><span class="keyword">VALUES</span>(<span class="string">'Bob'</span>,<span class="number">2016</span>,<span class="number">100</span>),</span><br><span class="line">      (<span class="string">'Bob'</span>,<span class="number">2017</span>,<span class="number">150</span>),</span><br><span class="line">      (<span class="string">'Bob'</span>,<span class="number">2018</span>,<span class="number">200</span>),</span><br><span class="line">      (<span class="string">'Alice'</span>,<span class="number">2016</span>,<span class="number">150</span>),</span><br><span class="line">      (<span class="string">'Alice'</span>,<span class="number">2017</span>,<span class="number">100</span>),</span><br><span class="line">      (<span class="string">'Alice'</span>,<span class="number">2018</span>,<span class="number">200</span>),</span><br><span class="line">       (<span class="string">'John'</span>,<span class="number">2016</span>,<span class="number">200</span>),</span><br><span class="line">      (<span class="string">'John'</span>,<span class="number">2017</span>,<span class="number">150</span>),</span><br><span class="line">      (<span class="string">'John'</span>,<span class="number">2018</span>,<span class="number">250</span>);</span><br></pre></td></tr></table></figure>
+
+<p>先看一个例子：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    fiscal_year, </span><br><span class="line">    sales_employee,</span><br><span class="line">    sale,</span><br><span class="line">    <span class="built_in">SUM</span>(sale) <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> fiscal_year) total_sales</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">    sales;</span><br></pre></td></tr></table></figure>
+
+<p>执行后得到的结果如下：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------------+--------+-------------+</span><br><span class="line">|<span class="string"> fiscal_year </span>|<span class="string"> sales_employee </span>|<span class="string"> sale   </span>|<span class="string"> total_sales </span>|</span><br><span class="line">+-------------+----------------+--------+-------------+</span><br><span class="line">|<span class="string">        2016 </span>|<span class="string"> Alice          </span>|<span class="string"> 150.00 </span>|<span class="string">      450.00 </span>|</span><br><span class="line">|<span class="string">        2016 </span>|<span class="string"> Bob            </span>|<span class="string"> 100.00 </span>|<span class="string">      450.00 </span>|</span><br><span class="line">|<span class="string">        2016 </span>|<span class="string"> John           </span>|<span class="string"> 200.00 </span>|<span class="string">      450.00 </span>|</span><br><span class="line">|<span class="string">        2017 </span>|<span class="string"> Alice          </span>|<span class="string"> 100.00 </span>|<span class="string">      400.00 </span>|</span><br><span class="line">|<span class="string">        2017 </span>|<span class="string"> Bob            </span>|<span class="string"> 150.00 </span>|<span class="string">      400.00 </span>|</span><br><span class="line">|<span class="string">        2017 </span>|<span class="string"> John           </span>|<span class="string"> 150.00 </span>|<span class="string">      400.00 </span>|</span><br><span class="line">|<span class="string">        2018 </span>|<span class="string"> Alice          </span>|<span class="string"> 200.00 </span>|<span class="string">      650.00 </span>|</span><br><span class="line">|<span class="string">        2018 </span>|<span class="string"> Bob            </span>|<span class="string"> 200.00 </span>|<span class="string">      650.00 </span>|</span><br><span class="line">|<span class="string">        2018 </span>|<span class="string"> John           </span>|<span class="string"> 250.00 </span>|<span class="string">      650.00 </span>|</span><br><span class="line">+-------------+----------------+--------+-------------+</span><br><span class="line">9 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>这里，sum()函数充当了窗口函数，得到了根据fiscal_year计算出的sale的总和total_sales列，但是又不像它作为聚合函数使用时一样，这里的结果保留了每一行的信息。</p>
+<p>窗口函数的结果集是在FROM，JOIN，WHERE，GROUP　BY，HAVING之后，在ORDER　BY，LIMIT，SELECT　DISTINCT之前。它执行时GROUP　BY的聚合过程已经完成了，所以不会再产生数据聚合。</p>
+<h3 id="窗口函数的语法"><a href="#窗口函数的语法" class="headerlink" title="窗口函数的语法"></a><strong>窗口函数的语法</strong></h3><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">window_function_name(expression) </span><br><span class="line">    OVER (</span><br><span class="line">        <span class="string">[partition_defintion]</span></span><br><span class="line">        <span class="string">[order_definition]</span></span><br><span class="line">        <span class="string">[frame_definition]</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>先指定作为窗口函数的函数名，然后是OVER(…)，就算OVER里面没有内容，括号也需要保留。<br>窗口函数的一个概念是当前行，当前行属于某个窗口，窗口由“[partition_defintion]”，“[order_definition]”，“[frame_definition]“确定。</p>
+<ol>
+<li>partition_defintion<br>翻译过来应该是分区，语法是”PARTITION BY &lt; expression&gt;[{,&lt; expression&gt;…}]”，它会根据单个或者多个表达式的计算结果来分区（列名也是一种表达式，它的结果就是列名本身）。在前面的例子中，结果中的每一行都有自己的分区，total_sales列的值就是它所属的分区里面的sum(sale)的结果。</li>
+<li>frame_definition<br>这里先讲frame_definition，可能应该是叫帧吧。它的作用是在分区里面再进一步细分窗口。<br>语法是<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">frame_unit </span>&#123;<span class="params">&lt;frame_start&gt;</span>|<span class="params">&lt;frame_between&gt;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>frame_unit有两种，分别是ROWS和RANGE，由ROWS定义的frame是由开始和结束位置的行确定的，由RANGE定义的frame由在某个值区间的行确定。<br>如果只指定了frame的开始位置，那么结束位置就默认为当前行。</p>
+<p>frame_start有三种：</p>
+<ul>
+<li>UNBOUNDED PRECEDING: 区间的第一行</li>
+<li>N PRECEDING: 当前行之前的N行，N可以是数字，也可以是一个能计算出数字的表达式</li>
+<li>CURRENT ROW: 当前行</li>
+</ul>
+<p>frame_between的可以取的值如下：</p>
+<ul>
+<li>frame_start：如前面所列</li>
+<li>UNBOUNDED FOLLOWING：区间的最后一行</li>
+<li>N FOLLOWING：当前行之后的N行，N可以是数字，也可以是一个能计算出数字的表达式<br>如果没显式指定frame的话，MySQL会认为frame是“ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING”</li>
+</ul>
+<p>这个有点复杂，看个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">   fiscal_year, </span><br><span class="line">   sales_employee,</span><br><span class="line">   sale,</span><br><span class="line">   <span class="keyword">SUM</span>(sale) <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> sales_employee </span><br><span class="line">                               <span class="keyword">ROWS</span> <span class="keyword">BETWEEN</span> <span class="keyword">UNBOUNDED</span> <span class="keyword">PRECEDING</span> <span class="keyword">AND</span> <span class="keyword">CURRENT</span> <span class="keyword">ROW</span>) total_sales</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">   sales;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果如下：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------------+--------+-------------+</span><br><span class="line">|<span class="string"> fiscal_year </span>|<span class="string"> sales_employee </span>|<span class="string"> sale   </span>|<span class="string"> total_sales </span>|</span><br><span class="line">+-------------+----------------+--------+-------------+</span><br><span class="line">|<span class="string">        2016 </span>|<span class="string"> Alice          </span>|<span class="string"> 150.00 </span>|<span class="string">      150.00 </span>|</span><br><span class="line">|<span class="string">        2017 </span>|<span class="string"> Alice          </span>|<span class="string"> 100.00 </span>|<span class="string">      250.00 </span>|</span><br><span class="line">|<span class="string">        2018 </span>|<span class="string"> Alice          </span>|<span class="string"> 200.00 </span>|<span class="string">      450.00 </span>|</span><br><span class="line">|<span class="string">        2016 </span>|<span class="string"> Bob            </span>|<span class="string"> 100.00 </span>|<span class="string">      100.00 </span>|</span><br><span class="line">|<span class="string">        2017 </span>|<span class="string"> Bob            </span>|<span class="string"> 150.00 </span>|<span class="string">      250.00 </span>|</span><br><span class="line">|<span class="string">        2018 </span>|<span class="string"> Bob            </span>|<span class="string"> 200.00 </span>|<span class="string">      450.00 </span>|</span><br><span class="line">|<span class="string">        2016 </span>|<span class="string"> John           </span>|<span class="string"> 200.00 </span>|<span class="string">      200.00 </span>|</span><br><span class="line">|<span class="string">        2017 </span>|<span class="string"> John           </span>|<span class="string"> 150.00 </span>|<span class="string">      350.00 </span>|</span><br><span class="line">|<span class="string">        2018 </span>|<span class="string"> John           </span>|<span class="string"> 250.00 </span>|<span class="string">      600.00 </span>|</span><br><span class="line">+-------------+----------------+--------+-------------+</span><br><span class="line">9 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一行所在的区间是sales_employee为Alice的区间，所在的帧是区间第一行到当前行，只有一行，total_sales为150；</li>
+<li>第二行所在的区间是sales_employee为Alice的区间，所在的帧是区间第一行到当前行，有两行，total_sales为150+100=250；</li>
+<li>第一行所在的区间是sales_employee为Alice的区间，所在的帧是区间第一行到当前行，有三行，total_sales为150+100+200=450。</li>
+</ul>
+<ol start="3">
+<li>order_definition<br>定义了分区内的行的排列顺序，<br>语法是<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt; expression&gt; [<span class="keyword">ASC</span>|<span class="keyword">DESC</span>],[<span class="comment">&#123;,&lt;expression&gt;…&#125;</span>]</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/06/12/Nginx/12、nginx 之文件操作的优化/" class="pre-post btn btn-default" title='12、nginx 之文件操作的优化'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            12、nginx 之文件操作的优化</span>
+    </a>
+    
+    
+    <a href="/2016/06/11/Nginx/11、nginx 之对客户端的请求限制/" class="next-post btn btn-default" title='11、nginx 之对客户端的请求限制'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            11、nginx 之对客户端的请求限制</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之窗口函数"><span class="toc-text">mysql 之窗口函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#窗口函数的语法"><span class="toc-text">窗口函数的语法</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

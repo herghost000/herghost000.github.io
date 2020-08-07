@@ -1,0 +1,488 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="PHP">
+
+
+<meta name="description" content="1. php.ini关于Session的相关设置
+（打开php.ini文件，在“[Session]”部分）：
+
+
+session.use_cookies：默认的值是“1”，代表SessionID...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    27、修改session你必须了解的知识 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="27、修改session你必须了解的知识">
+            
+            27、修改session你必须了解的知识
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/PHP/">PHP</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/PHP/">PHP</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2017/09/17</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1055</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h5 id="1-php-ini关于Session的相关设置"><a href="#1-php-ini关于Session的相关设置" class="headerlink" title="1. php.ini关于Session的相关设置"></a>1. php.ini关于Session的相关设置</h5><blockquote>
+<p>（打开php.ini文件，在“[Session]”部分）：</p>
+</blockquote>
+<ol>
+<li>session.use_cookies：默认的值是“1”，代表SessionID使用Cookie来传递，反之就是使用Query_String来传递；</li>
+<li>session.name: 这个就是SessionID储存的变量名称，可能是Cookie，也可能是Query_String来传递，默认值是“PHPSESSID”；</li>
+<li>session.cookie_lifetime：这个代表SessionID在客户端Cookie储存的时间，默认是0，代表浏览器一关闭SessionID就作废……就是因为这个所以Session不能永久使用！</li>
+<li>session.gc_maxlifetime：这个是Session数据在服务器端储存的时间，如果超过这个时间，那么Session数据就自动删除！</li>
+</ol>
+<h5 id="修改SESSION的生存时间，我们来手动设置-Session-的生存期："><a href="#修改SESSION的生存时间，我们来手动设置-Session-的生存期：" class="headerlink" title="修改SESSION的生存时间，我们来手动设置 Session 的生存期："></a>修改SESSION的生存时间，我们来手动设置 Session 的生存期：</h5><blockquote>
+<p>通过setcookie设置过期时间</p>
+</blockquote>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line">＜?php  </span><br><span class="line">session_start();   </span><br><span class="line"><span class="comment">// 保存一天   </span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$lifeTime</span> = 24 * 3600;   </span></span><br><span class="line">setcookie(session_name(), session_id(), time() + <span class="symbol">$</span>lifeTime, <span class="string">"/"</span>);</span><br><span class="line">?＞</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>通过session_set_cookie_params设置过期时间<br>如果客户端使用 IE 6.0会有问题，推荐上方设置</p>
+</blockquote>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">＜?php   </span><br><span class="line"><span class="comment">// 保存一天   </span></span><br><span class="line"><span class="meta"><span class="meta-keyword">$lifeTime</span> = 24 * 3600;   </span></span><br><span class="line">session_set_cookie_params(<span class="symbol">$</span>lifeTime);   </span><br><span class="line">session_start();  </span><br><span class="line"><span class="symbol">$</span>_SESSION[<span class="string">"admin"</span>] = true;   </span><br><span class="line">?＞</span><br></pre></td></tr></table></figure>
+
+<h5 id="服务端session“回收”何时发生？"><a href="#服务端session“回收”何时发生？" class="headerlink" title="服务端session“回收”何时发生？"></a>服务端session“回收”何时发生？</h5><blockquote>
+<p>默认情况下，每一次php请求，就会有1/100的概率发生回收<br>所以可能简单的理解为“每100次php请求就有一次回收发生”<br>这个概率是通过以下参数控制的</p>
+</blockquote>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#概率是gc_probability/gc_divisor  </span></span><br><span class="line"><span class="attr">session.gc_probability</span> = <span class="number">1</span>  </span><br><span class="line"><span class="attr">session.gc_divisor</span> = <span class="number">100</span></span><br></pre></td></tr></table></figure>
+
+<p>==注意1：假设这种情况gc_maxlifetime=120，如果某个session文件最后修改时间是120秒之前，那么在下一次回收（1/100的概率）发生前，这个session仍然是有效的。==</p>
+<p>==注意2：如果你的session使用session.save_path中使用别的地方保存session，session回收机制有可能不会自动处理过期session文件。这时需要定时手动（或者crontab）的删除过期的session：cd /path/to/sessions; find -cmin +24 | xargs rm==</p>
+<h5 id="PHP设置与获取Session"><a href="#PHP设置与获取Session" class="headerlink" title="PHP设置与获取Session"></a>PHP设置与获取Session</h5><blockquote>
+<p>设置session</p>
+</blockquote>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  &lt;?php </span><br><span class="line">session_start();   </span><br><span class="line">  <span class="regexp">//</span>设置一个session值  <span class="variable">$_SESSION</span>[<span class="string">"name"</span>] = <span class="string">"Hello"</span>;  </span><br><span class="line">  <span class="regexp">//</span>将session以数组形式保存  <span class="variable">$_SESSION</span>[<span class="string">"arr"</span>] = array(<span class="string">'name'</span> =&gt; <span class="string">'Hello'</span>, <span class="string">'url'</span> =&gt; <span class="string">'http://www.helloweba.com'</span>, <span class="string">'type'</span>=&gt; <span class="string">'website'</span>);  ?&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>获取session</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="php"><span class="meta">&lt;?php</span> </span></span><br><span class="line"><span class="php">session_start();   </span></span><br><span class="line"><span class="php">  <span class="comment">//获取保存的Session name   echo $_SESSION["name"]; </span></span></span><br><span class="line"><span class="php">  <span class="comment">//打印数组session </span></span></span><br><span class="line"><span class="php">print_r($_SESSION[<span class="string">"arr"</span>]);  <span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>删除session内的变量</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span>  <span class="keyword">unset</span>($_SESSION[<span class="string">"name"</span>]);  <span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>删除服务端session文件</p>
+</blockquote>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session_destory()<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Session</span></span>&#123;  </span><br><span class="line">      </span><br><span class="line">        <span class="comment">/** </span></span><br><span class="line"><span class="comment">         * 设置session </span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> String $name   session name </span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> Mixed  $data   session data </span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> Int    $expire 超时时间(秒) </span></span><br><span class="line"><span class="comment">         */</span>  </span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span><span class="params">($name, $data, $expire=<span class="number">600</span>)</span></span>&#123;  </span><br><span class="line">            $session_data = <span class="keyword">array</span>();  </span><br><span class="line">            $session_data[<span class="string">'data'</span>] = $data;  </span><br><span class="line">            $session_data[<span class="string">'expire'</span>] = time()+$expire;  </span><br><span class="line">            $_SESSION[$name] = $session_data;  </span><br><span class="line">        &#125;  </span><br><span class="line">      </span><br><span class="line">        <span class="comment">/** </span></span><br><span class="line"><span class="comment">         * 读取session </span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span>  String $name  session name </span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span> Mixed </span></span><br><span class="line"><span class="comment">         */</span>  </span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($name)</span></span>&#123;  </span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">isset</span>($_SESSION[$name]))&#123;  </span><br><span class="line">                <span class="keyword">if</span>($_SESSION[$name][<span class="string">'expire'</span>]&gt;time())&#123;  </span><br><span class="line">                    <span class="keyword">return</span> $_SESSION[$name][<span class="string">'data'</span>];  </span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;  </span><br><span class="line">                    <span class="keyword">self</span>::clear($name);  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">      </span><br><span class="line">        <span class="comment">/** </span></span><br><span class="line"><span class="comment">         * 清除session </span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span>  String  $name  session name </span></span><br><span class="line"><span class="comment">         */</span>  </span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">clear</span><span class="params">($name)</span></span>&#123;  </span><br><span class="line">            <span class="keyword">unset</span>($_SESSION[$name]);  </span><br><span class="line">        &#125;  </span><br><span class="line">      </span><br><span class="line">    &#125;  </span><br><span class="line">    demo.php  </span><br><span class="line">      </span><br><span class="line">    session_start();  </span><br><span class="line">      </span><br><span class="line">    $data = <span class="string">'123456'</span>;  </span><br><span class="line">    session::set(<span class="string">'test'</span>, $data, <span class="number">10</span>);  </span><br><span class="line">    <span class="keyword">echo</span> session::get(<span class="string">'test'</span>); <span class="comment">// 未过期，输出  </span></span><br><span class="line">    sleep(<span class="number">10</span>);  </span><br><span class="line">    <span class="keyword">echo</span> session::get(<span class="string">'test'</span>); <span class="comment">// 已过期</span></span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2017/09/18/PHP/28、让类支持数组形式访问/" class="pre-post btn btn-default" title='28、让类支持数组形式访问'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            28、让类支持数组形式访问</span>
+    </a>
+    
+    
+    <a href="/2017/09/16/PHP/26、需要知道的全局变量/" class="next-post btn btn-default" title='26、需要知道的全局变量'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            26、需要知道的全局变量</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-php-ini关于Session的相关设置"><span class="toc-text">1. php.ini关于Session的相关设置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#修改SESSION的生存时间，我们来手动设置-Session-的生存期："><span class="toc-text">修改SESSION的生存时间，我们来手动设置 Session 的生存期：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#服务端session“回收”何时发生？"><span class="toc-text">服务端session“回收”何时发生？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#PHP设置与获取Session"><span class="toc-text">PHP设置与获取Session</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

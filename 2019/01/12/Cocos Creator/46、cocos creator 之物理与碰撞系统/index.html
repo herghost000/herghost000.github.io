@@ -1,0 +1,484 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Cocos Creator">
+
+
+<meta name="description" content="cocos creator 之物理与碰撞系统简介目前 Cocos Creator 内置了一个简单易用的碰撞检测系统，支持 圆形，矩形 以及 多边形 相互间的碰撞检测。
+碰撞分组配对
+
+这张表里面...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    46、cocos creator 之物理与碰撞系统 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="46、cocos creator 之物理与碰撞系统">
+            
+            46、cocos creator 之物理与碰撞系统
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Cocos-Creator/">Cocos Creator</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Cocos-Creator/">Cocos Creator</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2019/01/12</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                573</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="cocos-creator-之物理与碰撞系统"><a href="#cocos-creator-之物理与碰撞系统" class="headerlink" title="cocos creator 之物理与碰撞系统"></a><strong>cocos creator 之物理与碰撞系统</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>目前 Cocos Creator 内置了一个简单易用的碰撞检测系统，支持 圆形，矩形 以及 多边形 相互间的碰撞检测。</p>
+<h3 id="碰撞分组配对"><a href="#碰撞分组配对" class="headerlink" title="碰撞分组配对"></a><strong>碰撞分组配对</strong></h3><p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zpUdtzNPnYZBgdN*78e9x8ZZSthtimIbMlOn6oWv*Zmz6oDuj6JAdBtzfpiVKou.7Q!!/b&bo=CAIJAQAAAAADByA!&rf=viewer_4&t=5" alt="image"></p>
+<ul>
+<li>这张表里面的行与列分别列出了 分组列表 里面的项</li>
+<li>分组列表 里的修改将会实时映射到这张表里。</li>
+<li>你可以在这张表里面配置哪一个分组可以对其他的分组进行碰撞检测，假设 a 行 b 列 被勾选上，那么表示 a 行 上的分组将会与 b 列 上的分组进行碰撞检测。</li>
+<li>例如Platform和Bullet被勾选上则Platform - Platform会产生碰撞</li>
+</ul>
+<p>根据上面的规则，在这张表里产生的碰撞对有：</p>
+<ul>
+<li>Platform - Bullet</li>
+<li>Collider - Collider</li>
+<li>Actor - Wall</li>
+<li>Actor - Platform</li>
+</ul>
+<h3 id="碰撞示例"><a href="#碰撞示例" class="headerlink" title="碰撞示例"></a><strong>碰撞示例</strong></h3><ol>
+<li><p>给要绑定的目标节点添加碰撞器</p>
+<ul>
+<li>选定目标节点配置分组</li>
+<li>在添加组件处选择添加碰撞组件<ul>
+<li>Box Collider表示方形碰撞器</li>
+<li>Circle Collider 表示圆形碰撞器</li>
+<li>Polygon Collider 表示自定义图形的碰撞器</li>
+</ul>
+</li>
+<li>选择好形状后，钩选中Editing处进行大小的编辑，<strong>注意：多边形在做碰撞检测的时候性能会差，所以能用圆形或者方形的，一般用圆形或者方形</strong></li>
+</ul>
+</li>
+<li><p>在代码中开启碰撞检测系统（默认的碰撞检测是关闭的），开启和关闭碰撞检测的调试</p>
+<ul>
+<li>碰撞检测系统的配置，建立一个script文件，绑定到canvas根目录下来配置碰撞检测的参数设置<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    <span class="keyword">extends</span>: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        <span class="keyword">is</span><span class="number">_</span>enable: true,    <span class="comment">//是否开启碰撞检测系统</span></span><br><span class="line">        <span class="keyword">is</span><span class="number">_</span>debug: false     <span class="comment">//是否显示碰撞检测区域</span></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="keyword">is</span><span class="number">_</span>enable) &#123;</span><br><span class="line">            <span class="keyword">let</span> manager = cc.director.getCollisionManager();</span><br><span class="line">            manager.enabled = true;     <span class="comment">//开启碰撞检测</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="keyword">is</span><span class="number">_</span>debug) &#123;</span><br><span class="line">                manager.enabledDebugDraw = true;   <span class="comment">//显示碰撞检测区域</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>碰撞检测系统的API接口</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">onCollisionEnter:<span class="function"><span class="keyword">function</span><span class="params">(other,self)</span></span>&#123;&#125;  =&gt; 当两物体刚发生碰撞时被触发</span><br><span class="line"></span><br><span class="line">onCollisionStay:<span class="function"><span class="keyword">function</span><span class="params">(other,self)</span></span>&#123;&#125;   =&gt; 当两物体发生碰撞后，并且有交集的时候被触发</span><br><span class="line"></span><br><span class="line">onCollisionExit:<span class="function"><span class="keyword">function</span><span class="params">(other,self)</span></span>&#123;&#125; =&gt; 当两物体发生碰撞后，并且在离开的那一刻被触发</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在添加碰撞器节点上绑定脚本文件如下</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">cc</span><span class="selector-class">.Class</span>(&#123;</span><br><span class="line">    <span class="attribute">extends</span>: cc.Component,</span><br><span class="line">    <span class="attribute">properties</span>: &#123;&#125;,</span><br><span class="line">    <span class="selector-tag">start</span>() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    onCollisionEnter(other, self) &#123;</span><br><span class="line">        <span class="selector-tag">console</span><span class="selector-class">.log</span>(other, self);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="selector-tag">onCollisionStay</span>(other, self) &#123;</span><br><span class="line">        <span class="selector-tag">console</span><span class="selector-class">.log</span>(<span class="string">'现在正在有交集'</span>);</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="selector-tag">onCollisionExit</span>(other, self) &#123;</span><br><span class="line">        <span class="selector-tag">console</span><span class="selector-class">.log</span>(<span class="string">'现在刚离开'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>场景编辑器中复制一个碰撞节点并将两个节点部分重叠，在浏览器控制台可以看到一直在输出“现在正在有交集”</p>
+<h3 id="物理组件"><a href="#物理组件" class="headerlink" title="物理组件"></a><strong>物理组件</strong></h3><h3 id="为上篇文章地图上的墙壁wall层级动态附加物理碰撞组件"><a href="#为上篇文章地图上的墙壁wall层级动态附加物理碰撞组件" class="headerlink" title="为上篇文章地图上的墙壁wall层级动态附加物理碰撞组件"></a><strong>为上篇文章地图上的墙壁wall层级动态附加物理碰撞组件</strong></h3><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">  extends: cc.Component,</span><br><span class="line"></span><br><span class="line">  properties: &#123;</span><br><span class="line">    tiledMap: &#123;</span><br><span class="line">      type: cc.TiledMap,</span><br><span class="line">      default: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  onLoad() &#123;</span><br><span class="line">    var <span class="attr">manager</span> = cc.director.getCollisionManager(); // 获取碰撞检测类</span><br><span class="line">    manager.<span class="attr">enabled</span> = <span class="literal">true</span> //开启碰撞检测</span><br><span class="line">    manager.<span class="attr">enabledDebugDraw</span> = <span class="literal">true</span> //显示碰撞检测区域</span><br><span class="line"></span><br><span class="line">    var <span class="attr">phyManager</span> = cc.director.getPhysicsManager();</span><br><span class="line">    phyManager.<span class="attr">enabled</span> = <span class="literal">true</span>;</span><br><span class="line">    phyManager.<span class="attr">debugDrawFlags</span> = <span class="literal">true</span>;</span><br><span class="line">    phyManager.<span class="attr">gravity</span> = cc.v2(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  start() &#123;</span><br><span class="line">    <span class="keyword">if</span> (!this.tiledMap) &#123;</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">tileSize</span> = this.tiledMap.getTileSize();</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">layer</span> = this.tiledMap.getLayer('wall');</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">layerSize</span> = layer.getLayerSize();</span><br><span class="line"></span><br><span class="line">    for (<span class="keyword">let</span> <span class="attr">i</span> = <span class="number">0</span>; i &lt; layerSize.width; i++) &#123;</span><br><span class="line">      for (<span class="keyword">let</span> <span class="attr">j</span> = <span class="number">0</span>; j &lt; layerSize.height; j++) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="attr">tile</span> = layer.getTiledTileAt(i, j, <span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">if</span> (tile.gid != <span class="number">0</span>) &#123;</span><br><span class="line">          tile.node.<span class="attr">group</span> = 'wall';</span><br><span class="line">          <span class="keyword">let</span> <span class="attr">body</span> = tile.node.addComponent(cc.RigidBody);</span><br><span class="line">          body.<span class="attr">type</span> = cc.RigidBodyType.Static;</span><br><span class="line">          <span class="keyword">let</span> <span class="attr">collider</span> = tile.node.addComponent(cc.PhysicsBoxCollider);</span><br><span class="line">          collider.<span class="attr">offset</span> = cc.v2(tileSize.width / <span class="number">2</span>, tileSize.height / <span class="number">2</span>);</span><br><span class="line">          collider.<span class="attr">size</span> = tileSize;</span><br><span class="line">          collider.apply();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2019/01/12/Cocos Creator/47、cocos creator 之摄像机跟随效果/" class="pre-post btn btn-default" title='47、cocos creator 之摄像机跟随效果'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            47、cocos creator 之摄像机跟随效果</span>
+    </a>
+    
+    
+    <a href="/2019/01/12/Cocos Creator/45、cocos creator 之Tiledmap绘制地图/" class="next-post btn btn-default" title='45、cocos creator 之Tiledmap绘制地图'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            45、cocos creator 之Tiledmap绘制地图</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cocos-creator-之物理与碰撞系统"><span class="toc-text">cocos creator 之物理与碰撞系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#碰撞分组配对"><span class="toc-text">碰撞分组配对</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#碰撞示例"><span class="toc-text">碰撞示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#物理组件"><span class="toc-text">物理组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为上篇文章地图上的墙壁wall层级动态附加物理碰撞组件"><span class="toc-text">为上篇文章地图上的墙壁wall层级动态附加物理碰撞组件</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

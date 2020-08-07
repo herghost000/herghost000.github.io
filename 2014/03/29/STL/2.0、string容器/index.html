@@ -1,0 +1,485 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="STL">
+
+
+<meta name="description" content="string容器
+char是一个指针，string是一个类，string封装了char
+string类封装了许多成员方法，如：find，copy，delete，replace，insert
+不用...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    2.0、string容器 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="2.0、string容器">
+            
+            2.0、string容器
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/STL/">STL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/STL/">STL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2014/03/29</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2323</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h4 id="string容器"><a href="#string容器" class="headerlink" title="string容器"></a><strong>string容器</strong></h4><ul>
+<li>char<em>是一个指针，string是一个类，string封装了char</em></li>
+<li>string类封装了许多成员方法，如：find，copy，delete，replace，insert</li>
+<li>不用考虑内存释放与越界</li>
+</ul>
+<h4 id="字符串的操作"><a href="#字符串的操作" class="headerlink" title="字符串的操作"></a><strong>字符串的操作</strong></h4><h5 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a><strong>构造方法</strong></h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> s;<span class="comment">//调用默认构造函数，s为一个空字符串</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="built_in">string</span>)</span></span>;<span class="comment">//等价于string s = str;调用拷贝构造函数，s是str的备份</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="built_in">string</span>,index)</span></span>;<span class="comment">//将字符串string内始于index位置到结尾当作s的初始值</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="built_in">string</span>,index,length)</span></span>; </span><br><span class="line"><span class="comment">//将字符串string由index位置起始且长度为length的部分当做s的初值</span></span><br><span class="line"><span class="comment">//如果length大于最大长度，则只截取字符串最大长度</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">string</span>.assign(<span class="built_in">string</span>)</span><br><span class="line"><span class="built_in">string</span>.assign(<span class="built_in">string</span>,index)</span><br><span class="line"><span class="built_in">string</span>.assign(<span class="built_in">string</span>,index,length)</span><br><span class="line"><span class="comment">//这三种与上面的构造方法赋值一样</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="keyword">char</span>*)</span></span>;<span class="comment">//将char*字符串作为s的初值</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="keyword">char</span>*, length)</span></span>;<span class="comment">//将char*字符串的length长度部分作为s的初值</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(length, <span class="keyword">char</span>)</span></span>;<span class="comment">//生成一个字符串，包含length个char字符</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s1</span><span class="params">()</span></span>;  <span class="comment">// si = ""</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s2</span><span class="params">(<span class="string">"Hello"</span>)</span></span>;  <span class="comment">// s2 = "Hello"</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s3</span><span class="params">(<span class="number">4</span>, <span class="string">'K'</span>)</span></span>;  <span class="comment">// s3 = "KKKK"</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s4</span><span class="params">(<span class="string">"12345"</span>, <span class="number">1</span>, <span class="number">3</span>)</span></span>;  <span class="comment">//s4 = "234"，即 "12345" 的从下标 1 开始，长度为 3 的子串</span></span><br></pre></td></tr></table></figure>
+
+<p>string 类没有接收一个整型参数或一个字符型参数的构造函数。下面的两种写法是错误的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s1</span><span class="params">(<span class="string">'K'</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">s2</span><span class="params">(<span class="number">123</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h5 id="为string-对象赋值"><a href="#为string-对象赋值" class="headerlink" title="为string 对象赋值"></a><strong>为string 对象赋值</strong></h5><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">string <span class="built_in">s1</span><span class="comment">;</span></span><br><span class="line"><span class="built_in">s1</span> = <span class="string">"Hello"</span><span class="comment">;  // s1 = "Hello"</span></span><br><span class="line"><span class="built_in">s2</span> = <span class="string">'K'</span><span class="comment">;  // s2 = "K”</span></span><br><span class="line"></span><br><span class="line">string <span class="built_in">s1</span>(<span class="string">"12345"</span>), <span class="built_in">s2</span><span class="comment">;</span></span><br><span class="line"><span class="built_in">s3</span>.assign(<span class="built_in">s1</span>)<span class="comment">;  // s3 = s1</span></span><br><span class="line"><span class="built_in">s2</span>.assign(<span class="built_in">s1</span>, <span class="number">1</span>, <span class="number">2</span>)<span class="comment">;  // s2 = "23"，即 s1 的子串(1, 2)</span></span><br><span class="line"><span class="built_in">s2</span>.assign(<span class="number">4</span>, <span class="string">'K'</span>)<span class="comment">;  // s2 = "KKKK"</span></span><br><span class="line"><span class="built_in">s2</span>.assign(<span class="string">"abcde"</span>, <span class="number">2</span>, <span class="number">3</span>)<span class="comment">;  // s2 = "cde"，即 "abcde" 的子串(2, 3)</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="求字符串的长度"><a href="#求字符串的长度" class="headerlink" title="求字符串的长度"></a><strong>求字符串的长度</strong></h5><blockquote>
+<p>length 成员函数返回字符串的长度。size 成员函数可以实现同样的功能。</p>
+</blockquote>
+<h5 id="字符串交换"><a href="#字符串交换" class="headerlink" title="字符串交换"></a><strong>字符串交换</strong></h5><figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> s1 = <span class="string">"hello"</span>;</span><br><span class="line"><span class="built_in">string</span> s2 = <span class="string">"world"</span>;</span><br><span class="line">swap(s1, s2);</span><br><span class="line"><span class="comment">//s1 world</span></span><br><span class="line"><span class="comment">//s2 hello</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">string</span> s1(<span class="string">"West”), s2("</span>East<span class="string">");</span></span><br><span class="line"><span class="string">s1.swap(s2);  // s1 = "</span>East<span class="string">"，s2 = "</span>West<span class="string">"</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="字符的追加"><a href="#字符的追加" class="headerlink" title="字符的追加"></a><strong>字符的追加</strong></h5><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">string <span class="built_in">s1</span> = <span class="string">"hello"</span><span class="comment">;</span></span><br><span class="line">string <span class="built_in">s2</span> = <span class="string">" world"</span><span class="comment">;</span></span><br><span class="line"><span class="built_in">s1</span> += <span class="built_in">s2</span><span class="comment">;</span></span><br><span class="line"><span class="built_in">s1</span> +=<span class="string">"world"</span><span class="comment">;</span></span><br><span class="line">string <span class="built_in">s1</span>(<span class="string">"123"</span>), <span class="built_in">s2</span>(<span class="string">"abc"</span>)<span class="comment">;</span></span><br><span class="line"><span class="built_in">s1</span>.append(<span class="built_in">s2</span>)<span class="comment">;  // s1 = "123abc"</span></span><br><span class="line"><span class="built_in">s1</span>.append(<span class="built_in">s2</span>, <span class="number">1</span>, <span class="number">2</span>)<span class="comment">;  // s1 = "123abcbc"</span></span><br><span class="line"><span class="built_in">s1</span>.append(<span class="number">3</span>, <span class="string">'K'</span>)<span class="comment">;  // s1 = "123abcbcKKK"</span></span><br><span class="line"><span class="built_in">s1</span>.append(<span class="string">"ABCDE"</span>, <span class="number">2</span>, <span class="number">3</span>)<span class="comment">;  // s1 = "123abcbcKKKCDE"，添加 "ABCDE" 的子串(2, 3)</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="string对象的比较"><a href="#string对象的比较" class="headerlink" title="string对象的比较"></a><strong>string对象的比较</strong></h5><blockquote>
+<p>除了可以用 &lt;、&lt;=、==、!=、&gt;=、&gt; 运算符比较 string 对象外，string 类还有 compare 成员函数，可用于比较字符串。compare 成员函数有以下返回值：</p>
+</blockquote>
+<ul>
+<li>小于 0 表示当前的字符串小；</li>
+<li>等于 0 表示两个字符串相等；</li>
+<li>大于 0 表示另一个字符串小。</li>
+</ul>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">string <span class="built_in">s1</span>(<span class="string">"hello"</span>), <span class="built_in">s2</span>(<span class="string">"hello, world"</span>)<span class="comment">;</span></span><br><span class="line">int n = <span class="built_in">s1</span>.compare(<span class="built_in">s2</span>)<span class="comment">;</span></span><br><span class="line">n = <span class="built_in">s1</span>.compare(<span class="number">1</span>, <span class="number">2</span>, <span class="built_in">s2</span>, <span class="number">0</span>, <span class="number">3</span>)<span class="comment">;  //比较s1的子串 (1,2) 和s2的子串 (0,3)</span></span><br><span class="line">n = <span class="built_in">s1</span>.compare(<span class="number">0</span>, <span class="number">2</span>, <span class="built_in">s2</span>)<span class="comment">;  // 比较s1的子串 (0,2) 和 s2</span></span><br><span class="line">n = <span class="built_in">s1</span>.compare(<span class="string">"Hello"</span>)<span class="comment">;</span></span><br><span class="line">n = <span class="built_in">s1</span>.compare(<span class="number">1</span>, <span class="number">2</span>, <span class="string">"Hello"</span>)<span class="comment">;  //比较 s1 的子串(1,2)和"Hello”</span></span><br><span class="line">n = <span class="built_in">s1</span>.compare(<span class="number">1</span>, <span class="number">2</span>, <span class="string">"Hello"</span>, <span class="number">1</span>, <span class="number">2</span>)<span class="comment">;  //比较 s1 的子串(1,2)和 "Hello" 的子串(1,2)</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="字符串的插入"><a href="#字符串的插入" class="headerlink" title="字符串的插入"></a><strong>字符串的插入</strong></h5><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">string</span> &amp;insert(<span class="keyword">int</span> p0, <span class="keyword">const</span> <span class="keyword">char</span> *s);</span><br><span class="line"><span class="keyword">string</span> &amp;insert(<span class="keyword">int</span> p0, <span class="keyword">const</span> <span class="keyword">char</span> *s, <span class="keyword">int</span> n);</span><br><span class="line"><span class="keyword">string</span> &amp;insert(<span class="keyword">int</span> p0,<span class="keyword">const</span> <span class="keyword">string</span> &amp;s);</span><br><span class="line"><span class="keyword">string</span> &amp;insert(<span class="keyword">int</span> p0,<span class="keyword">const</span> <span class="keyword">string</span> &amp;s, <span class="keyword">int</span> pos, <span class="keyword">int</span> n);</span><br><span class="line"><span class="comment">//前4个函数在p0位置插入字符串s中pos开始的前n个字符</span></span><br><span class="line"><span class="keyword">string</span> &amp;insert(<span class="keyword">int</span> p0, <span class="keyword">int</span> n, <span class="keyword">char</span> c);</span><br><span class="line"><span class="comment">//此函数在p0处插入n个字符c</span></span><br><span class="line"><span class="function">iterator <span class="title">insert</span>(<span class="params">iterator it, <span class="keyword">char</span> c</span>)</span>;</span><br><span class="line"><span class="comment">//在it处插入字符c，返回插入后迭代器的位置</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span>(<span class="params">iterator it, const_iterator first, const_iterator last</span>)</span>;</span><br><span class="line"><span class="comment">//在it处插入[first，last）之间的字符</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span>(<span class="params">iterator it, <span class="keyword">int</span> n, <span class="keyword">char</span> c</span>)</span>;</span><br><span class="line"><span class="comment">//在it处插入n个字符c</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">s1</span>(<span class="params"><span class="string">"Limitless"</span></span>), <span class="title">s2</span>(<span class="params"><span class="string">"00"</span></span>)</span>;</span><br><span class="line">s1.insert(<span class="number">2</span>, <span class="string">"123"</span>);  <span class="comment">//在下标 2 处插入字符串"123"，s1 = "Li123mitless"</span></span><br><span class="line">s1.insert(<span class="number">3</span>, s2);  <span class="comment">//在下标 2 处插入 s2 , s1 = "Li10023mitless"</span></span><br><span class="line">s1.insert(<span class="number">3</span>, <span class="number">5</span>, <span class="string">'X'</span>);  <span class="comment">//在下标 3 处插入 5 个 'X'，s1 = "Li1XXXXX0023mitless"</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="字符串的删除"><a href="#字符串的删除" class="headerlink" title="字符串的删除"></a><strong>字符串的删除</strong></h5><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">iterator erase(iterator first, iterator last);</span><br><span class="line"><span class="comment">//删除[first，last）之间的所有字符，返回删除后迭代器的位置</span></span><br><span class="line">iterator erase(iterator it);</span><br><span class="line"><span class="comment">//删除it指向的字符，返回删除后迭代器的位置</span></span><br><span class="line"><span class="built_in">string</span> &amp;erase(<span class="built_in">int</span> pos = <span class="number">0</span>, <span class="built_in">int</span> n = npos);</span><br><span class="line"><span class="comment">//删除pos开始的n个字符，返回修改后的字符串 </span></span><br><span class="line"></span><br><span class="line"><span class="built_in">string</span> str(<span class="string">"This is an example phrase."</span>);</span><br><span class="line"><span class="built_in">string</span>::iterator it;<span class="comment">//迭代器</span></span><br><span class="line"></span><br><span class="line">str.erase(str.begin()+<span class="number">5</span>,str.end()<span class="number">-7</span>);</span><br><span class="line"><span class="comment">//删除两个参数之间的所有字符，str="This phrase."</span></span><br><span class="line"></span><br><span class="line">it = str.begin();</span><br><span class="line"><span class="comment">//迭代器位置为0</span></span><br><span class="line">str.erase(it);</span><br><span class="line"><span class="comment">//删除迭代器位置为0的字符</span></span><br><span class="line"></span><br><span class="line">str.erase(<span class="number">10</span>,<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">string</span> s1(<span class="string">"Real Steel"</span>);</span><br><span class="line">s1.erase(<span class="number">1</span>, <span class="number">3</span>);  <span class="comment">//删除子串(1, 3)，此后 s1 = "R Steel"</span></span><br><span class="line">s1.erase(<span class="number">5</span>);  <span class="comment">//删除下标5及其后面的所有字符，此后 s1 = "R Ste"</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="字符串的截取"><a href="#字符串的截取" class="headerlink" title="字符串的截取"></a><strong>字符串的截取</strong></h5><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> substr(<span class="built_in">int</span> pos = <span class="number">0</span>, <span class="built_in">int</span> n = npos) <span class="keyword">const</span>; </span><br><span class="line"><span class="comment">// 返回pos开始的n个字符组成的字符串</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">string </span><span class="built_in">s1</span> = <span class="string">"this is ok"</span><span class="comment">;</span></span><br><span class="line"><span class="keyword">string </span><span class="built_in">s2</span> = <span class="built_in">s1</span>.<span class="keyword">substr(2, </span><span class="number">4</span>)<span class="comment">;  // s2 = "is i"</span></span><br><span class="line"><span class="symbol">s2</span> = <span class="built_in">s1</span>.<span class="keyword">substr(2); </span> // <span class="built_in">s2</span> = <span class="string">"is is ok"</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="string-对象作为流处理"><a href="#string-对象作为流处理" class="headerlink" title="string 对象作为流处理"></a><strong>string 对象作为流处理</strong></h5><blockquote>
+<p>使用流对象 istringstream 和 ostringstream，可以将 string 对象当作一个流进行输入输出。使用这两个类需要包含头文件 sstream。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">src</span><span class="params">(<span class="string">"Avatar 123 5.2 Titanic K"</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="built_in">istringstream</span> <span class="title">istrStream</span><span class="params">(src)</span></span>; <span class="comment">//建立src到istrStream的联系</span></span><br><span class="line">    <span class="built_in">string</span> s1, s2;</span><br><span class="line">    <span class="keyword">int</span> n;  <span class="keyword">double</span> d;  <span class="keyword">char</span> c;</span><br><span class="line">    istrStream &gt;&gt; s1 &gt;&gt; n &gt;&gt; d &gt;&gt; s2 &gt;&gt; c; <span class="comment">//把src的内容当做输入流进行读取</span></span><br><span class="line">    <span class="built_in">ostringstream</span> ostrStream;</span><br><span class="line">    ostrStream &lt;&lt; s1 &lt;&lt; <span class="built_in">endl</span> &lt;&lt; s2 &lt;&lt; <span class="built_in">endl</span> &lt;&lt; n &lt;&lt; <span class="built_in">endl</span> &lt;&lt; d &lt;&lt; <span class="built_in">endl</span> &lt;&lt; c &lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; ostrStream.str();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">程序的输出结果是：</span><br><span class="line">Avatar</span><br><span class="line">Titanic</span><br><span class="line"><span class="number">123</span></span><br><span class="line"><span class="number">5.2</span></span><br><span class="line">K</span><br></pre></td></tr></table></figure>
+
+<h5 id="用-STL-算法操作-string-对象"><a href="#用-STL-算法操作-string-对象" class="headerlink" title="用 STL 算法操作 string 对象"></a><strong>用 STL 算法操作 string 对象</strong></h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">s</span><span class="params">(<span class="string">"afgcbed"</span>)</span></span>;</span><br><span class="line">    <span class="built_in">string</span>::iterator p = find(s.begin(), s.end(), <span class="string">'c'</span>);</span><br><span class="line">    <span class="keyword">if</span> (p!= s.end())</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; p - s.begin() &lt;&lt; <span class="built_in">endl</span>;  <span class="comment">//输出 3</span></span><br><span class="line">    sort(s.begin(), s.end());</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span>;  <span class="comment">//输出 abcdefg</span></span><br><span class="line">    next_permutation(s.begin(), s.end());</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//输出 abcdegf</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2014/03/30/STL/3.0、vector容器/" class="pre-post btn btn-default" title='3.0、vector容器'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            3.0、vector容器</span>
+    </a>
+    
+    
+    <a href="/2014/03/29/数据结构/2、算法的时间复杂度/" class="next-post btn btn-default" title='2、算法的时间复杂度'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            2、算法的时间复杂度</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#string容器"><span class="toc-text">string容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串的操作"><span class="toc-text">字符串的操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#构造方法"><span class="toc-text">构造方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#为string-对象赋值"><span class="toc-text">为string 对象赋值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#求字符串的长度"><span class="toc-text">求字符串的长度</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符串交换"><span class="toc-text">字符串交换</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符的追加"><span class="toc-text">字符的追加</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#string对象的比较"><span class="toc-text">string对象的比较</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符串的插入"><span class="toc-text">字符串的插入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符串的删除"><span class="toc-text">字符串的删除</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字符串的截取"><span class="toc-text">字符串的截取</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#string-对象作为流处理"><span class="toc-text">string 对象作为流处理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#用-STL-算法操作-string-对象"><span class="toc-text">用 STL 算法操作 string 对象</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

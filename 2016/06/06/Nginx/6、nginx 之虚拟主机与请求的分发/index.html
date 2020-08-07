@@ -1,0 +1,513 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Nginx">
+
+
+<meta name="description" content="nginx 之虚拟主机与请求的分发监听端口123listen address:port[default(deprecated in0.8.21)|default_server|[backlog=...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    6、nginx 之虚拟主机与请求的分发 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="6、nginx 之虚拟主机与请求的分发">
+            
+            6、nginx 之虚拟主机与请求的分发
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Nginx/">Nginx</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/06/06</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1523</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="nginx-之虚拟主机与请求的分发"><a href="#nginx-之虚拟主机与请求的分发" class="headerlink" title="nginx 之虚拟主机与请求的分发"></a><strong>nginx 之虚拟主机与请求的分发</strong></h2><h3 id="监听端口"><a href="#监听端口" class="headerlink" title="监听端口"></a><strong>监听端口</strong></h3><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">listen address:port[default(deprecated <span class="built_in">in</span></span><br><span class="line"><span class="number">0.8</span><span class="number">.21</span>)|<span class="type">default_server</span>|<span class="type">[backlog</span>=num|<span class="type">rcvbuf</span>=size|<span class="type">sndbuf</span>=size|<span class="type">accept_filt</span></span><br><span class="line">er=filter|<span class="type">deferred</span>|<span class="type">bind</span>|<span class="type">ipv6only</span>=[on|<span class="type">off</span>]|<span class="type">ssl</span>]]; #默认：listen <span class="number">80</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">listen <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8000</span>; </span><br><span class="line">listen <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>; #注意：不加端口时，默认监听 <span class="number">80</span>端口 </span><br><span class="line">listen <span class="number">8000</span>; </span><br><span class="line">listen *:<span class="number">8000</span>; </span><br><span class="line">listen localhost:<span class="number">8000</span>;</span><br><span class="line">listen [::]:<span class="number">8000</span>; </span><br><span class="line">listen [fe80::<span class="number">1</span>]; </span><br><span class="line">listen [:::a8c9:<span class="number">1234</span>]:<span class="number">80</span>;</span><br><span class="line">listen <span class="number">443</span> default_server ssl; </span><br><span class="line">listen <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> default_server accept_filter=dataready backlog=<span class="number">1024</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>default：将所在的server块作为整个Web服务的默认server块。如果没有设置这个参数， 那么将会以在nginx.conf中找到的第一个server块作为默认server块。为什么需要默认虚拟主机 呢？当一个请求无法匹配配置文件中的所有主机域名时，就会选用默认的虚拟主机（在11.3 节介绍默认主机的使用）。</li>
+<li>default_server：同上。</li>
+<li>backlog=num：表示TCP中backlog队列的大小。默认为–1，表示不予设置。在TCP建 立三次握手过程中，进程还没有开始处理监听句柄，这时backlog队列将会放置这些新连接。 可如果backlog队列已满，还有新的客户端试图通过三次握手建立TCP连接，这时客户端将会建立连接失败。</li>
+<li>rcvbuf=size：设置监听句柄的SO_RCVBUF参数。</li>
+<li>sndbuf=size：设置监听句柄的SO_SNDBUF参数。</li>
+<li>accept_filter：设置accept过滤器，只对FreeBSD操作系统有用。</li>
+<li>deferred：在设置该参数后，若用户发起建立连接请求，并且完成了TCP的三次握手， 内核也不会为了这次的连接调度worker进程来处理，只有用户真的发送请求数据时（内核已 经在网卡中收到请求数据包），内核才会唤醒worker进程处理这个连接。这个参数适用于大 并发的情况下，它减轻了worker进程的负担。当请求数据来临时，worker进程才会开始处理 这个连接。只有确认上面所说的应用场景符合自己的业务需求时，才可以使用deferred配 置。</li>
+<li>bind：绑定当前端口/地址对，如127.0.0.1:8000。只有同时对一个端口监听多个地址时 才会生效。</li>
+<li>ssl：在当前监听的端口上建立的连接必须基于SSL协议。</li>
+</ul>
+<h3 id="主机名称"><a href="#主机名称" class="headerlink" title="主机名称"></a><strong>主机名称</strong></h3><p>配置项针对特定Host域名的请求提供不同的服务， 以此实现虚拟主机功能</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_name name<span class="string">[...]</span>; #默认：server_name <span class="string">""</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>server_name后可以跟多个主机名称，如server_name <a href="http://www.example.com" target="_blank" rel="noopener">www.example.com</a> 、 download.example.com;。</p>
+<p>在开始处理一个HTTP请求时，Nginx会取出header头中的Host，与每个server中的 server_name进行匹配，以此决定到底由哪一个server块来处理这个请求。有可能一个Host与 多个server块中的server_name都匹配，这时就会根据匹配优先级来选择实际处理的server块。 server_name与Host的匹配优先级如下：</p>
+<ul>
+<li>首先选择所有字符串完全匹配的server_name，如<a href="http://www.example.com" target="_blank" rel="noopener">www.example.com</a> 。</li>
+<li>其次选择通配符在前面的server_name，如*.example.com。</li>
+<li>再次选择通配符在后面的server_name，如<a href="http://www.example" target="_blank" rel="noopener">www.example</a>.* 。</li>
+<li>最后选择使用正则表达式才匹配的server_name，如~^.example.com$。</li>
+</ul>
+<p>如果Host与所有的server_name都不匹配，这时将会按下列顺序选 择处理的server块</p>
+<ul>
+<li>优先选择在listen配置项后加入[default|default_server]的server块。</li>
+<li>找到匹配listen端口的第一个server块。</li>
+</ul>
+<p>如果server_name后跟着空字符串（如server_name””;），那么表示匹配没有Host这个 HTTP头部的请求。</p>
+<h3 id="散列桶占用的内存大小"><a href="#散列桶占用的内存大小" class="headerlink" title="散列桶占用的内存大小"></a><strong>散列桶占用的内存大小</strong></h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_names_hash_bucket_size size; #默认：server_names_hash_bucket_size <span class="number">32</span>|<span class="number">64</span>|<span class="number">128</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>为了提高快速寻找到相应server name的能力，Nginx使用散列表来存储server name。 server_names_hash_bucket_size设置了每个散列桶占用的内存大小。</p>
+<h3 id="散列表的冲突率"><a href="#散列表的冲突率" class="headerlink" title="散列表的冲突率"></a><strong>散列表的冲突率</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">server_names_hash_max_size</span> size; <span class="comment">#默认： server_names_hash_max_size 512;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>server_names_hash_max_size会影响散列表的冲突率。server_names_hash_max_size越大， 消耗的内存就越多，但散列key的冲突率则会降低，检索速度也更快。 server_names_hash_max_size越小，消耗的内存就越小，但散列key的冲突率可能增高。</p>
+<h3 id="重定向主机名称的处理"><a href="#重定向主机名称的处理" class="headerlink" title="重定向主机名称的处理"></a><strong>重定向主机名称的处理</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">server_name_in_redirect</span> <span class="literal">on</span>|<span class="literal">off</span>; <span class="comment">#默认： server_name_in_redirect on;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>或者<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>该配置需要配合server_name使用。在使用on打开时，表示在重定向请求时会使用 server_name里配置的第一个主机名代替原先请求中的Host头部，而使用off关闭时，表示在重 定向请求时使用请求本身的Host头部</p>
+<h3 id="location"><a href="#location" class="headerlink" title="location"></a><strong>location</strong></h3><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location [=|~|~*|^~|@]/uri/<span class="meta">&#123;...&#125;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>location会尝试根据用户请求中的URI来匹配上面的/uri表达式，如果可以匹配，就选择 location{}块中的配置来处理用户请求。当然，匹配方式是多样的，下面介绍location的匹配 规则</p>
+<ul>
+<li><p>=表示把URI作为字符串，以便与参数中的uri做完全匹配</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">location</span> <span class="title">= / &#123; </span></span><br><span class="line"><span class="title">    #只有当用户请求是 /时，才会使用该 location</span>下的配置 </span><br><span class="line">    … </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>~表示匹配URI时是字母大小写敏感的。</p>
+</li>
+<li><p>~*表示匹配URI时忽略字母大小写问题</p>
+</li>
+<li><p>^~表示匹配URI时只需要其前半部分与uri参数匹配即可。例如</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">location</span> <span class="title">^~ images</span> &#123; </span><br><span class="line">    <span class="comment"># 以 images开始的请求都会匹配上 </span></span><br><span class="line">    … </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>@表示仅用于Nginx服务内部请求之间的重定向，带有@的location不直接处理用户请 求</p>
+</li>
+<li><p>在uri参数里是可以用正则表达式</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">location</span> <span class="title">~* \.(gif</span>|jpg|jpeg)$ &#123; </span><br><span class="line">    <span class="comment"># 匹配以 .gif、 .jpg、 .jpeg结尾的请求 </span></span><br><span class="line">    … </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在最后一个location中使用/作为参数，它会匹配 所有的HTTP请求，这样就可以表示如果不能匹配前面的所有location，则由“/”这个location处 理。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">location</span> <span class="title">/ &#123; </span></span><br><span class="line"><span class="title">    # /可以匹配所有请求 </span></span><br><span class="line"><span class="title">    … </span></span><br><span class="line"><span class="title">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/06/07/Nginx/7、nginx 之文件路径的定义/" class="pre-post btn btn-default" title='7、nginx 之文件路径的定义'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            7、nginx 之文件路径的定义</span>
+    </a>
+    
+    
+    <a href="/2016/06/06/Mysql/67、mysql 之全文搜索介绍/" class="next-post btn btn-default" title='67、mysql 之全文搜索介绍'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            67、mysql 之全文搜索介绍</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx-之虚拟主机与请求的分发"><span class="toc-text">nginx 之虚拟主机与请求的分发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#监听端口"><span class="toc-text">监听端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主机名称"><span class="toc-text">主机名称</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列桶占用的内存大小"><span class="toc-text">散列桶占用的内存大小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列表的冲突率"><span class="toc-text">散列表的冲突率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重定向主机名称的处理"><span class="toc-text">重定向主机名称的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#location"><span class="toc-text">location</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

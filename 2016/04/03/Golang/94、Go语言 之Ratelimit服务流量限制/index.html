@@ -1,0 +1,509 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Golang">
+
+
+<meta name="description" content="Go语言 之Ratelimit服务流量限制计算机程序可依据其瓶颈分为磁盘 IO 瓶颈型，CPU 计算瓶颈型，⽹络带宽瓶颈型，分布式场景下有时候也会外部系统⽽导致⾃身瓶颈。
+Web 系统打交道最多...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    94、Go语言 之Ratelimit服务流量限制 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="94、Go语言 之Ratelimit服务流量限制">
+            
+            94、Go语言 之Ratelimit服务流量限制
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Golang/">Golang</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Golang/">Golang</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/03</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1587</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Go语言-之Ratelimit服务流量限制"><a href="#Go语言-之Ratelimit服务流量限制" class="headerlink" title="Go语言 之Ratelimit服务流量限制"></a><strong>Go语言 之Ratelimit服务流量限制</strong></h2><p>计算机程序可依据其瓶颈分为磁盘 IO 瓶颈型，CPU 计算瓶颈型，⽹络带宽瓶颈型，分布式场景下有时候也会外部系统⽽导致⾃身瓶颈。</p>
+<p>Web 系统打交道最多的是⽹络，⽆论是接收，解析⽤户请求，访问存储，还是把响应数据返回给⽤户，都是要⾛⽹络的。在没有 epoll/kqueue 之类的系统提供的 IO 多路复⽤接⼝之前，多个核⼼的现代计算机最头痛的是 C10k 问题，C10k 问题会导致计算机没有办法充分利⽤ CPU 来处理更多的⽤户连接，进⽽没有办法通过优化程序提升CPU利⽤率来处理更多的请求。</p>
+<p>⾃从 Linux 实现了 epoll，FreeBSD 实现了 kqueue ，这个问题基本解决了，我们可以借助内核提供的 API 轻松解决当年的 C10k 问题，也就是说如今如果你的程序主要是和⽹络打交道，那么瓶颈⼀定在⽤户程序⽽不在操作系统内核。</p>
+<p>随着时代的发展，编程语⾔对这些系统调⽤⼜进⼀步进⾏了封装，如今做应⽤层开发，⼏乎不会在程序中看到 epoll 之类的字眼，⼤多数时候我们就只要聚焦在业务逻辑上就好。</p>
+<p>Go语言的 net 库针对不同平台封装了不同的 syscall API，http 库⼜是构建在 net 库之上，所以在 Go语⾔中我们可以借助标准库，很轻松地写出⾼性能的 http 服务，下⾯是⼀个简单的 hello world 服务的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"io"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">    <span class="string">"net/http"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sayhello</span><span class="params">(wr http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">    wr.WriteHeader(<span class="number">200</span>)</span><br><span class="line">    io.WriteString(wr, <span class="string">"hello world"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    http.HandleFunc(<span class="string">"/"</span>, sayhello)</span><br><span class="line">    err := http.ListenAndServe(<span class="string">":9090"</span>, <span class="literal">nil</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"ListenAndServe:"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们需要衡量⼀下这个 Web 服务的吞吐量，再具体⼀些，实际上就是接⼝的 QPS。借助 wrk，在家⽤电脑 Macbook Pro 上对这个 hello world 服务进⾏基准测试，Mac 的硬件情况如下：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">CPU: Intel(R) Core(TM) i5<span class="number">-5257</span>U CPU @ <span class="number">2.70</span>GHz</span><br><span class="line">Core: <span class="number">2</span></span><br><span class="line">Threads: <span class="number">4</span></span><br><span class="line">Graphics/Displays:</span><br><span class="line">    Chipset Model: Intel Iris Graphics <span class="number">6100</span></span><br><span class="line">        Resolution: <span class="number">2560</span> x <span class="number">1600</span> Retina</span><br><span class="line">    Memory Slots:</span><br><span class="line">        Size: <span class="number">4</span> GB</span><br><span class="line">        Speed: <span class="number">1867</span> MHz</span><br><span class="line">        Size: <span class="number">4</span> GB</span><br><span class="line">        Speed: <span class="number">1867</span> MHz</span><br><span class="line">    Storage:</span><br><span class="line">        Size: <span class="number">250.14</span> GB (<span class="number">250</span>,<span class="number">140</span>,<span class="number">319</span>,<span class="number">744</span> bytes)</span><br><span class="line">        Media Name: APPLE SSD SM0256G Media</span><br><span class="line">        Size: <span class="number">250.14</span> GB (<span class="number">250</span>,<span class="number">140</span>,<span class="number">319</span>,<span class="number">744</span> bytes)</span><br><span class="line">        Medium Type: SSD</span><br></pre></td></tr></table></figure>
+
+<p>测试结果：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">~ ❯❯❯ wrk -c <span class="number">10</span> -d <span class="number">10</span>s -t10 http:<span class="comment">//localhost:9090</span></span><br><span class="line">Running <span class="number">10</span>s test @ http:<span class="comment">//localhost:9090</span></span><br><span class="line">    <span class="number">10</span> threads <span class="keyword">and</span> <span class="number">10</span> connections</span><br><span class="line">    Thread Stats Avg Stdev Max +/- Stdev</span><br><span class="line">        Latency <span class="number">339.99</span>us <span class="number">1.28</span>ms <span class="number">44.43</span>ms <span class="number">98.29</span>%</span><br><span class="line">        Req/Sec <span class="number">4.49</span>k <span class="number">656.81</span> <span class="number">7.47</span>k <span class="number">73.36</span>%</span><br><span class="line">    <span class="number">449588</span> requests <span class="keyword">in</span> <span class="number">10.10</span>s, <span class="number">54.88</span>MB read</span><br><span class="line">Requests/sec: <span class="number">44513.22</span></span><br><span class="line">Transfer/sec: <span class="number">5.43</span>MB</span><br><span class="line"></span><br><span class="line">~ ❯❯❯ wrk -c <span class="number">10</span> -d <span class="number">10</span>s -t10 http:<span class="comment">//localhost:9090</span></span><br><span class="line">Running <span class="number">10</span>s test @ http:<span class="comment">//localhost:9090</span></span><br><span class="line">    <span class="number">10</span> threads <span class="keyword">and</span> <span class="number">10</span> connections</span><br><span class="line">    Thread Stats Avg Stdev Max +/- Stdev</span><br><span class="line">        Latency <span class="number">334.76</span>us <span class="number">1.21</span>ms <span class="number">45.47</span>ms <span class="number">98.27</span>%</span><br><span class="line">        Req/Sec <span class="number">4.42</span>k <span class="number">633.62</span> <span class="number">6.90</span>k <span class="number">71.16</span>%</span><br><span class="line">    <span class="number">443582</span> requests <span class="keyword">in</span> <span class="number">10.10</span>s, <span class="number">54.15</span>MB read</span><br><span class="line">Requests/sec: <span class="number">43911.68</span></span><br><span class="line">Transfer/sec: <span class="number">5.36</span>MB</span><br><span class="line"></span><br><span class="line">~ ❯❯❯ wrk -c <span class="number">10</span> -d <span class="number">10</span>s -t10 http:<span class="comment">//localhost:9090</span></span><br><span class="line">Running <span class="number">10</span>s test @ http:<span class="comment">//localhost:9090</span></span><br><span class="line">    <span class="number">10</span> threads <span class="keyword">and</span> <span class="number">10</span> connections</span><br><span class="line">    Thread Stats Avg Stdev Max +/- Stdev</span><br><span class="line">        Latency <span class="number">379.26</span>us <span class="number">1.34</span>ms <span class="number">44.28</span>ms <span class="number">97.62</span>%</span><br><span class="line">        Req/Sec <span class="number">4.55</span>k <span class="number">591.64</span> <span class="number">8.20</span>k <span class="number">76.37</span>%</span><br><span class="line">    <span class="number">455710</span> requests <span class="keyword">in</span> <span class="number">10.10</span>s, <span class="number">55.63</span>MB read</span><br><span class="line">Requests/sec: <span class="number">45118.57</span></span><br><span class="line">Transfer/sec: <span class="number">5.51</span>MB</span><br></pre></td></tr></table></figure>
+
+<p>多次测试的结果在 4 万左右的 QPS 浮动，响应时间最多也就是 40ms 左右，对于⼀个 Web 程序来说，这已经是很不错的成绩了，我们只是照抄了别⼈的示例代码，就完成了⼀个⾼性能的 hello world 服务器，是不是很有成就感？</p>
+<p>这还只是家⽤ PC，线上服务器⼤多都是 24 核⼼起，32G 内存 +，CPU 基本都是 Intel i7。所以同样的程序在服务器上运⾏会得到更好的结果。</p>
+<p>这⾥的 hello world 服务没有任何业务逻辑。真实环境的程序要复杂得多，有些程序偏⽹络 IO 瓶颈，例如⼀些 CDN 服务、Proxy 服务；有些程序偏 CPU/GPU 瓶颈，例如登陆校验服务、图像处理服务；有些程序瓶颈偏磁盘，例如专⻔的存储系统，数据库。</p>
+<p>不同的程序瓶颈会体现在不同的地⽅，这⾥提到的这些功能单⼀的服务相对来说还算容易分析。如果碰到业务逻辑复杂代码量巨⼤的模块，其瓶颈并不是三下五除⼆可以推测出来的，还是需要从压⼒测试中得到更为精确的结论。</p>
+<p>对于 IO/Network 瓶颈类的程序，其表现是⽹卡 / 磁盘 IO 会先于 CPU 打满，这种情况即使优化 CPU 的使⽤也不能提⾼整个系统的吞吐量，只能提⾼磁盘的读写速度，增加内存⼤⼩，提升⽹卡的带宽来提升整体性能。</p>
+<p>⽽ CPU 瓶颈类的程序，则是在存储和⽹卡未打满之前 CPU 占⽤率提前到达 100%，CPU 忙于各种计算任务，IO 设备相对则较闲。</p>
+<p>⽆论哪种类型的服务，在资源使⽤到极限的时候都会导致请求堆积，超时，系统 hang 死，最终伤害到终端⽤户。对于分布式的 Web 服务来说，瓶颈还不⼀定总在系统内部，也有可能在外部。</p>
+<p>⾮计算密集型的系统往往会在关系型数据库环节失守，⽽这时候 Web 模块本身还远远未达到瓶颈。不管我们的服务瓶颈在哪⾥，最终要做的事情都是⼀样的，那就是流量限制。</p>
+<h3 id="常⻅的流量限制⼿段"><a href="#常⻅的流量限制⼿段" class="headerlink" title="常⻅的流量限制⼿段"></a><strong>常⻅的流量限制⼿段</strong></h3><p>流量限制的⼿段有很多，最常⻅的：漏桶、令牌桶两种：</p>
+<ul>
+<li>漏桶是指我们有⼀个⼀直装满了⽔的桶，每过固定的⼀段时间即向外漏⼀滴⽔。如果你接到了这滴⽔，那么你就可以继续服务请求，如果没有接到，那么就需要等待下⼀滴⽔。</li>
+<li>令牌桶则是指匀速向桶中添加令牌，服务请求时需要从桶中获取令牌，令牌的数⽬可以按照需要消耗的资源进⾏相应的调整。如果没有令牌，可以选择等待，或者放弃。</li>
+</ul>
+<p>这两种⽅法看起来很像，不过还是有区别的。漏桶流出的速率固定，⽽令牌桶只要在桶中有令牌，那就可以拿。也就是说令牌桶是允许⼀定程度的并发的，⽐如同⼀个时刻，有 100 个⽤户请求，只要令牌桶中有 100 个令牌，那么这 100 个请求全都会放过去。令牌桶在桶中没有令牌的情况下也会退化为漏桶模型。</p>
+<p>令牌桶</p>
+<p>实际应⽤中令牌桶应⽤较为⼴泛，开源界流⾏的限流器⼤多数都是基于令牌桶思想的。并且在此基础上进⾏了⼀定程度的扩充，⽐如</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">github.com/juju/ratelimit 提供了⼏种不同特⾊的令牌桶填充⽅式：</span><br><span class="line">func <span class="constructor">NewBucket(<span class="params">fillInterval</span> <span class="params">time</span>.Duration, <span class="params">capacity</span> <span class="params">int64</span>)</span> *Bucket</span><br></pre></td></tr></table></figure>
+
+<p>默认的令牌桶，fillInterval 指每过多⻓时间向桶⾥放⼀个令牌，capacity 是桶的容量，超过桶容量的部分会被直接丢弃。桶初始是满的。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func <span class="constructor">NewBucketWithQuantum(<span class="params">fillInterval</span> <span class="params">time</span>.Duration, <span class="params">capacity</span>, <span class="params">quantum</span> <span class="params">int64</span>)</span> *Bucket</span><br></pre></td></tr></table></figure>
+
+<p>和普通的 NewBucket() 的区别是，每次向桶中放令牌时，是放 quantum 个令牌，⽽不是⼀个令牌。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func <span class="constructor">NewBucketWithRate(<span class="params">rate</span> <span class="params">float64</span>, <span class="params">capacity</span> <span class="params">int64</span>)</span> *Bucket</span><br></pre></td></tr></table></figure>
+
+<p>这个就有点特殊了，会按照提供的⽐例，每秒钟填充令牌数。例如 capacity 是 100，⽽ rate 是 0.1，那么每秒会填充 10 个令牌。</p>
+<p>从桶中获取令牌也提供了⼏个 API：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(tb *Bucket)</span> <span class="title">Take</span><span class="params">(count <span class="keyword">int64</span>)</span> <span class="title">time</span>.<span class="title">Duration</span></span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(tb *Bucket)</span> <span class="title">TakeAvailable</span><span class="params">(count <span class="keyword">int64</span>)</span> <span class="title">int64</span></span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(tb *Bucket)</span> <span class="title">TakeMaxDuration</span><span class="params">(count <span class="keyword">int64</span>, maxWait time.Duration)</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    time.Duration, <span class="keyword">bool</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(tb *Bucket)</span> <span class="title">Wait</span><span class="params">(count <span class="keyword">int64</span>)</span></span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(tb *Bucket)</span> <span class="title">WaitMaxDuration</span><span class="params">(count <span class="keyword">int64</span>, maxWait time.Duration)</span> <span class="title">bool</span></span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>名称和功能都⽐较直观，这⾥就不再赘述了。相⽐于开源界更为有名的 Google 的 Java ⼯具库 Guava 中提供的 ratelimiter，这个库不⽀持令牌桶预热，且⽆法修改初始的令牌容量，所以可能个别极端情况下的需求⽆法满⾜。</p>
+<p>但在明⽩令牌桶的基本原理之后，如果没办法满⾜需求，相信大家也可以很快对其进⾏修改并⽀持⾃⼰的业务场景。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h3><p>从功能上来看，令牌桶模型实际上就是对全局计数的加减法操作过程，但使⽤计数需要我们⾃⼰加读写锁，有⼩⼩的思想负担。如果我们对 Go语⾔已经⽐较熟悉的话，很容易想到可以⽤ buffered channel 来完成简单的加令牌取令牌操作：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> tokenBucket = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, capacity)</span><br></pre></td></tr></table></figure>
+
+<p>每过⼀段时间向 tokenBucket 中添加 token，如果 bucket 已经满了，那么直接放弃：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">fillToken := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">    ticker := time.NewTicker(fillInterval)</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        <span class="keyword">select</span> &#123;</span><br><span class="line">            <span class="keyword">case</span> &lt;-ticker.C:</span><br><span class="line">                <span class="keyword">select</span> &#123;</span><br><span class="line">                    <span class="keyword">case</span> tokenBucket &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;:</span><br><span class="line">                    <span class="keyword">default</span>:</span><br><span class="line">                &#125;</span><br><span class="line">                fmt.Println(<span class="string">"current token cnt:"</span>, <span class="built_in">len</span>(tokenBucket), time.Now())</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把代码组合起来：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> fillInterval = time.Millisecond * <span class="number">10</span></span><br><span class="line">    <span class="keyword">var</span> capacity = <span class="number">100</span></span><br><span class="line">    <span class="keyword">var</span> tokenBucket = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, capacity)</span><br><span class="line">    fillToken := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">        ticker := time.NewTicker(fillInterval)</span><br><span class="line">        <span class="keyword">for</span> &#123;</span><br><span class="line">            <span class="keyword">select</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> &lt;-ticker.C:</span><br><span class="line">                    <span class="keyword">select</span> &#123;</span><br><span class="line">                        <span class="keyword">case</span> tokenBucket &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;:</span><br><span class="line">                        <span class="keyword">default</span>:</span><br><span class="line">                    &#125;</span><br><span class="line">                    fmt.Println(<span class="string">"current token cnt:"</span>, <span class="built_in">len</span>(tokenBucket), time.Now())</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">go</span> fillToken()</span><br><span class="line">    time.Sleep(time.Hour)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看看运⾏结果：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">current token cnt: <span class="number">98</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.44304</span> +<span class="number">0800</span> CST m=+<span class="number">1.007173201</span></span><br><span class="line">current token cnt: <span class="number">99</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.4530154</span> +<span class="number">0800</span> CST m=+<span class="number">1.017148601</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.462987</span> +<span class="number">0800</span> CST m=+<span class="number">1.027120201</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.4729601</span> +<span class="number">0800</span> CST m=+<span class="number">1.037093301</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.4829352</span> +<span class="number">0800</span> CST m=+<span class="number">1.047068401</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.4939354</span> +<span class="number">0800</span> CST m=+<span class="number">1.058068601</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.5028803</span> +<span class="number">0800</span> CST m=+<span class="number">1.067013501</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.5128549</span> +<span class="number">0800</span> CST m=+<span class="number">1.076988101</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.5248539</span> +<span class="number">0800</span> CST m=+<span class="number">1.088987101</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.5348291</span> +<span class="number">0800</span> CST m=+<span class="number">1.098962301</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.5437705</span> +<span class="number">0800</span> CST m=+<span class="number">1.107903701</span></span><br><span class="line">current token cnt: <span class="number">100</span> <span class="number">2019</span><span class="number">-08</span><span class="number">-30</span> <span class="number">17</span>:<span class="number">34</span>:<span class="number">31.5537455</span> +<span class="number">0800</span> CST m=+<span class="number">1.117878701</span></span><br></pre></td></tr></table></figure>
+
+<p>在 1s 钟的时候刚好填满 100 个，没有太⼤的偏差。不过这⾥可以看到，Go 的定时器存在⼤约 0.001s 的误差，所以如果令牌桶⼤⼩在 1000 以上的填充可能会有⼀定的误差。对于⼀般的服务来说，这⼀点误差⽆关紧要。</p>
+<p>上⾯的令牌桶的取令牌操作实现起来也⽐较简单，简化问题，我们这⾥只取⼀个令牌：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TakeAvailable</span><span class="params">(block <span class="keyword">bool</span>)</span> <span class="title">bool</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> takenResult <span class="keyword">bool</span></span><br><span class="line">    <span class="keyword">if</span> block &#123;</span><br><span class="line">        <span class="keyword">select</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> &lt;-tokenBucket:</span><br><span class="line">            takenResult = <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">select</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> &lt;-tokenBucket:</span><br><span class="line">            takenResult = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            takenResult = <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> takenResult</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>⼀些公司⾃⼰造的限流的轮⼦就是⽤上⾯这种⽅式来实现的，不过如果开源版 ratelimit 也如此的话，那我们也没什么可说的了。现实并不是这样的。</p>
+<p>我们来思考⼀下，令牌桶每隔⼀段固定的时间向桶中放令牌，如果我们记下上⼀次放令牌的时间为 t1，和当时的令牌数 k1，放令牌的时间间隔为 ti，每次向令牌桶中放 x 个令牌，令牌桶容量为 cap。现在如果有⼈来调⽤ TakeAvailable 来取 n 个令牌，我们将这个时刻记为 t2。在 t2 时刻，令牌桶中理论上应该有多少令牌呢？伪代码如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cur</span> = k1 + ((t2 - t1)/ti) * x</span><br><span class="line"><span class="attr">cur</span> = cur &gt; cap ? cap : cur</span><br></pre></td></tr></table></figure>
+
+<p>我们⽤两个时间点的时间差，再结合其它的参数，理论上在取令牌之前就完全可以知道桶⾥有多少令牌了。那劳⼼费⼒地像本⼩节前⾯向 channel ⾥填充 token 的操作，理论上是没有必要的。</p>
+<p>只要在每次 Take 的时候，再对令牌桶中的 token 数进⾏简单计算，就可以得到正确的令牌数。是不是很像惰性求值的感觉？</p>
+<p>在得到正确的令牌数之后，再进⾏实际的 Take 操作就好，这个 Take 操作只需要对令牌数进⾏简单的减法即可，记得加锁以保证并发安全。github.com/juju/ratelimit 这个库就是这样做的。</p>
+<h3 id="服务瓶颈和-QoS"><a href="#服务瓶颈和-QoS" class="headerlink" title="服务瓶颈和 QoS"></a><strong>服务瓶颈和 QoS</strong></h3><p>前⾯我们说了很多 CPU 瓶颈、IO 瓶颈之类的概念，这种性能瓶颈从⼤多数公司都有的监控系统中可以⽐较快速地定位出来，如果⼀个系统遇到了性能问题，那监控图的反应⼀般都是最快的。</p>
+<p>虽然性能指标很重要，但对⽤户提供服务时还应考虑服务整体的 QoS。QoS 全称是 Quality of Service，顾名思义是服务质量。QoS 包含有可⽤性、吞吐量、时延、时延变化和丢失等指标。⼀般来讲我们可以通过优化系统，来提⾼ Web 服务的 CPU 利⽤率，从⽽提⾼整个系统的吞吐量。但吞吐量提⾼的同时，⽤户体验是有可能变差的。</p>
+<p>⽤户⻆度⽐较敏感的除了可⽤性之外，还有时延。虽然你的系统吞吐量⾼，但半天刷不开⻚⾯，想必会造成⼤量的⽤户流失。所以在⼤公司的Web服务性能指标中，除了平均响应时延之外，还会把响应时间的 95 分位，99 分位也拿出来作为性能标准。</p>
+<p>平均响应在提⾼ CPU 利⽤率没受到太⼤影响时，可能 95 分位、99 分位的响应时间⼤幅度攀升了，那么这时候就要考虑提⾼这些 CPU 利⽤率所付出的代价是否值得了。在线系统的机器⼀般都会保持 CPU 有⼀定的余裕。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/04/Golang/95、Go语言 之Test用例/" class="pre-post btn btn-default" title='95、Go语言 之Test用例'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            95、Go语言 之Test用例</span>
+    </a>
+    
+    
+    <a href="/2016/04/03/Mysql/3、mysql 之查看选择数据库/" class="next-post btn btn-default" title='3、mysql 之查看选择数据库'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            3、mysql 之查看选择数据库</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go语言-之Ratelimit服务流量限制"><span class="toc-text">Go语言 之Ratelimit服务流量限制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常⻅的流量限制⼿段"><span class="toc-text">常⻅的流量限制⼿段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理"><span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务瓶颈和-QoS"><span class="toc-text">服务瓶颈和 QoS</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="OpenGL">
+
+
+<meta name="description" content="OpenGL 之Look At矩阵
+如果你使用3个相互垂直（或非线性）的轴定义了一个坐标空间，你可以用这3个轴外加一个平移向量来创建一个矩阵
+你可以用这个矩阵乘以任何向量来将其变换到那个坐标空间...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    30、OpenGL 之Look At矩阵 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="30、OpenGL 之Look At矩阵">
+            
+            30、OpenGL 之Look At矩阵
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/OpenGL/">OpenGL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/OpenGL/">OpenGL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/06/05</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="OpenGL-之Look-At矩阵"><a href="#OpenGL-之Look-At矩阵" class="headerlink" title="OpenGL 之Look At矩阵"></a><strong>OpenGL 之Look At矩阵</strong></h2><ol>
+<li>如果你使用3个相互垂直（或非线性）的轴定义了一个坐标空间，你可以用这3个轴外加一个平移向量来创建一个矩阵</li>
+<li>你可以用这个矩阵乘以任何向量来将其变换到那个坐标空间</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LookAt = \begin&#123;pmatrix&#125;</span><br><span class="line">   R_x &amp; R_y &amp; R_z &amp; 0 \\</span><br><span class="line">   U_x &amp; U_y &amp; U_z &amp; 0 \\</span><br><span class="line">   D_x &amp; D_y &amp; D_z &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; * \begin&#123;pmatrix&#125;</span><br><span class="line">   1 &amp; 0 &amp; 0 &amp; -P_x \\</span><br><span class="line">   0 &amp; 1 &amp; 0 &amp; -P_y \\</span><br><span class="line">   0 &amp; 0 &amp; 1 &amp; -P_z \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中R是右向量，U是上向量，D是方向向量P是摄像机位置向量。</p>
+<p>GLM已经提供了这些支持。我们要做的只是定义一个摄像机位置，一个目标位置和一个表示世界空间中的上向量的向量（我们计算右向量使用的那个上向量）。接着GLM就会创建一个LookAt矩阵，我们可以把它当作我们的观察矩阵：</p>
+<p>glm::LookAt函数需要一个位置、目标和上向量。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">glm::mat4 view;</span><br><span class="line">view = glm::lookAt(glm::vec3(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">3.0f</span>), </span><br><span class="line">           glm::vec3(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>), </span><br><span class="line">           glm::vec3(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>));</span><br></pre></td></tr></table></figure>
+
+<p>在讨论用户输入之前，我们先来做些有意思的事，把我们的摄像机在场景中旋转。我们会将摄像机的注视点保持在(0, 0, 0)。</p>
+<p>我们需要用到一点三角学的知识来在每一帧创建一个x和z坐标，它会代表圆上的一点，我们将会使用它作为摄像机的位置。通过重新计算x和y坐标，我们会遍历圆上的所有点，这样摄像机就会绕着场景旋转了。我们预先定义这个圆的半径radius，在每次渲染迭代中使用GLFW的glfwGetTime函数重新创建观察矩阵，来扩大这个圆。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">float<span class="built_in"> radius </span>= 10.0f;</span><br><span class="line">float camX = sin(glfwGetTime()) * radius;</span><br><span class="line">float camZ = cos(glfwGetTime()) * radius;</span><br><span class="line">glm::mat4 view;</span><br><span class="line">view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));</span><br></pre></td></tr></table></figure>
+
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a><strong>源码</strong></h3><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;glad/glad.h&gt;</span><br><span class="line">#include &lt;GLFW/glfw3.h&gt;</span><br><span class="line"></span><br><span class="line">#define STB_IMAGE_IMPLEMENTATION</span><br><span class="line">#include <span class="string">"stb_image.h"</span></span><br><span class="line"></span><br><span class="line">#include <span class="string">"shader.h"</span></span><br><span class="line"></span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;glm/glm.hpp&gt;</span><br><span class="line">#include &lt;glm/gtc/matrix_transform.hpp&gt;</span><br><span class="line">#include &lt;glm/gtc/type_ptr.hpp&gt;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> framebuffer_size_callback(GLFWwindow* window, <span class="built_in">int</span> width, <span class="built_in">int</span> height);</span><br><span class="line"><span class="built_in">void</span> processInput(GLFWwindow *window);</span><br><span class="line"></span><br><span class="line"><span class="comment">// settings</span></span><br><span class="line"><span class="keyword">const</span> unsigned <span class="built_in">int</span> SCR_WIDTH = <span class="number">800</span>;</span><br><span class="line"><span class="keyword">const</span> unsigned <span class="built_in">int</span> SCR_HEIGHT = <span class="number">600</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> main()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// glfw: initialize and configure</span></span><br><span class="line">	<span class="comment">// ------------------------------</span></span><br><span class="line">	glfwInit();</span><br><span class="line">	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, <span class="number">3</span>);</span><br><span class="line">	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, <span class="number">3</span>);</span><br><span class="line">	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);</span><br><span class="line"></span><br><span class="line">#ifdef __APPLE__</span><br><span class="line">	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">	<span class="comment">// glfw window creation</span></span><br><span class="line">	<span class="comment">// --------------------</span></span><br><span class="line">	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, <span class="string">"LearnOpenGL"</span>, NULL, NULL);</span><br><span class="line">	<span class="keyword">if</span> (window == NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">"Failed to create GLFW window"</span> &lt;&lt; std::endl;</span><br><span class="line">		glfwTerminate();</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	glfwMakeContextCurrent(window);</span><br><span class="line">	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// glad: load all OpenGL function pointers</span></span><br><span class="line">	<span class="comment">// ---------------------------------------</span></span><br><span class="line">	<span class="keyword">if</span> (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">"Failed to initialize GLAD"</span> &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// configure global opengl state</span></span><br><span class="line">	<span class="comment">// -----------------------------</span></span><br><span class="line">	glEnable(GL_DEPTH_TEST);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// build and compile our shader zprogram</span></span><br><span class="line">	<span class="comment">// ------------------------------------</span></span><br><span class="line">	Shader ourShader(<span class="string">"4.2.texture.vs"</span>, <span class="string">"4.2.texture.fs"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// set up vertex data (and buffer(s)) and configure vertex attributes</span></span><br><span class="line">	<span class="comment">// ------------------------------------------------------------------</span></span><br><span class="line">	<span class="built_in">float</span> vertices[] = &#123;</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line"></span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line"></span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">1.0f</span>, <span class="number">1.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		 <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.5f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>,</span><br><span class="line">		<span class="number">-0.5f</span>,  <span class="number">0.5f</span>, <span class="number">-0.5f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span></span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="comment">// world space positions of our cubes</span></span><br><span class="line">	glm::vec3 cubePositions[] = &#123;</span><br><span class="line">		glm::vec3(<span class="number">0.0f</span>,  <span class="number">0.0f</span>,  <span class="number">0.0f</span>),</span><br><span class="line">		glm::vec3(<span class="number">2.0f</span>,  <span class="number">5.0f</span>, <span class="number">-15.0f</span>),</span><br><span class="line">		glm::vec3(<span class="number">-1.5f</span>, <span class="number">-2.2f</span>, <span class="number">-2.5f</span>),</span><br><span class="line">		glm::vec3(<span class="number">-3.8f</span>, <span class="number">-2.0f</span>, <span class="number">-12.3f</span>),</span><br><span class="line">		glm::vec3(<span class="number">2.4f</span>, <span class="number">-0.4f</span>, <span class="number">-3.5f</span>),</span><br><span class="line">		glm::vec3(<span class="number">-1.7f</span>,  <span class="number">3.0f</span>, <span class="number">-7.5f</span>),</span><br><span class="line">		glm::vec3(<span class="number">1.3f</span>, <span class="number">-2.0f</span>, <span class="number">-2.5f</span>),</span><br><span class="line">		glm::vec3(<span class="number">1.5f</span>,  <span class="number">2.0f</span>, <span class="number">-2.5f</span>),</span><br><span class="line">		glm::vec3(<span class="number">1.5f</span>,  <span class="number">0.2f</span>, <span class="number">-1.5f</span>),</span><br><span class="line">		glm::vec3(<span class="number">-1.3f</span>,  <span class="number">1.0f</span>, <span class="number">-1.5f</span>)</span><br><span class="line">	&#125;;</span><br><span class="line">	unsigned <span class="built_in">int</span> VBO, VAO;</span><br><span class="line">	glGenVertexArrays(<span class="number">1</span>, &amp;VAO);</span><br><span class="line">	glGenBuffers(<span class="number">1</span>, &amp;VBO);</span><br><span class="line"></span><br><span class="line">	glBindVertexArray(VAO);</span><br><span class="line"></span><br><span class="line">	glBindBuffer(GL_ARRAY_BUFFER, VBO);</span><br><span class="line">	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// position attribute</span></span><br><span class="line">	glVertexAttribPointer(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">5</span> * sizeof(<span class="built_in">float</span>), (<span class="built_in">void</span>*)<span class="number">0</span>);</span><br><span class="line">	glEnableVertexAttribArray(<span class="number">0</span>);</span><br><span class="line">	<span class="comment">// texture coord attribute</span></span><br><span class="line">	glVertexAttribPointer(<span class="number">1</span>, <span class="number">2</span>, GL_FLOAT, GL_FALSE, <span class="number">5</span> * sizeof(<span class="built_in">float</span>), (<span class="built_in">void</span>*)(<span class="number">3</span> * sizeof(<span class="built_in">float</span>)));</span><br><span class="line">	glEnableVertexAttribArray(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// load and create a texture </span></span><br><span class="line">	<span class="comment">// -------------------------</span></span><br><span class="line">	unsigned <span class="built_in">int</span> texture1, texture2;</span><br><span class="line">	<span class="comment">// texture 1</span></span><br><span class="line">	<span class="comment">// ---------</span></span><br><span class="line">	glGenTextures(<span class="number">1</span>, &amp;texture1);</span><br><span class="line">	glBindTexture(GL_TEXTURE_2D, texture1);</span><br><span class="line">	<span class="comment">// set the texture wrapping parameters</span></span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);</span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);</span><br><span class="line">	<span class="comment">// set texture filtering parameters</span></span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);</span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);</span><br><span class="line">	<span class="comment">// load image, create texture and generate mipmaps</span></span><br><span class="line">	<span class="built_in">int</span> width, height, nrChannels;</span><br><span class="line">	stbi_set_flip_vertically_on_load(<span class="literal">true</span>); <span class="comment">// tell stb_image.h to flip loaded texture's on the y-axis.</span></span><br><span class="line">	unsigned char *data = stbi_load(<span class="string">"container.jpg"</span>, &amp;width, &amp;height, &amp;nrChannels, <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span> (data)</span><br><span class="line">	&#123;</span><br><span class="line">		glTexImage2D(GL_TEXTURE_2D, <span class="number">0</span>, GL_RGB, width, height, <span class="number">0</span>, GL_RGB, GL_UNSIGNED_BYTE, data);</span><br><span class="line">		glGenerateMipmap(GL_TEXTURE_2D);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">"Failed to load texture"</span> &lt;&lt; std::endl;</span><br><span class="line">	&#125;</span><br><span class="line">	stbi_image_free(data);</span><br><span class="line">	<span class="comment">// texture 2</span></span><br><span class="line">	<span class="comment">// ---------</span></span><br><span class="line">	glGenTextures(<span class="number">1</span>, &amp;texture2);</span><br><span class="line">	glBindTexture(GL_TEXTURE_2D, texture2);</span><br><span class="line">	<span class="comment">// set the texture wrapping parameters</span></span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);</span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);</span><br><span class="line">	<span class="comment">// set texture filtering parameters</span></span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);</span><br><span class="line">	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);</span><br><span class="line">	<span class="comment">// load image, create texture and generate mipmaps</span></span><br><span class="line">	data = stbi_load(<span class="string">"awesomeface.png"</span>, &amp;width, &amp;height, &amp;nrChannels, <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span> (data)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA</span></span><br><span class="line">		glTexImage2D(GL_TEXTURE_2D, <span class="number">0</span>, GL_RGB, width, height, <span class="number">0</span>, GL_RGBA, GL_UNSIGNED_BYTE, data);</span><br><span class="line">		glGenerateMipmap(GL_TEXTURE_2D);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">"Failed to load texture"</span> &lt;&lt; std::endl;</span><br><span class="line">	&#125;</span><br><span class="line">	stbi_image_free(data);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)</span></span><br><span class="line">	<span class="comment">// -------------------------------------------------------------------------------------------</span></span><br><span class="line">	ourShader.use();</span><br><span class="line">	ourShader.setInt(<span class="string">"texture1"</span>, <span class="number">0</span>);</span><br><span class="line">	ourShader.setInt(<span class="string">"texture2"</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// pass projection matrix to shader (as projection matrix rarely changes there's no need to do this per frame)</span></span><br><span class="line">	<span class="comment">// -----------------------------------------------------------------------------------------------------------</span></span><br><span class="line">	glm::mat4 projection = glm::perspective(glm::radians(<span class="number">45.0f</span>), (<span class="built_in">float</span>)SCR_WIDTH / (<span class="built_in">float</span>)SCR_HEIGHT, <span class="number">0.1f</span>, <span class="number">100.0f</span>);</span><br><span class="line">	ourShader.setMat4(<span class="string">"projection"</span>, projection);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// render loop</span></span><br><span class="line">	<span class="comment">// -----------</span></span><br><span class="line">	<span class="keyword">while</span> (!glfwWindowShouldClose(window))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// input</span></span><br><span class="line">		<span class="comment">// -----</span></span><br><span class="line">		processInput(window);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// render</span></span><br><span class="line">		<span class="comment">// ------</span></span><br><span class="line">		glClearColor(<span class="number">0.2f</span>, <span class="number">0.3f</span>, <span class="number">0.3f</span>, <span class="number">1.0f</span>);</span><br><span class="line">		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); <span class="comment">// also clear the depth buffer now!</span></span><br><span class="line"></span><br><span class="line">		 <span class="comment">// bind textures on corresponding texture units</span></span><br><span class="line">		glActiveTexture(GL_TEXTURE0);</span><br><span class="line">		glBindTexture(GL_TEXTURE_2D, texture1);</span><br><span class="line">		glActiveTexture(GL_TEXTURE1);</span><br><span class="line">		glBindTexture(GL_TEXTURE_2D, texture2);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// activate shader</span></span><br><span class="line">		ourShader.use();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// camera/view transformation</span></span><br><span class="line">        glm::mat4 view = glm::mat4(<span class="number">1.0f</span>); <span class="comment">// make sure to initialize matrix to identity matrix first</span></span><br><span class="line">        <span class="built_in">float</span> radius = <span class="number">10.0f</span>;</span><br><span class="line">        <span class="built_in">float</span> camX   = sin(glfwGetTime()) * radius;</span><br><span class="line">        <span class="built_in">float</span> camZ   = cos(glfwGetTime()) * radius;</span><br><span class="line">        view = glm::lookAt(glm::vec3(camX, <span class="number">0.0f</span>, camZ), glm::vec3(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>), glm::vec3(<span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>));</span><br><span class="line">        ourShader.setMat4(<span class="string">"view"</span>, view);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// render boxes</span></span><br><span class="line">        glBindVertexArray(VAO);</span><br><span class="line">        <span class="keyword">for</span> (unsigned <span class="built_in">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// calculate the model matrix for each object and pass it to shader before drawing</span></span><br><span class="line">            glm::mat4 model = glm::mat4(<span class="number">1.0f</span>);</span><br><span class="line">            model = glm::translate(model, cubePositions[i]);</span><br><span class="line">            <span class="built_in">float</span> angle = <span class="number">20.0f</span> * i;</span><br><span class="line">            model = glm::rotate(model, glm::radians(angle), glm::vec3(<span class="number">1.0f</span>, <span class="number">0.3f</span>, <span class="number">0.5f</span>));</span><br><span class="line">            ourShader.setMat4(<span class="string">"model"</span>, model);</span><br><span class="line"></span><br><span class="line">            glDrawArrays(GL_TRIANGLES, <span class="number">0</span>, <span class="number">36</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)</span></span><br><span class="line">		<span class="comment">// -------------------------------------------------------------------------------</span></span><br><span class="line">		glfwSwapBuffers(window);</span><br><span class="line">		glfwPollEvents();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// optional: de-allocate all resources once they've outlived their purpose:</span></span><br><span class="line">	<span class="comment">// ------------------------------------------------------------------------</span></span><br><span class="line">	glDeleteVertexArrays(<span class="number">1</span>, &amp;VAO);</span><br><span class="line">	glDeleteBuffers(<span class="number">1</span>, &amp;VBO);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// glfw: terminate, clearing all previously allocated GLFW resources.</span></span><br><span class="line">	<span class="comment">// ------------------------------------------------------------------</span></span><br><span class="line">	glfwTerminate();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly</span></span><br><span class="line"><span class="comment">// ---------------------------------------------------------------------------------------------------------</span></span><br><span class="line"><span class="built_in">void</span> processInput(GLFWwindow *window)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)</span><br><span class="line">		glfwSetWindowShouldClose(window, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// glfw: whenever the window size changed (by OS or user resize) this callback function executes</span></span><br><span class="line"><span class="comment">// ---------------------------------------------------------------------------------------------</span></span><br><span class="line"><span class="built_in">void</span> framebuffer_size_callback(GLFWwindow* window, <span class="built_in">int</span> width, <span class="built_in">int</span> height)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// make sure the viewport matches the new window dimensions; note that width and </span></span><br><span class="line">	<span class="comment">// height will be significantly larger than specified on retina displays.</span></span><br><span class="line">	glViewport(<span class="number">0</span>, <span class="number">0</span>, width, height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/06/05/LinearAlgebra/77、LinearAlgebra 之完美的对称矩阵/" class="pre-post btn btn-default" title='77、LinearAlgebra 之完美的对称矩阵'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            77、LinearAlgebra 之完美的对称矩阵</span>
+    </a>
+    
+    
+    <a href="/2020/06/04/LinearAlgebra/76、LinearAlgebra 之矩阵对角化/" class="next-post btn btn-default" title='76、LinearAlgebra 之矩阵对角化'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            76、LinearAlgebra 之矩阵对角化</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL-之Look-At矩阵"><span class="toc-text">OpenGL 之Look At矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源码"><span class="toc-text">源码</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

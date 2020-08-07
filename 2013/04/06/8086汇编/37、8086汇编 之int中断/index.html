@@ -1,0 +1,459 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="8086汇编">
+
+
+<meta name="description" content="int中断
+一种软件中断，通过AH里的值来确定具体执行什么中断子程序，这个中断的编号是21
+int格式： int n，n为中断类型码。它的功能是引发中断过程。
+
+CPU 执行int n指令，相当...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    37、8086汇编 之int中断 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="37、8086汇编 之int中断">
+            
+            37、8086汇编 之int中断
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/8086汇编/">8086汇编</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/8086汇编/">8086汇编</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2013/04/06</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2680</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h3 id="int中断"><a href="#int中断" class="headerlink" title="int中断"></a><strong>int中断</strong></h3><ul>
+<li>一种软件中断，通过AH里的值来确定具体执行什么中断子程序，这个中断的编号是21</li>
+<li>int格式： int n，n为中断类型码。它的功能是引发中断过程。</li>
+</ul>
+<p>CPU 执行int n指令，相当于引发一个 n号中断的中断过程</p>
+<ol>
+<li>取中段类型码n；</li>
+<li>标志寄存器入栈；</li>
+<li>CS、IP 入栈</li>
+<li>(IP) = (n*4)</li>
+<li>(CS) = (n*4+2)。</li>
+</ol>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a><strong>使用方法</strong></h3><p>例如：需要键盘输入，并且回显。<br>AH的值需要查表取得，表在下面</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">指令：<span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">01</span></span><br><span class="line">     <span class="keyword">INT</span> <span class="number">21H</span></span><br></pre></td></tr></table></figure>
+
+<p>通过这样两条指令，输入的字符就会被存储在AL中。</p>
+<p>表：DOS系统功能调INT 21H<br>AH | 功能 | 调用参数 | 返回参数<br>–|–|–|–<br>00 | 程序终止(同INT 20H) | CS=程序段前缀 |<br>01 | 键盘输入并回显 |  | AL=输入字符<br>02 | 显示输出 | DL=输出字符 |<br>03 | 异步通迅输入 |  | AL=输入数据<br>04 | 异步通迅输出 | DL=输出数据 |<br>05 | 打印机输出 | DL=输出字符 |<br>06 | 直接控制台I/O | DL=FF(输入) DL=字符(输出) | AL=输入字符<br>07 | 键盘输入(无回显) |  | AL=输入字符<br>08 | 键盘输入(无回显) 检测Ctrl-Break | | AL=输入字符<br>09 | 显示字符串 | DS:DX=串地址 ‘$’结束字符串 |<br>0A | 键盘输入到缓冲区 | DS:DX=缓冲区首地址 | (DS:DX)=缓冲区最大字符数 (DS:DX+1)=实际输入的字符数<br>0B | 检验键盘状态 |  | AL=00 有输入 AL=FF 无输入<br>0C | 清除输入缓冲区并 请求指定的输入功能 | AL=输入功能号 (1,6,7,8,A) |<br>0D | 磁盘复位 |  | 清除文件缓冲区<br>0E | 指定当前缺省的磁盘驱动器 | DL=驱动器号 0=A,1=B,… | AL=驱动器数<br>0F | 打开文件 | DS:DX=FCB首地址 | AL=00 文件找到 AL=FF 文件未找到<br>10 | 关闭文件 | DS:DX=FCB首地址 | AL=00 目录修改成功 AL=FF 目录中未找到文件<br>11 | 查找第一个目录项 | DS:DX=FCB首地址 | AL=00 找到 AL=FF 未找到<br>12 | 查找下一个目录项 | DS:DX=FCB首地址(文件中带有<em>或?) | AL=00 找到 AL=FF 未找到<br>13 | 删除文件 | DS:DX=FCB首地址 | AL=00 删除成功 AL=FF 未找到<br>14 | 顺序读 | DS:DX=FCB首地址 | AL=00 读成功 =01 文件结束,记录中无数据 =02 DTA空间不够 =03 文件结束,记录不完整<br>15 | 顺序写 | DS:DX=FCB首地址 | AL=00 写成功 =01 盘满 =02 DTA空间不够<br>16 | 建文件 | DS:DX=FCB首地址 | AL=00 建立成功 =FF 无磁盘空间<br>17 | 文件改名 | DS:DX=FCB首地址 (DS:DX+1)=旧文件名 (DS:DX+17)=新文件名 | AL=00 成功 AL=FF 未成功<br>19 | 取当前缺省磁盘驱动器 |  | AL=缺省的驱动器号 0=A,1=B,2=C,…<br>1A | 置DTA地址 | DS:DX=DTA地址 |<br>1B | 取缺省驱动器FAT信息 |  | AL=每簇的扇区数 DS:BX=FAT标识字节  CX=物理扇区大小 DX=缺省驱动器的簇数<br>1C | 取任一驱动器FAT信息 | DL=驱动器号 | 同上<br>21 | 随机读 | DS:DX=FCB首地址 | AL=00 读成功 =01 文件结束 =02 缓冲区溢出 =03 缓冲区不满　<br>22 | 随机写 | DS:DX=FCB首地址 | AL=00 写成功 =01 盘满 =02 缓冲区溢出<br>23 | 测定文件大小 | DS:DX=FCB首地址 | AL=00 成功(文件长度填入FCB) AL=FF 未找到<br>24 | 设置随机记录号 | DS:DX=FCB首地址 |<br>25 | 设置中断向量 | DS:DX=中断向量 AL=中断类型号 |<br>26 | 建立程序段前缀 | DX=新的程序段前缀 |<br>27 | 随机分块读 | DS:DX=FCB首地址 CX=记录数 | AL=00 读成功 =01 文件结束 =02 缓冲区太小,传输结束 =03 缓冲区不满<br>28 | 随机分块写 | DS:DX=FCB首地址 | CX=记录数 | AL=00 写成功 =01 盘满 =02 缓冲区溢出<br>29 | 分析文件名 | ES:DI=FCB首地址 DS:SI=ASCIIZ串 AL=控制分析标志 | AL=00 标准文件 =01 多义文件 =02 非法盘符<br>2A | 取日期 |  | CX=年 DH:DL=月:日(二进制)<br>2B | 设置日期 | CX:DH:DL=年:月:日 | AL=00 成功 =FF 无效<br>2C | 取时间 |  | CH:CL=时:分 DH:DL=秒:1/100秒<br>2D | 设置时间 | CH:CL=时:分 DH:DL=秒:1/100秒 | AL=00 成功 =FF 无效<br>2E | 置磁盘自动读写标志 | AL=00 关闭标志 AL=01 打开标志 |<br>2F | 取磁盘缓冲区的首址 |  | ES:BX=缓冲区首址<br>30 | 取DOS版本号 |  | AH=发行号,AL=版本<br>31 | 结束并驻留 | AL=返回码 DX=驻留区大小 |<br>33 | Ctrl-Break检测 | AL=00 取状态 =01 置状态(DL) DL=00 关闭检测 =01 打开检测  | DL=00 关闭Ctrl-Break检测 =01 打开Ctrl-Break检测<br>35 | 取中断向量 | AL=中断类型 | ES:BX=中断向量<br>36 | 取空闲磁盘空间 | DL=驱动器号  0=缺省,1=A,2=B,… | 成功:AX=每簇扇区数 BX=有效簇数 CX=每扇区字节数 DX=总簇数 失败:AX=FFFF<br>38 | 置/取国家信息 | DS:DX=信息区首地址 | BX=国家码(国际电话前缀码) AX=错误码<br>39 | 建立子目录(MKDIR) | DS:DX=ASCIIZ串地址 | AX=错误码<br>3A | 删除子目录（RMDIR） | DS:DX=ASCIIZ串地址 | AX=错误码<br>3B | 改变当前目录(CHDIR) | DS:DX=ASCIIZ串地址 | AX=错误码<br>3C | 建立文件 | DS:DX=ASCIIZ串地址 CX=文件属性 | 成功:AX=文件代号 错误:AX=错误码<br>3D | 打开文件 | DS:DX=ASCIIZ串地址 AL=0 读 =1 写 =3 读/写 | 成功:AX=文件代号 错误:AX=错误码<br>3E | 关闭文件 | BX=文件代号 | 失败:AX=错误码<br>3F | 读文件或设备 | DS:DX=数据缓冲区地址 BX=文件代号 CX=读取的字节数 | 读成功: AX=实际读入的字节数 AX=0 已到文件尾 读出错:AX=错误码<br>40 | 写文件或设备 | DS:DX=数据缓冲区地址 BX=文件代号 CX=写入的字节数 | 写成功: AX=实际写入的字节数 写出错:AX=错误码<br>41 | 删除文件 | DS:DX=ASCIIZ串地址 | 成功:AX=00 出错:AX=错误码(2,5)<br>42 | 移动文件指针 | BX=文件代号 CX:DX=位移量 AL=移动方式(0:从文件头绝对位移,1:从当前位置相对移动,2:从文件尾绝对位移) | 成功:DX:AX=新文件指针位置 出错:AX=错误码<br>43 | 置/取文件属性 | DS:DX=ASCIIZ串地址 AL=0 取文件属性 AL=1 置文件属性 CX=文件属性 | 成功:CX=文件属性 失败:CX=错误码<br>44 | 设备文件I/O控制 | BX=文件代号 AL=0 取状态 =1 置状态DX =2 读数据 =3 写数据 =6 取输入状态 =7 取输出状态 | DX=设备信息<br>45 | 复制文件代号 | BX=文件代号1 | 成功:AX=文件代号2 失败:AX=错误码<br>46 | 人工复制文件代号 | BX=文件代号1 CX=文件代号2 | 失败:AX=错误码<br>47 | 取当前目录路径名 | DL=驱动器号 DS:SI=ASCIIZ串地址 | (DS:SI)=ASCIIZ串 失败:AX=出错码<br>48 | 分配内存空间 | BX=申请内存容量 | 成功:AX=分配内存首地 失败:BX=最大可用内存<br>49 | 释放内容空间 | ES=内存起始段地址 | 失败:AX=错误码<br>4A | 调整已分配的存储块 | ES=原内存起始地址 BX=再申请的容量 | 失败:BX=最大可用空间 AX=错误码<br>4B | 装配/执行程序 | DS:DX=ASCIIZ串地址 ES:BX=参数区首地址 AL=0 装入执行 AL=3 装入不执行 | 失败:AX=错误码<br>4C | 带返回码结束 | AL=返回码 |<br>4D | 取返回代码 |  | AX=返回代码<br>4E | 查找第一个匹配文件 | DS:DX=ASCIIZ串地址 CX=属性 | AX=出错代码(02,18)<br>4F | 查找下一个匹配文件 | DS:DX=ASCIIZ串地址(文件名中带有?或</em>) | AX=出错代码(18)<br>54 | 取盘自动读写标志 |  | AL=当前标志值<br>56 | 文件改名 | DS:DX=ASCIIZ串(旧) ES:DI=ASCIIZ串(新) | AX=出错码(03,05,17)<br>57 | 置/取文件日期和时间 | BX=文件代号 AL=0 读取 AL=1 设置(DX:CX) | DX:CX=日期和时间 失败:AX=错误码<br>58 | 取/置分配策略码 | AL=0 取码 AL=1 置码(BX) | 成功:AX=策略码 失败:AX=错误码<br>59 | 取扩充错误码 |  | AX=扩充错误码 BH=错误类型 BL=建议的操作 CH=错误场所<br>5A | 建立临时文件 | CX=文件属性 DS:DX=ASCIIZ串地址 | 成功:AX=文件代号 失败:AX=错误码<br>5B | 建立新文件 | CX=文件属性 DS:DX=ASCIIZ串地址 | 成功:AX=文件代号 失败:AX=错误码<br>5C | 控制文件存取 | AL=00封锁 =01开启 BX=文件代号 CX:DX=文件位移 SI:DI=文件长度 | 失败:AX=错误码<br>62 | 取程序段前缀 |  | BX=PSP地址</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2013/04/07/8086汇编/38、8086汇编 之外中断/" class="pre-post btn btn-default" title='38、8086汇编 之外中断'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            38、8086汇编 之外中断</span>
+    </a>
+    
+    
+    <a href="/2013/04/05/8086汇编/36、8086汇编 之内中断/" class="next-post btn btn-default" title='36、8086汇编 之内中断'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            36、8086汇编 之内中断</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#int中断"><span class="toc-text">int中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用方法"><span class="toc-text">使用方法</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

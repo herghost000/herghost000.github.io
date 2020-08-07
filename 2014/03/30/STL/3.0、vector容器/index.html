@@ -1,0 +1,471 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="STL">
+
+
+<meta name="description" content="vector容器特性vector 是顺序容器的一种。vector 是可变长的动态数组，支持随机访问迭代器，所有 STL 算法都能对 vector 进行操作。要使用 vector，需要包含头文件 ...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    3.0、vector容器 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="3.0、vector容器">
+            
+            3.0、vector容器
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/STL/">STL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/STL/">STL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2014/03/30</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2322</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h4 id="vector容器特性"><a href="#vector容器特性" class="headerlink" title="vector容器特性"></a>vector容器特性</h4><p>vector 是顺序容器的一种。vector 是可变长的动态数组，支持随机访问迭代器，所有 STL 算法都能对 vector 进行操作。要使用 vector，需要包含头文件 vector。</p>
+<p>在 vector 容器中，根据下标随机访问某个元素的时间是常数，在尾部添加一个元素的时间大多数情况下也是常数，总体来说速度很快。</p>
+<p>在中间插入或删除元素时，因为要移动多个元素，因此速度较慢，平均花费的时间和容器中的元素个数成正比。</p>
+<p>在 vector 容器中，用一个动态分配的数组来存放元素，因此根据下标访问某个元素的时间是固定的，与元素个数无关。</p>
+<p>vector 容器在实现时，动态分配的存储空间一般都大于存放元素所需的空间。例如，哪怕容器中只有一个元素，也会分配 32 个元素的存储空间。这样做的好处是，在尾部添加一个新元素时不必重新分配空间，直接将新元素写入适当位置即可。在这种情况下，添加新元素的时间也是常数。</p>
+<p>但是，如果不断添加新元素，多出来的空间就会用完，此时再添加新元素，就不得不重新分配内存空间，把原有内容复制过去后再添加新的元素。碰到这种情况，添加新元素所花的时间就不是常数，而是和数组中的元素个数成正比。</p>
+<p>至于在中间插入或删除元素，必然涉及元素的移动，因此时间不是固定的，而是和元素个数有关。</p>
+<h4 id="vector中常用的成员函数"><a href="#vector中常用的成员函数" class="headerlink" title="vector中常用的成员函数"></a><strong>vector中常用的成员函数</strong></h4><p>成员函数 | 作 用</p>
+<p>vector() | 无参构造函数，将容器初始化为空<br>vector(int n) | 将容器初始化为有 n 个元素<br>vector(int n, const T &amp; val) | 假定元素的类型是 T，此构造函数将容器初始化为有 n 个元素，每 个元素的值都是 val<br>vector(iterator first, iterator last) | first 和 last 可以是其他容器的迭代器。一般来说，本构造函数初始化的结果就是将 vector 容器的内容变成与其他容器上的区间 [first, last) —致<br>void clear() | 删除所有元素<br>bool empty() | 判断容器是否为空<br>void pop_back() | 删除容器末尾的元素<br>void push_back( const T &amp; val) | 将 val 添加到容器末尾<br>int size() | 返回容器中元素的个数<br>T &amp; front() | 返回容器中第一个元素的引用<br>T &amp; back() | 返回容器中最后一个元素的引用<br>iterator insert(iterator i, const T &amp; val) | 将 val 插入迭代器 i 指向的位置，返回 i<br>iterator insert( iterator i, iterator first, iterator last) | 将其他容器上的区间 [first, last) 中的元素插入迭代器 i 指向的位置<br>iterator erase(iterator i) | 删除迭代器 i 指向的元素，返回值是被删元素后面的元素的迭代器<br>iterator erase(iterator first, iterator last) | 删除容器中的区间 [first, last)<br>void swap( vector <t> &amp; v) | 将容器自身的内容和另一个同类型的容器 v 互换</t></p>
+<h4 id="vector的操作"><a href="#vector的操作" class="headerlink" title="vector的操作"></a><strong>vector的操作</strong></h4><ol>
+<li><p>构造方法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;T&gt; v; <span class="comment">// 空容器</span></span><br><span class="line"><span class="built_in">vector</span>&lt;T&gt; vv(v.begin(), v.end()); <span class="comment">// 将v.begin(), v.end()之间的元素拷贝到本身</span></span><br><span class="line"><span class="built_in">vector</span>&lt;T&gt; vv(n, el) <span class="comment">// 将n个el元素拷贝到本身</span></span><br><span class="line"><span class="built_in">vector</span>&lt;T&gt; vv(<span class="keyword">const</span> <span class="built_in">vector</span> &amp;vec)</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> arr[] = &#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">9</span>&#125;</span><br><span class="line"><span class="built_in">vector</span>&lt;T&gt; vv(arr, <span class="keyword">sizeof</span>(arr) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>常用赋值操作</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">vv</span><span class="selector-class">.assign</span>(v.begin(), v.end()) <span class="comment">// 将v.begin(), v.end()之间的元素拷贝到本身</span></span><br><span class="line"><span class="selector-tag">vv</span><span class="selector-class">.assign</span>(n, el) <span class="comment">// 将n个el元素拷贝到本身</span></span><br><span class="line"><span class="selector-tag">vv</span><span class="selector-class">.swap</span>(v) <span class="comment">// v与vv元素互换</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>大小操作</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">size</span><span class="params">()</span></span> <span class="comment">// 元素个数</span></span><br><span class="line"><span class="function"><span class="title">capacity</span><span class="params">()</span></span> <span class="comment">// 容器容量</span></span><br><span class="line"><span class="function"><span class="title">resize</span><span class="params">(len)</span></span> <span class="comment">// 重新指定容器长度为len，容器变长填充默认值，变短删除多余元素</span></span><br><span class="line"><span class="function"><span class="title">resize</span><span class="params">(len, el)</span></span> <span class="comment">// 指定el元素填充</span></span><br><span class="line"><span class="function"><span class="title">reserve</span><span class="params">(len)</span></span> <span class="comment">// 容器预留元素长度为len，预留位置不初始化,元素不可访问</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>vector的遍历</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void print<span class="constructor">Vector(<span class="params">int</span> <span class="params">a</span>)</span> &#123;</span><br><span class="line">	cout &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line">for<span class="constructor">_each(<span class="params">v</span>.<span class="params">begin</span>()</span>, v.<span class="keyword">end</span><span class="literal">()</span>, printVector);</span><br><span class="line"></span><br><span class="line">for (vector&lt;<span class="built_in">int</span>&gt;::iterator vv = v.<span class="keyword">begin</span><span class="literal">()</span>; i &lt; v.<span class="keyword">end</span><span class="literal">()</span>; i++) &#123;</span><br><span class="line">    <span class="comment">//*i</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取元素操作</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">v</span><span class="selector-class">.at</span>(index)</span><br><span class="line"><span class="selector-tag">v</span><span class="selector-attr">[index]</span></span><br><span class="line"><span class="selector-tag">v</span><span class="selector-class">.front</span>() <span class="comment">// 首元素</span></span><br><span class="line"><span class="selector-tag">v</span><span class="selector-class">.back</span>() <span class="comment">// 最后一个元素</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插入元素操作</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void push_back(<span class="keyword">const</span> T&amp; x)</span><br><span class="line"><span class="comment">// 尾部增加一个元素X</span></span><br><span class="line"><span class="keyword">iterator</span> insert(<span class="keyword">iterator</span> it,<span class="keyword">const</span> T&amp; x)</span><br><span class="line"><span class="comment">// 迭代器指向元素前增加一个元素x</span></span><br><span class="line"><span class="keyword">iterator</span> insert(<span class="keyword">iterator</span> it,int n,<span class="keyword">const</span> T&amp; x)</span><br><span class="line"><span class="comment">// 迭代器指向元素前增加n个相同的元素x</span></span><br><span class="line"><span class="keyword">iterator</span> insert(<span class="keyword">iterator</span> it,const_iterator first,const_iterator last)</span><br><span class="line"><span class="comment">// 迭代器指向元素前插入另一个相同类型向量的[first,last)间的数据</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除元素操作</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">iterator</span> erase(<span class="keyword">iterator</span> it)</span><br><span class="line"><span class="comment">// 删除迭代器指向元素</span></span><br><span class="line"><span class="keyword">iterator</span> erase(<span class="keyword">iterator</span> first,<span class="keyword">iterator</span> last)</span><br><span class="line"><span class="comment">// 删除[first,last)中元素</span></span><br><span class="line">void pop_back()</span><br><span class="line"><span class="comment">// 删除最后一个元素</span></span><br><span class="line">void clear()</span><br><span class="line"><span class="comment">// 清空所有元素</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a><strong>基本用法</strong></h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;  //使用vector需要包含此头文件</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">PrintVector</span>(<span class="title">const</span> <span class="title">vector</span> &lt;T&gt; &amp; <span class="title">v</span>)</span></span><br><span class="line"><span class="class">&#123;</span>  <span class="comment">//用于输出vector容器的全部元素的函数模板</span></span><br><span class="line">    <span class="keyword">typename</span> <span class="built_in">vector</span> &lt;T&gt;::const_iterator i;</span><br><span class="line">    <span class="comment">//typename 用来说明 vector &lt;T&gt;::const_iterator 是一个类型，在 Visual Studio 中不写也可以</span></span><br><span class="line">    <span class="keyword">for</span> (i = v.begin(); i != v.end(); ++i)</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; *i &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">5</span>] = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">    <span class="built_in">vector</span> &lt;<span class="keyword">int</span>&gt; v(a, a + <span class="number">5</span>);  <span class="comment">//将数组a的内容放入v</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"1) "</span> &lt;&lt; v.end() - v.begin() &lt;&lt; <span class="built_in">endl</span>;  <span class="comment">//两个随机迭代器可以相减，输出：1)5</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"2)"</span>; PrintVector(v);  <span class="comment">//输出：2)1 2 3 4 5</span></span><br><span class="line">    v.insert(v.begin() + <span class="number">2</span>, <span class="number">13</span>);  <span class="comment">//在 begin()+2 位置插人 13</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"3)"</span>; PrintVector(v);  <span class="comment">//输出：3)1 2 13 3 4 5</span></span><br><span class="line">    v.erase(v.begin() + <span class="number">2</span>);  <span class="comment">//删除位于 begin()+2 位置的元素</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"4)"</span>; PrintVector(v);  <span class="comment">//输出：4)1 2 3 4 5</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v2(<span class="number">4</span>, <span class="number">100</span>);  <span class="comment">//v2 有 4 个元素，都是 100</span></span><br><span class="line">    v2.insert(v2.begin(), v.begin() + <span class="number">1</span>, v.begin() + <span class="number">3</span>);  <span class="comment">//将v的一段插入v2开头</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"5)v2:"</span>; PrintVector(v2);  <span class="comment">//输出：5)v2:2 3 100 100 100 100</span></span><br><span class="line">    v.erase(v.begin() + <span class="number">1</span>, v.begin() + <span class="number">3</span>);  <span class="comment">//删除 v 上的一个区间，即 [2,3)</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"6)"</span>; PrintVector(v);  <span class="comment">//输出：6)1 4 5</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2014/03/31/STL/4.0、deque容器/" class="pre-post btn btn-default" title='4.0、deque容器'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            4.0、deque容器</span>
+    </a>
+    
+    
+    <a href="/2014/03/29/STL/2.0、string容器/" class="next-post btn btn-default" title='2.0、string容器'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            2.0、string容器</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#vector容器特性"><span class="toc-text">vector容器特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vector中常用的成员函数"><span class="toc-text">vector中常用的成员函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vector的操作"><span class="toc-text">vector的操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#基本用法"><span class="toc-text">基本用法</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

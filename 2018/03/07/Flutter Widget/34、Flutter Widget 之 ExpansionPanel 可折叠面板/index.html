@@ -1,0 +1,444 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Flutter Widget">
+
+
+<meta name="description" content="简介
+扩展面板，包含一个标题和一个正文，可以展开或者折叠。面板展开，主体可见。
+
+示例123456789101112131415161718192021222324252627282930313...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    34、Flutter Widget 之 ExpansionPanel 可折叠面板 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="34、Flutter Widget 之 ExpansionPanel 可折叠面板">
+            
+            34、Flutter Widget 之 ExpansionPanel 可折叠面板
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Flutter-Widget/">Flutter Widget</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Flutter-Widget/">Flutter Widget</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2018/03/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                884</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><blockquote>
+<p>扩展面板，包含一个标题和一个正文，可以展开或者折叠。面板展开，主体可见。</p>
+</blockquote>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">import</span> <span class="string">'package:flutter/material.dart';</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">@visibleForTesting</span></span><br><span class="line"><span class="attr">enum</span> <span class="string">Location &#123;</span></span><br><span class="line">  <span class="attr">Barbados,</span></span><br><span class="line">  <span class="attr">Bahamas,</span></span><br><span class="line">  <span class="attr">Bermuda</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">typedef</span> <span class="string">DemoItemBodyBuilder&lt;T&gt; = Widget Function(DemoItem&lt;T&gt; item);</span></span><br><span class="line"><span class="attr">typedef</span> <span class="string">ValueToString&lt;T&gt; = String Function(T value);</span></span><br><span class="line"></span><br><span class="line"><span class="attr">class</span> <span class="string">DualHeaderWithHint extends StatelessWidget &#123;</span></span><br><span class="line">  <span class="attr">const</span> <span class="string">DualHeaderWithHint(&#123;</span></span><br><span class="line">    <span class="attr">this.name,</span></span><br><span class="line">    <span class="attr">this.value,</span></span><br><span class="line">    <span class="attr">this.hint,</span></span><br><span class="line">    <span class="attr">this.showHint</span></span><br><span class="line">  <span class="attr">&#125;);</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">final</span> <span class="string">String name;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">String value;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">String hint;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">bool showHint;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">Widget</span> <span class="string">_crossFade(Widget first, Widget second, bool isExpanded) &#123;</span></span><br><span class="line">    <span class="attr">return</span> <span class="string">AnimatedCrossFade(</span></span><br><span class="line">      <span class="attr">firstChild</span>: <span class="string">first,</span></span><br><span class="line">      <span class="attr">secondChild</span>: <span class="string">second,</span></span><br><span class="line">      <span class="attr">firstCurve</span>: <span class="string">const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),</span></span><br><span class="line">      <span class="attr">secondCurve</span>: <span class="string">const Interval(0.4, 1.0, curve: Curves.fastOutSlowIn),</span></span><br><span class="line">      <span class="attr">sizeCurve</span>: <span class="string">Curves.fastOutSlowIn,</span></span><br><span class="line">      <span class="attr">crossFadeState</span>: <span class="string">isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,</span></span><br><span class="line">      <span class="attr">duration</span>: <span class="string">const Duration(milliseconds: 200),</span></span><br><span class="line">    <span class="attr">);</span></span><br><span class="line">  <span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">@override</span></span><br><span class="line">  <span class="attr">Widget</span> <span class="string">build(BuildContext context) &#123;</span></span><br><span class="line">    <span class="attr">final</span> <span class="string">ThemeData theme = Theme.of(context);</span></span><br><span class="line">    <span class="attr">final</span> <span class="string">TextTheme textTheme = theme.textTheme;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">return</span> <span class="string">Row(</span></span><br><span class="line">      <span class="attr">children</span>: <span class="string">&lt;Widget&gt;[</span></span><br><span class="line">        <span class="attr">Expanded(</span></span><br><span class="line">          <span class="attr">flex</span>: <span class="string">2,</span></span><br><span class="line">          <span class="attr">child</span>: <span class="string">Container(</span></span><br><span class="line">            <span class="attr">margin</span>: <span class="string">const EdgeInsets.only(left: 24.0),</span></span><br><span class="line">            <span class="attr">child</span>: <span class="string">FittedBox(</span></span><br><span class="line">              <span class="attr">fit</span>: <span class="string">BoxFit.scaleDown,</span></span><br><span class="line">              <span class="attr">alignment</span>: <span class="string">Alignment.centerLeft,</span></span><br><span class="line">              <span class="attr">child</span>: <span class="string">Text(</span></span><br><span class="line">                <span class="attr">name,</span></span><br><span class="line">                <span class="attr">style</span>: <span class="string">textTheme.body1.copyWith(fontSize: 15.0),</span></span><br><span class="line">              <span class="attr">),</span></span><br><span class="line">            <span class="attr">),</span></span><br><span class="line">          <span class="attr">),</span></span><br><span class="line">        <span class="attr">),</span></span><br><span class="line">        <span class="attr">Expanded(</span></span><br><span class="line">          <span class="attr">flex</span>: <span class="string">3,</span></span><br><span class="line">          <span class="attr">child</span>: <span class="string">Container(</span></span><br><span class="line">            <span class="attr">margin</span>: <span class="string">const EdgeInsets.only(left: 24.0),</span></span><br><span class="line">            <span class="attr">child</span>: <span class="string">_crossFade(</span></span><br><span class="line">              <span class="meta">Text(value,</span> <span class="string">style: textTheme.caption.copyWith(fontSize: 15.0)),</span></span><br><span class="line">              <span class="meta">Text(hint,</span> <span class="string">style: textTheme.caption.copyWith(fontSize: 15.0)),</span></span><br><span class="line">              <span class="attr">showHint</span></span><br><span class="line">            <span class="attr">)</span></span><br><span class="line">          <span class="attr">)</span></span><br><span class="line">        <span class="attr">)</span></span><br><span class="line">      <span class="attr">]</span></span><br><span class="line">    <span class="attr">);</span></span><br><span class="line">  <span class="attr">&#125;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">class</span> <span class="string">CollapsibleBody extends StatelessWidget &#123;</span></span><br><span class="line">  <span class="attr">const</span> <span class="string">CollapsibleBody(&#123;</span></span><br><span class="line">    <span class="meta">this.margin</span> = <span class="string">EdgeInsets.zero,</span></span><br><span class="line">    <span class="attr">this.child,</span></span><br><span class="line">    <span class="attr">this.onSave,</span></span><br><span class="line">    <span class="attr">this.onCancel</span></span><br><span class="line">  <span class="attr">&#125;);</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">final</span> <span class="string">EdgeInsets margin;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">Widget child;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">VoidCallback onSave;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">VoidCallback onCancel;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">@override</span></span><br><span class="line">  <span class="attr">Widget</span> <span class="string">build(BuildContext context) &#123;</span></span><br><span class="line">    <span class="attr">final</span> <span class="string">ThemeData theme = Theme.of(context);</span></span><br><span class="line">    <span class="attr">final</span> <span class="string">TextTheme textTheme = theme.textTheme;</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">return</span> <span class="string">Column(</span></span><br><span class="line">      <span class="attr">children</span>: <span class="string">&lt;Widget&gt;[</span></span><br><span class="line">        <span class="attr">Container(</span></span><br><span class="line">          <span class="attr">margin</span>: <span class="string">const EdgeInsets.only(</span></span><br><span class="line">            <span class="attr">left</span>: <span class="string">24.0,</span></span><br><span class="line">            <span class="attr">right</span>: <span class="string">24.0,</span></span><br><span class="line">            <span class="attr">bottom</span>: <span class="string">24.0</span></span><br><span class="line">          <span class="meta">)</span> <span class="string">- margin,</span></span><br><span class="line">          <span class="attr">child</span>: <span class="string">Center(</span></span><br><span class="line">            <span class="attr">child</span>: <span class="string">DefaultTextStyle(</span></span><br><span class="line">              <span class="attr">style</span>: <span class="string">textTheme.caption.copyWith(fontSize: 15.0),</span></span><br><span class="line">              <span class="attr">child</span>: <span class="string">child</span></span><br><span class="line">            <span class="attr">)</span></span><br><span class="line">          <span class="attr">)</span></span><br><span class="line">        <span class="attr">),</span></span><br><span class="line">        <span class="attr">const</span> <span class="string">Divider(height: 1.0),</span></span><br><span class="line">        <span class="attr">Container(</span></span><br><span class="line">          <span class="attr">padding</span>: <span class="string">const EdgeInsets.symmetric(vertical: 16.0),</span></span><br><span class="line">          <span class="attr">child</span>: <span class="string">Row(</span></span><br><span class="line">            <span class="attr">mainAxisAlignment</span>: <span class="string">MainAxisAlignment.end,</span></span><br><span class="line">            <span class="attr">children</span>: <span class="string">&lt;Widget&gt;[</span></span><br><span class="line">              <span class="attr">Container(</span></span><br><span class="line">                <span class="attr">margin</span>: <span class="string">const EdgeInsets.only(right: 8.0),</span></span><br><span class="line">                <span class="attr">child</span>: <span class="string">FlatButton(</span></span><br><span class="line">                  <span class="attr">onPressed</span>: <span class="string">onCancel,</span></span><br><span class="line">                  <span class="attr">child</span>: <span class="string">const Text('CANCEL', style: TextStyle(</span></span><br><span class="line">                    <span class="attr">color</span>: <span class="string">Colors.black54,</span></span><br><span class="line">                    <span class="attr">fontSize</span>: <span class="string">15.0,</span></span><br><span class="line">                    <span class="attr">fontWeight</span>: <span class="string">FontWeight.w500</span></span><br><span class="line">                  <span class="attr">))</span></span><br><span class="line">                <span class="attr">)</span></span><br><span class="line">              <span class="attr">),</span></span><br><span class="line">              <span class="attr">Container(</span></span><br><span class="line">                <span class="attr">margin</span>: <span class="string">const EdgeInsets.only(right: 8.0),</span></span><br><span class="line">                <span class="attr">child</span>: <span class="string">FlatButton(</span></span><br><span class="line">                  <span class="attr">onPressed</span>: <span class="string">onSave,</span></span><br><span class="line">                  <span class="attr">textTheme</span>: <span class="string">ButtonTextTheme.accent,</span></span><br><span class="line">                  <span class="attr">child</span>: <span class="string">const Text('SAVE')</span></span><br><span class="line">                <span class="attr">)</span></span><br><span class="line">              <span class="attr">)</span></span><br><span class="line">            <span class="attr">]</span></span><br><span class="line">          <span class="attr">)</span></span><br><span class="line">        <span class="attr">)</span></span><br><span class="line">      <span class="attr">]</span></span><br><span class="line">    <span class="attr">);</span></span><br><span class="line">  <span class="attr">&#125;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">class</span> <span class="string">DemoItem&lt;T&gt; &#123;</span></span><br><span class="line">  <span class="attr">DemoItem(&#123;</span></span><br><span class="line">    <span class="attr">this.name,</span></span><br><span class="line">    <span class="attr">this.value,</span></span><br><span class="line">    <span class="attr">this.hint,</span></span><br><span class="line">    <span class="attr">this.builder,</span></span><br><span class="line">    <span class="attr">this.valueToString</span></span><br><span class="line">  <span class="meta">&#125;)</span> : <span class="string">textController = TextEditingController(text: valueToString(value));</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">final</span> <span class="string">String name;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">String hint;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">TextEditingController textController;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">DemoItemBodyBuilder&lt;T&gt; builder;</span></span><br><span class="line">  <span class="attr">final</span> <span class="string">ValueToString&lt;T&gt; valueToString;</span></span><br><span class="line">  <span class="attr">T</span> <span class="string">value;</span></span><br><span class="line">  <span class="attr">bool</span> <span class="string">isExpanded = false;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">ExpansionPanelHeaderBuilder</span> <span class="string">get headerBuilder &#123;</span></span><br><span class="line">    <span class="attr">return</span> <span class="string">(BuildContext context, bool isExpanded) &#123;</span></span><br><span class="line">      <span class="attr">return</span> <span class="string">DualHeaderWithHint(</span></span><br><span class="line">        <span class="attr">name</span>: <span class="string">name,</span></span><br><span class="line">        <span class="attr">value</span>: <span class="string">valueToString(value),</span></span><br><span class="line">        <span class="attr">hint</span>: <span class="string">hint,</span></span><br><span class="line">        <span class="attr">showHint</span>: <span class="string">isExpanded</span></span><br><span class="line">      <span class="attr">);</span></span><br><span class="line">    <span class="attr">&#125;;</span></span><br><span class="line">  <span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">Widget</span> <span class="string">build() =&gt; builder(this);</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">class</span> <span class="string">ExpansionPanelsDemo extends StatefulWidget &#123;</span></span><br><span class="line">  <span class="attr">static</span> <span class="string">const String routeName = '/material/expansion_panels';</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">@override</span></span><br><span class="line">  <span class="attr">_ExpansionPanelsDemoState</span> <span class="string">createState() =&gt; _ExpansionPanelsDemoState();</span></span><br><span class="line"><span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">class</span> <span class="string">_ExpansionPanelsDemoState extends State&lt;ExpansionPanelsDemo&gt; &#123;</span></span><br><span class="line">  <span class="meta">List&lt;DemoItem&lt;dynamic&gt;&gt;</span> <span class="string">_demoItems;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">@override</span></span><br><span class="line">  <span class="attr">void</span> <span class="string">initState() &#123;</span></span><br><span class="line">    <span class="attr">super.initState();</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">_demoItems</span> = <span class="string">&lt;DemoItem&lt;dynamic&gt;&gt;[</span></span><br><span class="line"></span><br><span class="line">      <span class="attr">DemoItem&lt;Location&gt;(</span></span><br><span class="line">        <span class="attr">name</span>: <span class="string">'Location',</span></span><br><span class="line">        <span class="attr">value</span>: <span class="string">Location.Bahamas,</span></span><br><span class="line">        <span class="attr">hint</span>: <span class="string">'Select location',</span></span><br><span class="line">        <span class="attr">valueToString</span>: <span class="string">(Location location) =&gt; location.toString().split('.')[1],</span></span><br><span class="line">        <span class="attr">builder</span>: <span class="string">(DemoItem&lt;Location&gt; item) &#123;</span></span><br><span class="line">          <span class="attr">void</span> <span class="string">close() &#123;</span></span><br><span class="line">            <span class="meta">setState(()</span> <span class="string">&#123;</span></span><br><span class="line">              <span class="meta">item.isExpanded</span> = <span class="string">false;</span></span><br><span class="line">            <span class="attr">&#125;);</span></span><br><span class="line">          <span class="attr">&#125;</span></span><br><span class="line">          <span class="attr">return</span> <span class="string">Form(</span></span><br><span class="line">            <span class="attr">child</span>: <span class="string">Builder(</span></span><br><span class="line">              <span class="attr">builder</span>: <span class="string">(BuildContext context) &#123;</span></span><br><span class="line">                <span class="attr">return</span> <span class="string">CollapsibleBody(</span></span><br><span class="line">                  <span class="attr">onSave</span>: <span class="string">() &#123; Form.of(context).save(); close(); &#125;,</span></span><br><span class="line">                  <span class="attr">onCancel</span>: <span class="string">() &#123; Form.of(context).reset(); close(); &#125;,</span></span><br><span class="line">                  <span class="attr">child</span>: <span class="string">FormField&lt;Location&gt;(</span></span><br><span class="line">                    <span class="attr">initialValue</span>: <span class="string">item.value,</span></span><br><span class="line">                    <span class="attr">onSaved</span>: <span class="string">(Location result) &#123; item.value = result; &#125;,</span></span><br><span class="line">                    <span class="attr">builder</span>: <span class="string">(FormFieldState&lt;Location&gt; field) &#123;</span></span><br><span class="line">                      <span class="attr">return</span> <span class="string">Column(</span></span><br><span class="line">                        <span class="attr">mainAxisSize</span>: <span class="string">MainAxisSize.min,</span></span><br><span class="line">                        <span class="attr">crossAxisAlignment</span>: <span class="string">CrossAxisAlignment.start,</span></span><br><span class="line">                        <span class="attr">children</span>: <span class="string">&lt;Widget&gt;[</span></span><br><span class="line">                          <span class="attr">RadioListTile&lt;Location&gt;(</span></span><br><span class="line">                            <span class="attr">value</span>: <span class="string">Location.Bahamas,</span></span><br><span class="line">                            <span class="attr">title</span>: <span class="string">const Text('Bahamas'),</span></span><br><span class="line">                            <span class="attr">groupValue</span>: <span class="string">field.value,</span></span><br><span class="line">                            <span class="attr">onChanged</span>: <span class="string">field.didChange,</span></span><br><span class="line">                          <span class="attr">),</span></span><br><span class="line">                          <span class="attr">RadioListTile&lt;Location&gt;(</span></span><br><span class="line">                            <span class="attr">value</span>: <span class="string">Location.Barbados,</span></span><br><span class="line">                            <span class="attr">title</span>: <span class="string">const Text('Barbados'),</span></span><br><span class="line">                            <span class="attr">groupValue</span>: <span class="string">field.value,</span></span><br><span class="line">                            <span class="attr">onChanged</span>: <span class="string">field.didChange,</span></span><br><span class="line">                          <span class="attr">),</span></span><br><span class="line">                          <span class="attr">RadioListTile&lt;Location&gt;(</span></span><br><span class="line">                            <span class="attr">value</span>: <span class="string">Location.Bermuda,</span></span><br><span class="line">                            <span class="attr">title</span>: <span class="string">const Text('Bermuda'),</span></span><br><span class="line">                            <span class="attr">groupValue</span>: <span class="string">field.value,</span></span><br><span class="line">                            <span class="attr">onChanged</span>: <span class="string">field.didChange,</span></span><br><span class="line">                          <span class="attr">),</span></span><br><span class="line">                        <span class="attr">]</span></span><br><span class="line">                      <span class="attr">);</span></span><br><span class="line">                    <span class="attr">&#125;</span></span><br><span class="line">                  <span class="attr">),</span></span><br><span class="line">                <span class="attr">);</span></span><br><span class="line">              <span class="attr">&#125;</span></span><br><span class="line">            <span class="attr">)</span></span><br><span class="line">          <span class="attr">);</span></span><br><span class="line">        <span class="attr">&#125;</span></span><br><span class="line">      <span class="attr">),</span></span><br><span class="line">    <span class="attr">];</span></span><br><span class="line">  <span class="attr">&#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">@override</span></span><br><span class="line">  <span class="attr">Widget</span> <span class="string">build(BuildContext context) &#123;</span></span><br><span class="line">    <span class="attr">return</span>  <span class="string">SingleChildScrollView(</span></span><br><span class="line">        <span class="attr">child</span>: <span class="string">SafeArea(</span></span><br><span class="line">          <span class="attr">top</span>: <span class="string">false,</span></span><br><span class="line">          <span class="attr">bottom</span>: <span class="string">false,</span></span><br><span class="line">          <span class="attr">child</span>: <span class="string">Container(</span></span><br><span class="line">            <span class="attr">margin</span>: <span class="string">const EdgeInsets.all(24.0),</span></span><br><span class="line">            <span class="attr">child</span>: <span class="string">ExpansionPanelList(</span></span><br><span class="line">              <span class="attr">expansionCallback</span>: <span class="string">(int index, bool isExpanded) &#123;</span></span><br><span class="line">                <span class="meta">setState(()</span> <span class="string">&#123;</span></span><br><span class="line">                  <span class="meta">_demoItems[index].isExpanded</span> = <span class="string">!isExpanded;</span></span><br><span class="line">                <span class="attr">&#125;);</span></span><br><span class="line">              <span class="attr">&#125;,</span></span><br><span class="line">              <span class="attr">children</span>: <span class="string">_demoItems.map&lt;ExpansionPanel&gt;((DemoItem&lt;dynamic&gt; item) &#123;</span></span><br><span class="line">                <span class="attr">return</span> <span class="string">ExpansionPanel(</span></span><br><span class="line">                  <span class="attr">isExpanded</span>: <span class="string">true,</span></span><br><span class="line">                  <span class="attr">headerBuilder</span>: <span class="string">item.headerBuilder,</span></span><br><span class="line">                  <span class="attr">body</span>: <span class="string">item.build()</span></span><br><span class="line">                <span class="attr">);</span></span><br><span class="line">              <span class="attr">&#125;).toList()</span></span><br><span class="line">            <span class="attr">),</span></span><br><span class="line">          <span class="attr">),</span></span><br><span class="line">        <span class="attr">),</span></span><br><span class="line">      <span class="attr">);</span></span><br><span class="line">  <span class="attr">&#125;</span></span><br><span class="line"><span class="attr">&#125;</span></span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2018/03/08/Flutter Widget/35、Flutter Widget 之 Chipe 小贴片/" class="pre-post btn btn-default" title='35、Flutter Widget 之 Chipe 小贴片'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            35、Flutter Widget 之 Chipe 小贴片</span>
+    </a>
+    
+    
+    <a href="/2018/03/06/Flutter Widget/33、Flutter Widget 之 showDatePicker、showTimePicker 日期时间选择器/" class="next-post btn btn-default" title='33、Flutter Widget 之 showDatePicker、showTimePicker 日期时间选择器'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            33、Flutter Widget 之 showDatePicker、showTimePicker 日期时间选择器</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

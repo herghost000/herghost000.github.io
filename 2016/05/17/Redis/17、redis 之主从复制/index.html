@@ -1,0 +1,634 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Redis">
+
+
+<meta name="description" content="redis 之主从复制简介
+主从复制即将master中的数据即时、有效的复制到slave中 
+Master可以拥有多个slave
+多个slave可以连接同一个Master外，还可以连接到其他的s...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    17、redis 之主从复制 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="17、redis 之主从复制">
+            
+            17、redis 之主从复制
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Redis/">Redis</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Redis/">Redis</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/05/17</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1543</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="redis-之主从复制"><a href="#redis-之主从复制" class="headerlink" title="redis 之主从复制"></a><strong>redis 之主从复制</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><ul>
+<li>主从复制即将master中的数据即时、有效的复制到slave中 </li>
+<li>Master可以拥有多个slave</li>
+<li>多个slave可以连接同一个Master外，还可以连接到其他的slave</li>
+<li>主从复制不会阻塞Master，在主从复制时，Master可以处理client请求。</li>
+<li>提供系统的伸缩性。</li>
+</ul>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">slave1--&gt;<span class="literal">Master</span></span><br><span class="line">slave2--&gt;<span class="literal">Master</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="单机redis的风险与问题"><a href="#单机redis的风险与问题" class="headerlink" title="单机redis的风险与问题"></a><strong>单机redis的风险与问题</strong></h3><ul>
+<li>问题1.机器故障 <ul>
+<li>现象：硬盘故障、系统崩溃 </li>
+<li>本质：数据丢失，很可能对业务造成灾难性打击 </li>
+<li>结论：基本上会放弃使用redis</li>
+</ul>
+</li>
+<li>问题2.容量瓶颈 <ul>
+<li>现象：内存不足，从16G升级到64G，从64G升级到128G，无限升级内存 </li>
+<li>本质：穷，硬件条件跟不上 </li>
+<li>结论：放弃使用redis </li>
+</ul>
+</li>
+<li>结论<ul>
+<li>为了避免单点Redis服务器故障，准备多台服务器，互相连通。将数据复制多个副本保存在不同的服 务器上，连接在一起，并保证数据是同步的。即使有其中一台服务器宕机，其他服务器依然可以继续 提供服务，实现Redis的高可用，同时实现数据冗余备份。 </li>
+</ul>
+</li>
+</ul>
+<h3 id="主从复制的作用"><a href="#主从复制的作用" class="headerlink" title="主从复制的作用"></a><strong>主从复制的作用</strong></h3><ul>
+<li>读写分离：master写、slave读，提高服务器的读写负载能力 </li>
+<li>负载均衡：基于主从结构，配合读写分离，由slave分担master负载，并根据需求的变化，改变slave的数量，通过多个从节点分担数据读取负载，大大提高Redis服务器并发量与数据吞吐量</li>
+<li>故障恢复：当master出现问题时，由slave提供服务，实现快速的故障恢复 </li>
+<li>数据冗余：实现数据热备份，是持久化之外的一种数据冗余方式 </li>
+<li>高可用基石：基于主从复制，构建哨兵模式与集群，实现Redis的高可用方案 </li>
+</ul>
+<h3 id="阶段一：主从连接（slave连接master）"><a href="#阶段一：主从连接（slave连接master）" class="headerlink" title="阶段一：主从连接（slave连接master）"></a><strong>阶段一：主从连接（slave连接master）</strong></h3><ol>
+<li>slave发送指令：slaveof  ip  port </li>
+<li>master接收到指令，响应对方 </li>
+<li>slave保存master的IP与端口</li>
+<li>slave根据保存的信息创建连接master的socket </li>
+<li>slave周期性发送命令：ping </li>
+<li>master响应pong </li>
+<li>slave发送指令：auth  password </li>
+<li>master验证授权 </li>
+<li>slave发送指令：replconf listening-port <port-number> </port-number></li>
+<li>master保存slave的端口号</li>
+</ol>
+<ul>
+<li><p>方式一：客户端发送命令 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof <span class="tag">&lt;<span class="name">masterip</span>&gt;</span> <span class="tag">&lt;<span class="name">masterport</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：启动服务器参数 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server -slaveof <span class="tag">&lt;<span class="name">masterip</span>&gt;</span> <span class="tag">&lt;<span class="name">masterport</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式三：服务器配置 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof <span class="tag">&lt;<span class="name">masterip</span>&gt;</span> <span class="tag">&lt;<span class="name">masterport</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主从断开连接 </p>
+</li>
+<li><p>客户端发送命令 </p>
+</li>
+<li><p>slave断开连接后，不会删除已有数据，只是不再接受master发送的数据 </p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">slaveof</span> <span class="literal">no</span> one</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>master客户端发送命令设置密码 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass <span class="tag">&lt;<span class="name">password</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>master配置文件设置密码 </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">config <span class="builtin-name">set</span> requirepass &lt;password&gt; </span><br><span class="line">config <span class="builtin-name">get</span> requirepass</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>slave客户端发送命令设置密码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth <span class="tag">&lt;<span class="name">password</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>slave配置文件设置密码 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">masterauth <span class="tag">&lt;<span class="name">password</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>slave启动服务器设置密码 </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-<span class="keyword">server</span> –a &lt;<span class="keyword">password</span>&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="阶段二：数据同步阶段"><a href="#阶段二：数据同步阶段" class="headerlink" title="阶段二：数据同步阶段"></a><strong>阶段二：数据同步阶段</strong></h3><h4 id="数据同步阶段master说明"><a href="#数据同步阶段master说明" class="headerlink" title="数据同步阶段master说明"></a><strong>数据同步阶段master说明</strong></h4><ol>
+<li><p>如果master数据量巨大，数据同步阶段应避开流量高峰期，避免造成master阻塞，影响业务正常执行 </p>
+</li>
+<li><p>复制缓冲区大小设定不合理，会导致数据溢出。如进行全量复制周期太长，进行部分复制时发现数据已经存在丢失的情况，必须进行第二次全量复制，致使slave陷入死循环状态</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">repl-backlog-size <span class="number">1</span>mb</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>master单机内存占用主机内存的比例不应过大，建议使用50%-70%的内存，留下30%-50%的内存用于执行bgsave命令和创建复制缓冲区 </p>
+</li>
+</ol>
+<h4 id="数据同步阶段slave说明"><a href="#数据同步阶段slave说明" class="headerlink" title="数据同步阶段slave说明"></a><strong>数据同步阶段slave说明</strong></h4><ol>
+<li><p>为避免slave进行全量复制、部分复制时服务器响应阻塞或数据不同步，建议关闭此期间的对外服务 </p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slave-serve-stale-data <span class="literal">yes</span>|<span class="literal">no</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据同步阶段，master发送给slave信息可以理解master是slave的一个客户端，主动向slave发送 命令 </p>
+</li>
+<li><p>多个slave同时对master请求数据同步，master发送的RDB文件增多，会对带宽造成巨大冲击，如果master带宽不足，因此数据同步需要根据业务需求，适量错峰 </p>
+</li>
+<li><p>slave过多时，建议调整拓扑结构，由一主多从结构变为树状结构，中间的节点既是master，也是slave。注意使用树状结构时，由于层级深度，导致深度越高的slave与最顶层master间数据同步延迟 较大，数据一致性变差，应谨慎选择 </p>
+<h3 id="阶段三：命令传播阶段"><a href="#阶段三：命令传播阶段" class="headerlink" title="阶段三：命令传播阶段"></a><strong>阶段三：命令传播阶段</strong></h3></li>
+</ol>
+<ul>
+<li>当master数据库状态被修改后，导致主从服务器数据库状态不一致，此时需要让主从数据同步到一致的 状态，同步的动作称为命令传播 </li>
+<li>master将接收到的数据变更命令发送给slave，slave接收命令后执行命令 </li>
+</ul>
+<h3 id="命令传播阶段的部分复制"><a href="#命令传播阶段的部分复制" class="headerlink" title="命令传播阶段的部分复制"></a><strong>命令传播阶段的部分复制</strong></h3><ul>
+<li>命令传播阶段出现了断网现象 <ul>
+<li>网络闪断闪连      忽略 </li>
+<li>短时间网络中断    部分复制 </li>
+<li>长时间网络中断    全量复制 </li>
+</ul>
+</li>
+<li>部分复制的三个核心要素 <ul>
+<li>服务器的运行 id（run id） </li>
+<li>主服务器的复制积压缓冲区 </li>
+<li>主从服务器的复制偏移量 </li>
+</ul>
+</li>
+</ul>
+<h4 id="服务器运行ID（runid）"><a href="#服务器运行ID（runid）" class="headerlink" title="服务器运行ID（runid）"></a><strong>服务器运行ID（runid）</strong></h4><ul>
+<li>概念：服务器运行ID是每一台服务器每次运行的身份识别码，一台服务器多次运行可以生成多个运行id </li>
+<li>组成：运行id由40位字符组成，是一个随机的十六进制字符 例如：fdc9ff13b9bbaab28db42b3d50f852bb5e3fcdce </li>
+<li>作用：运行id被用于在服务器间进行传输，识别身份 如果想两次操作均对同一台服务器进行，必须每次操作携带对应的运行id，用于对方识别 </li>
+<li>实现方式：运行id在每台服务器启动时自动生成的，master在首次连接slave时，会将自己的运行ID发 送给slave，slave保存此ID，通过info Server命令，可以查看节点的runid </li>
+</ul>
+<h4 id="复制缓冲区内部工作原理"><a href="#复制缓冲区内部工作原理" class="headerlink" title="复制缓冲区内部工作原理"></a><strong>复制缓冲区内部工作原理</strong></h4><ul>
+<li>组成 <ul>
+<li>偏移量 </li>
+<li>字节值 </li>
+</ul>
+</li>
+<li>工作原理 <ul>
+<li>通过offset区分不同的slave当前数据传播的差异 </li>
+<li>master记录已发送的信息对应的offset </li>
+<li>slave记录已接收的信息对应的offset </li>
+</ul>
+</li>
+</ul>
+<h4 id="复制缓冲区"><a href="#复制缓冲区" class="headerlink" title="复制缓冲区"></a><strong>复制缓冲区</strong></h4><ul>
+<li>概念：复制缓冲区，又名复制积压缓冲区，是一个先进先出（FIFO）的队列，用于存储服务器执行过的命 令，每次传播命令，master都会将传播的命令记录下来，并存储在复制缓冲区 <ul>
+<li>复制缓冲区默认数据存储空间大小是1M，由于存储空间大小是固定的，当入队元素的数量大于队列长度时，最先入队的元素会被弹出，而新元素会被放入队列 </li>
+</ul>
+</li>
+<li>由来：每台服务器启动时，如果开启有AOF或被连接成为master节点，即创建复制缓冲区 </li>
+<li>作用：用于保存master收到的所有指令（仅影响数据变更的指令，例如set，select） </li>
+<li>数据来源：当master接收到主客户端的指令时，除了将指令执行，会将该指令存储到缓冲区中 </li>
+</ul>
+<h4 id="复制偏移量（offset）"><a href="#复制偏移量（offset）" class="headerlink" title="复制偏移量（offset）"></a><strong>复制偏移量（offset）</strong></h4><ul>
+<li>概念：一个数字，描述复制缓冲区中的指令字节位置 </li>
+<li>分类： <ul>
+<li>master复制偏移量：记录发送给所有slave的指令字节对应的位置（多个） </li>
+<li>slave复制偏移量：记录slave接收master发送过来的指令字节对应的位置（一个） </li>
+</ul>
+</li>
+<li>数据来源： <ul>
+<li>master端：发送一次记录一次 </li>
+<li>slave端：接收一次记录一次 </li>
+</ul>
+</li>
+<li>作用：同步信息，比对master与slave的差异，当slave断线后，恢复数据使用 <h3 id="数据同步-命令传播阶段工作流程"><a href="#数据同步-命令传播阶段工作流程" class="headerlink" title="数据同步+命令传播阶段工作流程"></a><strong>数据同步+命令传播阶段工作流程</strong></h3></li>
+<li>如果从服务器以前没有复制过任何主服务器，或者之前执行过SLAVEOF no one命令，那么从服务器在开始一次新的复制时将向主服务器发送PSYNC ? -1命令，主动请求主服务器进行完整重同步（因为这时不可能执行部分重同步；</li>
+<li>相反地，如果从服务器已经复制过某个主服务器，那么从服务器在开始一次新的复制时将向主服务器发送 PSYNC <runid> <offset>命令：其中runid是上一次复制的主服务器的运行ID，而offset则是从服务器当前的复制偏移量，接收到这个命令的主服务器会通过这两个参数来判断应该对从服务器执行哪种同步操作。</offset></runid></li>
+</ul>
+<p>根据情况，接收到PSYNC命令的主服务器会向从服务器返回以下三种回复的其中一种：</p>
+<ul>
+<li>如果主服务器返回+FULLRESYNC <runid> <offset>回复，那么表示主服务器将与从服务器执行完整重同步操作：其中runid是这个主服务器的运行ID，从服务器会将这个ID保存起来，在下一次发送PSYNC命令时使用；而offset则是主服务器当前的复制偏移量，从服务器会将这个值作为自己的初始化偏移量；</offset></runid></li>
+<li>如果主服务器返回+CONTINUE回复，那么表示主服务器将与从服务器执行部分重同步操作，主服务器将自己的offset与从服务器的offset相差部分传送给从服务器</li>
+<li>如果主服务器返回-ERR回复，那么表示主服务器的版本低于Redis 2.8，它识别不了PSYNC命令，从服务器将向主服务器发送SYNC命令，并与主服务器执行完整同步操作。</li>
+</ul>
+<h3 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a><strong>心跳机制</strong></h3><blockquote>
+<p>进入命令传播阶段候，master与slave间需要进行信息交换，使用心跳机制进行维护，实现双方连接保持在线 </p>
+</blockquote>
+<ul>
+<li>master心跳：<ul>
+<li>指令：PING </li>
+<li>周期：由repl-ping-slave-period决定，默认10秒 </li>
+<li>作用：判断slave是否在线 </li>
+<li>查询：INFO replication 获取slave最后一次连接时间间隔，lag项维持在0或1视为正常 </li>
+</ul>
+</li>
+<li>slave心跳： <ul>
+<li>指令：REPLCONF ACK {offset} </li>
+<li>周期：1秒 </li>
+<li>作用1：汇报slave自己的复制偏移量，获取最新的数据变更指令 </li>
+<li>作用2：判断master是否在线 </li>
+</ul>
+</li>
+</ul>
+<h4 id="心跳阶段注意事项"><a href="#心跳阶段注意事项" class="headerlink" title="心跳阶段注意事项"></a><strong>心跳阶段注意事项</strong></h4><ul>
+<li>当slave多数掉线，或延迟过高时，master为保障数据稳定性，将拒绝所有信息同步操作 </li>
+<li>通过向主服务器发送INFO replication命令，在列出的从服务器列表的lag一栏中，我们可以看到相应从服务器最后一次向主服务器发送REPLCONF ACK命令距离现在过了多少秒：<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">min</span>-slaves-<span class="built_in">to</span>-<span class="built_in">write</span> <span class="number">2</span> </span><br><span class="line"><span class="built_in">min</span>-slaves-<span class="built_in">max</span>-lag <span class="number">8</span> </span><br><span class="line"></span><br><span class="line">slave数量少于<span class="number">2</span>个，或者所有slave的延迟都大于等于<span class="number">10</span>秒时，强制关闭master写功能，停止数据同步</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/05/17/Mysql/47、mysql 之 Prepare execute deallocate 预处理语句/" class="pre-post btn btn-default" title='47、mysql 之 Prepare execute deallocate 预处理语句'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            47、mysql 之 Prepare execute deallocate 预处理语句</span>
+    </a>
+    
+    
+    <a href="/2016/05/16/Redis/16、redis 之 GEO 类型/" class="next-post btn btn-default" title='16、redis 之 GEO 类型'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            16、redis 之 GEO 类型</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-之主从复制"><span class="toc-text">redis 之主从复制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单机redis的风险与问题"><span class="toc-text">单机redis的风险与问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主从复制的作用"><span class="toc-text">主从复制的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阶段一：主从连接（slave连接master）"><span class="toc-text">阶段一：主从连接（slave连接master）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阶段二：数据同步阶段"><span class="toc-text">阶段二：数据同步阶段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据同步阶段master说明"><span class="toc-text">数据同步阶段master说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据同步阶段slave说明"><span class="toc-text">数据同步阶段slave说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阶段三：命令传播阶段"><span class="toc-text">阶段三：命令传播阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令传播阶段的部分复制"><span class="toc-text">命令传播阶段的部分复制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#服务器运行ID（runid）"><span class="toc-text">服务器运行ID（runid）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#复制缓冲区内部工作原理"><span class="toc-text">复制缓冲区内部工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#复制缓冲区"><span class="toc-text">复制缓冲区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#复制偏移量（offset）"><span class="toc-text">复制偏移量（offset）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据同步-命令传播阶段工作流程"><span class="toc-text">数据同步+命令传播阶段工作流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#心跳机制"><span class="toc-text">心跳机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#心跳阶段注意事项"><span class="toc-text">心跳阶段注意事项</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

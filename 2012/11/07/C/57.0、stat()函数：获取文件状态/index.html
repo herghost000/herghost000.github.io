@@ -1,0 +1,454 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="C">
+
+
+<meta name="description" content="stat()函数：获取文件状态相关函数：fstat, lstat, chmod, chown, readlink, utime
+头文件：#include&lt;sys/stat.h&gt;  #...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    57.0、stat()函数：获取文件状态 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="57.0、stat()函数：获取文件状态">
+            
+            57.0、stat()函数：获取文件状态
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/C/">C</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/C/">C</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2012/11/07</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2830</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="stat-函数：获取文件状态"><a href="#stat-函数：获取文件状态" class="headerlink" title="stat()函数：获取文件状态"></a>stat()函数：获取文件状态</h2><p>相关函数：fstat, lstat, chmod, chown, readlink, utime</p>
+<p>头文件：#include&lt;sys/stat.h&gt;  #include&lt;uninstd.h&gt;</p>
+<p>定义函数：int stat(const char * file_name, struct stat *buf);</p>
+<p>函数说明：stat()用来将参数file_name 所指的文件状态, 复制到参数buf 所指的结构中。</p>
+<p>下面是struct stat 内各参数的说明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stat</span> &#123;</span></span><br><span class="line">    <span class="keyword">dev_t</span> st_dev; <span class="comment">//device 文件的设备编号</span></span><br><span class="line">    <span class="keyword">ino_t</span> st_ino; <span class="comment">//inode 文件的i-node</span></span><br><span class="line">    <span class="keyword">mode_t</span> st_mode; <span class="comment">//protection 文件的类型和存取的权限</span></span><br><span class="line">    <span class="keyword">nlink_t</span> st_nlink; <span class="comment">//number of hard links 连到该文件的硬连接数目, 刚建立的文件值为1.</span></span><br><span class="line">    <span class="keyword">uid_t</span> st_uid; <span class="comment">//user ID of owner 文件所有者的用户识别码 </span></span><br><span class="line">    <span class="keyword">gid_t</span> st_gid; <span class="comment">//group ID of owner 文件所有者的组识别码 </span></span><br><span class="line">    <span class="keyword">dev_t</span> st_rdev; <span class="comment">//device type 若此文件为装置设备文件, 则为其设备编号 </span></span><br><span class="line">    <span class="keyword">off_t</span> st_size; <span class="comment">//total size, in bytes 文件大小, 以字节计算 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> st_blksize; <span class="comment">//blocksize for filesystem I/O 文件系统的I/O 缓冲区大小. </span></span><br><span class="line">    u nsigned <span class="keyword">long</span> st_blocks; <span class="comment">//number of blocks allocated 占用文件区块的个数, 每一区块大小为512 个字节. </span></span><br><span class="line">    <span class="keyword">time_t</span> st_atime; <span class="comment">//time of lastaccess 文件最近一次被存取或被执行的时间, 一般只有在用mknod、 utime、read、write 与tructate 时改变.</span></span><br><span class="line">    <span class="keyword">time_t</span> st_mtime; <span class="comment">//time of last modification 文件最后一次被修改的时间, 一般只有在用mknod、 utime 和write 时才会改变</span></span><br><span class="line">    <span class="keyword">time_t</span> st_ctime; <span class="comment">//time of last change i-node 最近一次被更改的时间, 此参数会在文件所有者、组、 权限被更改时更新 </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>先前所描述的st_mode 则定义了下列数种情况：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、S_IFMT <span class="number">0170000</span> 文件类型的位遮罩 </span><br><span class="line"><span class="number">2</span>、S_IFSOCK <span class="number">0140000</span> scoket</span><br><span class="line"><span class="number">3</span>、S_IFLNK <span class="number">0120000</span> 符号连接 </span><br><span class="line"><span class="number">4</span>、S_IFREG <span class="number">0100000</span> 一般文件 </span><br><span class="line"><span class="number">5</span>、S_IFBLK <span class="number">0060000</span> 区块装置 </span><br><span class="line"><span class="number">6</span>、S_IFDIR <span class="number">0040000</span> 目录 </span><br><span class="line"><span class="number">7</span>、S_IFCHR <span class="number">0020000</span> 字符装置 </span><br><span class="line"><span class="number">8</span>、S_IFIFO <span class="number">0010000</span> 先进先出 </span><br><span class="line"><span class="number">9</span>、S_ISUID <span class="number">04000</span> 文件的 (<span class="keyword">set</span> user-id on execution)位 </span><br><span class="line"><span class="number">10</span>、S_ISGID <span class="number">02000</span> 文件的 (<span class="keyword">set</span> group-id on execution)位 </span><br><span class="line"><span class="number">11</span>、S_ISVTX <span class="number">01000</span> 文件的sticky 位 </span><br><span class="line"><span class="number">12</span>、S_IRUSR (S_IREAD) <span class="number">00400</span> 文件所有者具可读取权限 </span><br><span class="line"><span class="number">13</span>、S_IWUSR (S_IWRITE)<span class="number">00200</span> 文件所有者具可写入权限 </span><br><span class="line"><span class="number">14</span>、S_IXUSR (S_IEXEC) <span class="number">00100</span> 文件所有者具可执行权限 </span><br><span class="line"><span class="number">15</span>、S_IRGRP <span class="number">00040</span> 用户组具可读取权限 </span><br><span class="line"><span class="number">16</span>、S_IWGRP <span class="number">00020</span> 用户组具可写入权限 </span><br><span class="line"><span class="number">17</span>、S_IXGRP <span class="number">00010</span> 用户组具可执行权限 </span><br><span class="line"><span class="number">18</span>、S_IROTH <span class="number">00004</span> 其他用户具可读取权限 </span><br><span class="line"><span class="number">19</span>、S_IWOTH <span class="number">00002</span> 其他用户具可写入权限 </span><br><span class="line"><span class="number">20</span>、S_IXOTH <span class="number">00001</span> 其他用户具可执行权限上述的文件类型在 POSIX 中定义了检查这些类型的宏定义 </span><br><span class="line"><span class="number">21</span>、S_ISLNK (st_mode) 判断是否为符号连接 </span><br><span class="line"><span class="number">22</span>、S_ISREG (st_mode) 是否为一般文件 </span><br><span class="line"><span class="number">23</span>、S_ISDIR (st_mode) 是否为目录 </span><br><span class="line"><span class="number">24</span>、S_ISCHR (st_mode) 是否为字符装置文件 </span><br><span class="line"><span class="number">25</span>、S_ISBLK (s3e) 是否为先进先出 </span><br><span class="line"><span class="number">26</span>、S_ISSOCK (st_mode) 是否为socket 若一目录具有sticky 位 (S_ISVTX), 则表示在此目录下的文件只能 被该文件所有者、此目录所有者或root 来删除或改名.</span><br></pre></td></tr></table></figure>
+
+<p>返回值：执行成功则返回0，失败返回-1，错误代码存于errno。</p>
+<p>错误代码：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、ENOENT 参数file_name 指定的文件不存在 </span><br><span class="line"> <span class="number">2</span>、ENOTDIR 路径中的目录存在但却非真正的目录</span><br><span class="line"> <span class="number">3</span>、ELOOP 欲打开的文件有过多符号连接问题, 上限为<span class="number">16</span> 符号连接</span><br><span class="line"> <span class="number">4</span>、EFAULT 参数buf 为无效指针, 指向无法存在的内存空间</span><br><span class="line"> <span class="number">5</span>、EACCESS 存取文件时被拒绝</span><br><span class="line"> <span class="number">6</span>、ENOMEM 核心内存不足</span><br><span class="line"> <span class="number">7</span>、ENAMETOOLONG 参数file_name 的路径名称太长</span><br></pre></td></tr></table></figure>
+
+<p>范例：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#define _CRT_SECURE_NO_WARNINGS </span></span><br><span class="line"><span class="comment">#include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;stdlib.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;string.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;sys/stat.h&gt;</span></span><br><span class="line"><span class="comment">#include &lt;time.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> mfstat(const char* filename) &#123;</span><br><span class="line">	/*struct <span class="keyword">stat</span></span><br><span class="line">	&#123;</span><br><span class="line">		_dev_t         st_dev;</span><br><span class="line">		_ino_t         st_ino;</span><br><span class="line">		unsigned short st_mode;</span><br><span class="line">		short          st_nlink;</span><br><span class="line">		short          st_uid;</span><br><span class="line">		short          st_gid;</span><br><span class="line">		_dev_t         st_rdev;</span><br><span class="line">		_off_t         st_size;</span><br><span class="line">		time_t         st_atime;</span><br><span class="line">		time_t         st_mtime;</span><br><span class="line">		time_t         st_ctime;</span><br><span class="line">	&#125;;*<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	struct stat buf;</span></span><br><span class="line"><span class="regexp">	int state = stat(filename, &amp;buf);</span></span><br><span class="line"><span class="regexp">	if (-1 == state) &#123;</span></span><br><span class="line"><span class="regexp">		perror("stat");</span></span><br><span class="line"><span class="regexp">		return -1;</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp">	char s[100];</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file device		num: %d\n", buf.st_dev);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file inode		num: %d\n", buf.st_ino);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file mode		num: %p\n", buf.st_mode);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file link		num: %d\n", buf.st_nlink);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file uid		num: %d\n", buf.st_uid);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file gid		num: %d\n", buf.st_gid);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file rdev		num: %d\n", buf.st_rdev);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	printf("file size		num: %dBytes\n", buf.st_size);</span></span><br><span class="line"><span class="regexp">	printf("--------------------------------------------------------------------------------\n");</span></span><br><span class="line"><span class="regexp">	strftime(s, sizeof(s), "%Y/</span>%m/%d %H:%M:%S<span class="string">", localtime(&amp;buf.st_atime));</span></span><br><span class="line"><span class="string">	printf("</span>file atime		num: %s\n<span class="string">", s);</span></span><br><span class="line"><span class="string">	printf("</span>—%s\n<span class="string">", "</span>文件最近一次被存取或被执行的时间mknod、 <span class="keyword">utime</span>、<span class="keyword">read</span>、<span class="keyword">write</span> 与tructate<span class="string">");</span></span><br><span class="line"><span class="string">	printf("</span>--------------------------------------------------------------------------------\n<span class="string">");</span></span><br><span class="line"><span class="string">	strftime(s, sizeof(s), "</span>%Y/%m/%d %H:%M:%S<span class="string">", localtime(&amp;buf.st_mtime));</span></span><br><span class="line"><span class="string">	printf("</span>file mtime		num: %s\n<span class="string">", s);</span></span><br><span class="line"><span class="string">	printf("</span>—%s\n<span class="string">", "</span>文件最后一次被修改的时间, mknod、 <span class="keyword">utime</span> 、<span class="keyword">write</span> <span class="string">");</span></span><br><span class="line"><span class="string">	printf("</span>--------------------------------------------------------------------------------\n<span class="string">");</span></span><br><span class="line"><span class="string">	strftime(s, sizeof(s), "</span>%Y/%m/%d %H:%M:%S<span class="string">", localtime(&amp;buf.st_ctime));</span></span><br><span class="line"><span class="string">	printf("</span>file ctime		num: %s\n<span class="string">", s);</span></span><br><span class="line"><span class="string">	printf("</span>—%s\n<span class="string">", "</span>最近一次被更改的时间, 此参数会在文件所有者、组、 权限被更改时更新 <span class="string">");</span></span><br><span class="line"><span class="string">	printf("</span>--------------------------------------------------------------------------------\n<span class="string">");</span></span><br><span class="line"><span class="string">	return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">int main(int argc, char** argv) &#123;</span></span><br><span class="line"><span class="string">	mfstat("</span><span class="number">123</span>.txt<span class="string">");</span></span><br><span class="line"><span class="string">	system("</span>pause<span class="string">");</span></span><br><span class="line"><span class="string">	return 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2012/11/08/C/58.0、时间与格式化/" class="pre-post btn btn-default" title='58.0、时间与格式化'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            58.0、时间与格式化</span>
+    </a>
+    
+    
+    <a href="/2012/11/06/C/56.0、getc和putc函数/" class="next-post btn btn-default" title='56.0、getc和putc函数'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            56.0、getc和putc函数</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#stat-函数：获取文件状态"><span class="toc-text">stat()函数：获取文件状态</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

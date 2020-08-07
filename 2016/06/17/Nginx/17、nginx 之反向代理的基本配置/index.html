@@ -1,0 +1,516 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Nginx">
+
+
+<meta name="description" content="nginx 之反向代理的基本配置proxy_pass1proxy_pass URL;
+
+1配置块： location、if
+
+此配置项将当前请求反向代理到URL参数指定的服务器上，URL可以是主...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    17、nginx 之反向代理的基本配置 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="17、nginx 之反向代理的基本配置">
+            
+            17、nginx 之反向代理的基本配置
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Nginx/">Nginx</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Nginx/">Nginx</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/06/17</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1512</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="nginx-之反向代理的基本配置"><a href="#nginx-之反向代理的基本配置" class="headerlink" title="nginx 之反向代理的基本配置"></a><strong>nginx 之反向代理的基本配置</strong></h2><h3 id="proxy-pass"><a href="#proxy-pass" class="headerlink" title="proxy_pass"></a><strong>proxy_pass</strong></h3><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass URL<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： <span class="keyword">location</span>、<span class="keyword">if</span></span><br></pre></td></tr></table></figure>
+
+<p>此配置项将当前请求反向代理到URL参数指定的服务器上，URL可以是主机名或IP地址 加端口的形式，例如：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass http:<span class="regexp">//</span>localhost:<span class="number">8000</span><span class="regexp">/uri/</span>;</span><br><span class="line">proxy_pass http:<span class="regexp">//u</span>nix:<span class="regexp">/path/</span>to<span class="regexp">/backend.socket:/u</span>ri<span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+<p>直接使用upstream块</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">upstream <span class="keyword">backend</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">proxy_pass</span> <span class="keyword">http</span>://backend;</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下反向代理是不会转发请求中的Host头部的。如果需要转发，那么必须加上配 置：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="proxy-method"><a href="#proxy-method" class="headerlink" title="proxy_method"></a><strong>proxy_method</strong></h3><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_method <span class="function"><span class="keyword">method</span>;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>此配置项表示转发时的协议方法名。例如设置为：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_method POST<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<p>客户端发来的GET请求在转发时方法名也会改为POST。</p>
+<h3 id="proxy-hide-header"><a href="#proxy-hide-header" class="headerlink" title="proxy_hide_header"></a><strong>proxy_hide_header</strong></h3><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_hide_header the_header<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>Nginx会将上游服务器的响应转发给客户端，但默认不会转发以下HTTP头部字段： Date、Server、X-Pad和X-Accel-*。使用proxy_hide_header后可以任意地指定哪些HTTP头部 字段不能被转发。例如：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">proxy_hide_header Cache-Control<span class="comment">; </span></span><br><span class="line">proxy_hide_header MicrosoftOfficeWebServer<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="proxy-pass-header"><a href="#proxy-pass-header" class="headerlink" title="proxy_pass_header"></a><strong>proxy_pass_header</strong></h3><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass_header the_header<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>与proxy_hide_header功能相反，proxy_pass_header会将原来禁止转发的header设置为允许 转发。例如：</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_pass_header <span class="meta">X</span>-Accel-<span class="meta">Redirect</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="proxy-pass-request-body"><a href="#proxy-pass-request-body" class="headerlink" title="proxy_pass_request_body"></a><strong>proxy_pass_request_body</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass_request_body</span> <span class="literal">on</span>|<span class="literal">off</span>; <span class="comment">#默认： proxy_pass_request_body on;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>作用为确定是否向上游服务器发送HTTP body部分。</p>
+<h3 id="proxy-pass-request-headers"><a href="#proxy-pass-request-headers" class="headerlink" title="proxy_pass_request_headers"></a><strong>proxy_pass_request_headers</strong></h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass_request_headers</span> <span class="literal">on</span>|<span class="literal">off</span>; <span class="comment">#默认： proxy_pass_request_headers on;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>作用为确定是否转发HTTP头部。</p>
+<h3 id="proxy-redirect"><a href="#proxy-redirect" class="headerlink" title="proxy_redirect"></a><strong>proxy_redirect</strong></h3><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_redirect[<span class="keyword">default</span>|<span class="literal">off</span>|redirect replacement]; <span class="comment">#默认： proxy_redirect default;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>当上游服务器返回的响应是重定向或刷新请求（如HTTP响应码是301或者302）时， proxy_redirect可以重设HTTP头部的location或refresh字段。</p>
+<p>示例：访问a.jsp跳转到b.jsp<br>hostA/app/a.jsp jump to hostB:8080/test_app/b.jsp</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span> hostA;</span><br><span class="line">    <span class="attribute">location</span> /app/ &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> hostB:<span class="number">8080</span>/test_app/;</span><br><span class="line">        <span class="attribute">proxy_redirect</span> xxx;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下为测试结果</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">访问测试地址：hostA<span class="regexp">/app/</span>a.jsp</span><br><span class="line"></span><br><span class="line">测试代理地址：proxy_pass <span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span>;</span><br><span class="line"></span><br><span class="line">未配置则重定向为：<span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span>b.jsp;</span><br><span class="line"></span><br><span class="line">用法对比：</span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/ /</span>app/</span><br><span class="line"></span><br><span class="line">跳转到：hostA<span class="regexp">/app/</span>test_app/b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/ /</span></span><br><span class="line"></span><br><span class="line">跳转到：hostA<span class="regexp">/test_app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="regexp">/ /</span>;</span><br><span class="line"></span><br><span class="line">跳转到：<span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">跳转到：hostA<span class="regexp">/app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span> <span class="regexp">/app/</span>;（与<span class="keyword">default</span>等同）</span><br><span class="line"></span><br><span class="line">跳转到：hostA<span class="regexp">/app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span> hostA<span class="regexp">/app/</span>;</span><br><span class="line"></span><br><span class="line">跳转到：hostA<span class="regexp">/app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect(不加)</span><br><span class="line"></span><br><span class="line">跳转到：hostA<span class="regexp">/app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect off;</span><br><span class="line"></span><br><span class="line">跳转到：<span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span>b.jsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proxy_redirect <span class="string">hostB:</span><span class="number">8080</span><span class="regexp">/test_app/</span> /;</span><br><span class="line"></span><br><span class="line">跳转到：hostA/b.jsp</span><br></pre></td></tr></table></figure>
+
+<h3 id="proxy-next-upstream"><a href="#proxy-next-upstream" class="headerlink" title="proxy_next_upstream"></a><strong>proxy_next_upstream</strong></h3><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_next_upstream[error|<span class="type">timeout</span>|<span class="type">invalid_header</span>|<span class="type">http_500</span>|<span class="type">http_502</span>|<span class="type">http_503</span>|<span class="type">http_504</span>|<span class="type">http_404</span>|<span class="type">off</span>]; #默认： proxy_next_upstream error <span class="built_in">timeout</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置块： http、<span class="keyword">server</span>、<span class="keyword">location</span></span><br></pre></td></tr></table></figure>
+
+<p>此配置项表示当向一台上游服务器转发请求出现错误时，继续换一台上游服务器处理这个请求。</p>
+<p>上游服务器一旦开始发送应答，Nginx反向代理服务器会立刻把应 答包转发给客户端。因此，一旦Nginx开始向客户端发送响应包，之后的过程中若出现错误 也是不允许换下一台上游服务器继续处理的。这很好理解，这样才可以更好地保证客户端只收到来自一个上游服务器的应答。</p>
+<p>proxy_next_upstream的参数用来说明在哪些情况下会继续 选择下一台上游服务器转发请求。</p>
+<ul>
+<li>error：当向上游服务器发起连接、发送请求、读取响应时出错。</li>
+<li>timeout：发送请求或读取响应时发生超时。</li>
+<li>invalid_header：上游服务器发送的响应是不合法的。</li>
+<li>http_500：上游服务器返回的HTTP响应码是500。</li>
+<li>http_502：上游服务器返回的HTTP响应码是502。</li>
+<li>http_503：上游服务器返回的HTTP响应码是503。</li>
+<li>http_504：上游服务器返回的HTTP响应码是504。</li>
+<li>http_404：上游服务器返回的HTTP响应码是404。</li>
+<li>off：关闭proxy_next_upstream功能—出错就选择另一台上游服务器再次转发。</li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/06/18/Nginx/18、nginx 之 X-Forwarded-For 信息头处理/" class="pre-post btn btn-default" title='18、nginx 之 X-Forwarded-For 信息头处理'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            18、nginx 之 X-Forwarded-For 信息头处理</span>
+    </a>
+    
+    
+    <a href="/2016/06/17/Mysql/78、mysql 之explain查看执行计划/" class="next-post btn btn-default" title='78、mysql 之explain查看执行计划'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            78、mysql 之explain查看执行计划</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx-之反向代理的基本配置"><span class="toc-text">nginx 之反向代理的基本配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-pass"><span class="toc-text">proxy_pass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-method"><span class="toc-text">proxy_method</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-hide-header"><span class="toc-text">proxy_hide_header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-pass-header"><span class="toc-text">proxy_pass_header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-pass-request-body"><span class="toc-text">proxy_pass_request_body</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-pass-request-headers"><span class="toc-text">proxy_pass_request_headers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-redirect"><span class="toc-text">proxy_redirect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-next-upstream"><span class="toc-text">proxy_next_upstream</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

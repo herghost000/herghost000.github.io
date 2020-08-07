@@ -1,0 +1,727 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="Mysql">
+
+
+<meta name="description" content="mysql 之字符串函数
+
+
+函数
+功能
+
+
+
+ASCII()
+返回最左边字符的数值
+
+
+BIN()
+返回一个包含数字二进制表示的字符串
+
+
+BIT_LENGTH()
+以位为单位返回参数的长度
+...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    18、mysql 之字符串函数 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="18、mysql 之字符串函数">
+            
+            18、mysql 之字符串函数
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Mysql/">Mysql</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Mysql/">Mysql</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2016/04/18</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                1572</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="mysql-之字符串函数"><a href="#mysql-之字符串函数" class="headerlink" title="mysql 之字符串函数"></a><strong>mysql 之字符串函数</strong></h2><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ASCII()</td>
+<td>返回最左边字符的数值</td>
+</tr>
+<tr>
+<td>BIN()</td>
+<td>返回一个包含数字二进制表示的字符串</td>
+</tr>
+<tr>
+<td>BIT_LENGTH()</td>
+<td>以位为单位返回参数的长度</td>
+</tr>
+<tr>
+<td>CHAR()</td>
+<td>返回传递的每个整数的字符</td>
+</tr>
+<tr>
+<td>CHAR_LENGTH()</td>
+<td>返回字符串的字符个数</td>
+</tr>
+<tr>
+<td>CHARACTER_LENGTH()</td>
+<td>CHAR_LENGTH（）的同义词</td>
+</tr>
+<tr>
+<td>CONCAT()</td>
+<td>将多个字符串首尾相连然后返回</td>
+</tr>
+<tr>
+<td>CONCAT_WS()</td>
+<td>将多个字符串与连接符首尾相连然后返回</td>
+</tr>
+<tr>
+<td>ELT()</td>
+<td>在索引号处返回字符串</td>
+</tr>
+<tr>
+<td>EXPORT_SET()</td>
+<td>返回一个字符串，使得对于值位中设置的每一位，您都会得到一个字符串，并且对于每个未设置的位，您都会得到一个字符串</td>
+</tr>
+<tr>
+<td>FIELD()</td>
+<td>第一个字符串与后面几个字符串比较，返回相等字符串的位置， 都不想等则返回0</td>
+</tr>
+<tr>
+<td>FIND_IN_SET()</td>
+<td>返回第二个参数中第一个参数的索引位置</td>
+</tr>
+<tr>
+<td>FORMAT()</td>
+<td>返回格式化为指定小数位数的数字</td>
+</tr>
+<tr>
+<td>FROM_BASE64()</td>
+<td>解码为一个基64字符串并返回结果</td>
+</tr>
+<tr>
+<td>HEX()</td>
+<td>十进制数字转化为十六进制字符串，如果为字符串则转化为ascii码再转化成十六进制</td>
+</tr>
+<tr>
+<td>INSERT()</td>
+<td>在指定位置插入一个子字符串，直到指定的字符数</td>
+</tr>
+<tr>
+<td>INSTR()</td>
+<td>返回子字符串在字符串中第一次出现的索引</td>
+</tr>
+<tr>
+<td>LCASE()</td>
+<td>LOWER（）的同义词</td>
+</tr>
+<tr>
+<td>LEFT()</td>
+<td>返回最左边指定长度的字符</td>
+</tr>
+<tr>
+<td>LENGTH()</td>
+<td>返回字符串存储长度</td>
+</tr>
+<tr>
+<td>LIKE</td>
+<td>简单的模式匹配</td>
+</tr>
+<tr>
+<td>LOAD_FILE()</td>
+<td>加载指定的文件</td>
+</tr>
+<tr>
+<td>LOCATE()</td>
+<td>返回第一个出现的子串的位置</td>
+</tr>
+<tr>
+<td>LOWER()</td>
+<td>将字符串全部转换成小写</td>
+</tr>
+<tr>
+<td>LPAD()</td>
+<td>在字符串左边填充指定的字符串到指定的长度</td>
+</tr>
+<tr>
+<td>LTRIM()</td>
+<td>去掉字符串左侧的空格</td>
+</tr>
+<tr>
+<td>MAKE_SET()</td>
+<td>返回一组逗号分隔的字符串，它们具有相应的位设置</td>
+</tr>
+<tr>
+<td>MATCH</td>
+<td>执行全文搜索</td>
+</tr>
+<tr>
+<td>MID()</td>
+<td>从指定的位置开始返回一个子串</td>
+</tr>
+<tr>
+<td>NOT LIKE</td>
+<td>否定简单的模式匹配</td>
+</tr>
+<tr>
+<td>NOT REGEXP</td>
+<td>否定REGEXP</td>
+</tr>
+<tr>
+<td>OCT()</td>
+<td>返回一个包含数字的八进制表示的字符串</td>
+</tr>
+<tr>
+<td>OCTET_LENGTH()</td>
+<td>LENGTH（）的同义词</td>
+</tr>
+<tr>
+<td>ORD()</td>
+<td>返回参数最左边字符的字符代码</td>
+</tr>
+<tr>
+<td>POSITION()</td>
+<td>Synonym for LOCATE()</td>
+</tr>
+<tr>
+<td>QUOTE()</td>
+<td>Escape the argument for use in an SQL statement</td>
+</tr>
+<tr>
+<td>REGEXP</td>
+<td>Whether string matches regular expression</td>
+</tr>
+<tr>
+<td>REPEAT()</td>
+<td>将字符串重复N次后返回</td>
+</tr>
+<tr>
+<td>REPLACE(str,from_str,to_str)</td>
+<td>在字符串str中查找from_str并用to_str替换返回</td>
+</tr>
+<tr>
+<td>REVERSE(str)</td>
+<td>反转字符串中的字符</td>
+</tr>
+<tr>
+<td>RIGHT()</td>
+<td>Return the specified rightmost number of characters</td>
+</tr>
+<tr>
+<td>RLIKE</td>
+<td>Synonym for REGEXP</td>
+</tr>
+<tr>
+<td>RPAD()</td>
+<td>Append string the specified number of times</td>
+</tr>
+<tr>
+<td>RTRIM()</td>
+<td>Remove trailing spaces</td>
+</tr>
+<tr>
+<td>SOUNDEX()</td>
+<td>Return a soundex string</td>
+</tr>
+<tr>
+<td>SOUNDS LIKE</td>
+<td>Compare sounds</td>
+</tr>
+<tr>
+<td>SPACE()</td>
+<td>返回由N个空格构成的字符串</td>
+</tr>
+<tr>
+<td>STRCMP()</td>
+<td>如果两个字符串是一样的返回0，第一个小于第二个返回-1，否则返回1</td>
+</tr>
+<tr>
+<td>SUBSTR(str, pos[,len])</td>
+<td>指定位置截取字符串</td>
+</tr>
+<tr>
+<td>SUBSTRING(str,pos,len)</td>
+<td>截取指定位置len长度的字符串</td>
+</tr>
+<tr>
+<td>SUBSTRING_INDEX()</td>
+<td>Return a substring from a string before the specified number of occurrences of the delimiter</td>
+</tr>
+<tr>
+<td>TO_BASE64()</td>
+<td>转成base64字符串</td>
+</tr>
+<tr>
+<td>TRIM()</td>
+<td>删除字符串前后空格</td>
+</tr>
+<tr>
+<td>UCASE()</td>
+<td>UPPER（）的同义词</td>
+</tr>
+<tr>
+<td>UNHEX()</td>
+<td>十六进制转为字符</td>
+</tr>
+<tr>
+<td>UPPER()</td>
+<td>将字符串全部转换为大写</td>
+</tr>
+<tr>
+<td>WEIGHT_STRING()</td>
+<td>返回字符串的权重字符串</td>
+</tr>
+</tbody></table>
+<h3 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a><strong>ASCII</strong></h3><ul>
+<li><code>ASCII(str)</code></li>
+<li>返回第一个字符的ascii码</li>
+<li>空字符串则返回0</li>
+<li>NULL返回NULL<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">SELECT</span> ASCII(<span class="string">'2'</span>);</span><br><span class="line">        -&gt; <span class="number">50</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> ASCII(<span class="number">2</span>);</span><br><span class="line">        -&gt; <span class="number">50</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> ASCII(<span class="string">'dx'</span>);</span><br><span class="line">        -&gt; <span class="number">100</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> ASCII(<span class="string">''</span>);</span><br><span class="line">        -&gt; <span class="number">0</span></span><br><span class="line">mysql&gt; <span class="keyword">SELECT</span> ASCII(<span class="keyword">NULL</span>);</span><br><span class="line">        -&gt; <span class="keyword">NULL</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="BIN"><a href="#BIN" class="headerlink" title="BIN"></a><strong>BIN</strong></h3><ul>
+<li><code>BIN(N)</code></li>
+<li>返回数字的二进制</li>
+<li>NULL返回NULL</li>
+<li>字母返回0</li>
+<li>空字符串返回NULL</li>
+<li>输入字符串会被试图转换成整型<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="meta">SELECT</span> B<span class="meta">IN(</span><span class="string">'3'</span>);</span><br><span class="line">        -&gt; <span class="string">'11'</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="BIT-LENGTH"><a href="#BIT-LENGTH" class="headerlink" title="BIT_LENGTH"></a><strong>BIT_LENGTH</strong></h3><ul>
+<li><code>BIT_LENGTH(str)</code></li>
+<li>字符串有多少bit位</li>
+<li>NULL返回NULL</li>
+<li>空字符串返回0</li>
+<li>输入整型会被试图转换成字符串<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">SELECT</span> BIT_LENGTH(<span class="string">'text'</span>);</span><br><span class="line">        -&gt; <span class="number">32</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="CHAR"><a href="#CHAR" class="headerlink" title="CHAR"></a><strong>CHAR</strong></h3><ul>
+<li><code>CHAR(N,... [USING  charset_name])</code></li>
+<li>将ascii码转成字符</li>
+<li>CHAR内如果为小数则按四舍五入， 如果是字符串小数则不按四舍五入<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select char(77,121,83,81,<span class="emphasis">'76'</span>),char(77,77.3,<span class="emphasis">'77.3'</span>);</span><br><span class="line"><span class="code">+-------------------------+</span>----------------------+</span><br><span class="line">| char(77,121,83,81,<span class="emphasis">'76'</span>) | char(77,77.3,<span class="emphasis">'77.3'</span>) |</span><br><span class="line"><span class="code">+-------------------------+</span>----------------------+</span><br><span class="line">| MySQL                   | MMM                  |</span><br><span class="line"><span class="code">+-------------------------+</span>----------------------+</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>默认情况下，函数返回二进制字符串，若想返回针对特定字符集的字符串，使用using选项</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT charset(char(0x65)), charset(char(0x65 USING utf8));</span><br><span class="line"><span class="code">+---------------------+</span>--------------------------------+</span><br><span class="line">| charset(char(0x65)) | charset(char(0x65 USING utf8)) |</span><br><span class="line"><span class="code">+---------------------+</span>--------------------------------+</span><br><span class="line">| binary              | utf8                           |</span><br><span class="line"><span class="code">+---------------------+</span>--------------------------------+</span><br></pre></td></tr></table></figure>
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2016/04/19/Mysql/19、mysql 之数字函数和操作符/" class="pre-post btn btn-default" title='19、mysql 之数字函数和操作符'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            19、mysql 之数字函数和操作符</span>
+    </a>
+    
+    
+    <a href="/2016/04/17/Mysql/17、mysql 之 binary 区分大小写/" class="next-post btn btn-default" title='17、mysql 之 binary 区分大小写'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            17、mysql 之 binary 区分大小写</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql-之字符串函数"><span class="toc-text">mysql 之字符串函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ASCII"><span class="toc-text">ASCII</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BIN"><span class="toc-text">BIN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BIT-LENGTH"><span class="toc-text">BIT_LENGTH</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CHAR"><span class="toc-text">CHAR</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="计算机网络">
+
+
+<meta name="description" content="计算机网络 之物理层信道复用简介“复用”是一种将若干个彼此独立的信号，合并为一个可在同一信道上同时传输的复合信号的方法
+如下是复用的示意图：
+
+复用技术常见以下几种：
+
+频分复用
+时分复用（统计...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    11、计算机网络 之物理层信道复用 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="11、计算机网络 之物理层信道复用">
+            
+            11、计算机网络 之物理层信道复用
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/计算机网络/">计算机网络</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/计算机网络/">计算机网络</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2013/09/05</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                2528</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="计算机网络-之物理层信道复用"><a href="#计算机网络-之物理层信道复用" class="headerlink" title="计算机网络 之物理层信道复用"></a><strong>计算机网络 之物理层信道复用</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>“复用”是一种将若干个彼此独立的信号，合并为一个可在同一信道上同时传输的复合信号的方法</p>
+<p>如下是复用的示意图：</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zrxnnlSxZj489OBhfcBEMOqkNF7gaQcxZ4hq*zjR6a6GYAJubUB7wxR0BkITRpKIYg!!/b&bo=mgMOAQAAAAARB6Y!&rf=viewer_4" alt="image"></p>
+<p>复用技术常见以下几种：</p>
+<ul>
+<li>频分复用</li>
+<li>时分复用（统计时分复用）</li>
+<li>波分复用</li>
+<li>码分复用</li>
+</ul>
+<h3 id="频分复用-FDM（Frequency-Division-Multiplexing）"><a href="#频分复用-FDM（Frequency-Division-Multiplexing）" class="headerlink" title="频分复用 FDM（Frequency Division Multiplexing）"></a><strong>频分复用 FDM（Frequency Division Multiplexing）</strong></h3><p>这种方法就是将不同频率的数据合成在同一信道发送，在接收端再将其分开。</p>
+<p>频分复用是指一条线路给多个用户共同使用，按照频率分割给各个用户，收音机就是个例子，你在调台时候就是调节接受的频率，所有的信号共用“无线”这个载体。</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zpAtsznTPOpbXYAWslo1BX3yzTg9tBo*BGn93O2QIpnijyJ*gEykmfB8B6X62U3M5w!!/b&bo=cwObAQAAAAARB9o!&rf=viewer_4" alt="image"></p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vsmiF42u4pe5qG0cM*faJ8OE3xozGYX*uV7nvglpqNXiEMXUCetk1GBNp0qzbf6OGeQ!!/b&bo=kwOTAQAAAAARFyI!&rf=viewer_4" alt="image"></p>
+<h3 id="时分复用（TDM）"><a href="#时分复用（TDM）" class="headerlink" title="时分复用（TDM）"></a><strong>时分复用（TDM）</strong></h3><p>TDM帧：将传输时间划分为多个等长的时间段（TDM帧）</p>
+<p>时隙：每个TDM帧划分成更小的时间段（时隙），每个用户在每个TDM帧中占用固定的时隙进行通信。类似分时OS的时间片概念。</p>
+<p>当采用时分复用时，所有用户在不同的时间占用同样的频带宽度（分时不分频）。</p>
+<p>时分复用可能会造成线路资源的浪费</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vssCPsfJ5QflbsCSo2TDU7vhbeeDWOdvHPHOH0oi04kYwl6WlfOLGCCntm1GiHsvwGQ!!/b&bo=VwJEAQAAAAACV2M!&rf=viewer_4" alt="image"></p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vsqc3ot0DQkl1ZVmwLnz*6GavvBN3xd0DYUdzE0.obzLvhCxM.JS3LMAeadzA2ry*rA!!/b&bo=uQM.AQAAAAARF6U!&rf=viewer_4" alt="image"></p>
+<h3 id="统计时分复用-Statistic-TDM"><a href="#统计时分复用-Statistic-TDM" class="headerlink" title="统计时分复用 (Statistic TDM)"></a><strong>统计时分复用 (Statistic TDM)</strong></h3><p>集中器：连接低速用户，集中数据传输。</p>
+<p>STDM帧</p>
+<ul>
+<li>不等长，时隙数小于所连接的用户数</li>
+<li>不是固定分配时隙，而是按需分配时隙，可提高线路的利用率。</li>
+</ul>
+<p>增加地址信息</p>
+<ul>
+<li>由于STDM帧中的时隙不是固定地分配给某个用户，因此在每个时隙中还必须有用户的地址信息，这将产生额外开销。</li>
+</ul>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zqeU1Re6UxgqZfVF8cq*h7dM82Ma69oj9CSACoQPdmDzpNqmPMvfd9Q8TeglNmmD6w!!/b&bo=XgINAQAAAAARB2A!&rf=viewer_4" alt="image"></p>
+<h3 id="波分复用WDM"><a href="#波分复用WDM" class="headerlink" title="波分复用WDM"></a><strong>波分复用WDM</strong></h3><p>波分复用WDM(Wavelength Division Multiplexing)是将两种或多种不同波长的光载波信号（携带各种信息）在发送端经复用器(亦称合波器，Multiplexer)汇合在一起，并耦合到光线路的同一根光纤中进行传输的技术</p>
+<p>波分复用就是光的频分复用，原理与频分复用大致相同</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zuA5bItScDY72nYZ*keQhlIC4LML8oU66eRKm*NccXUeyJc*xvpokV*dce67Iu5aMg!!/b&bo=*QRIAgAAAAARB4M!&rf=viewer_4" alt="image"></p>
+<h3 id="码分复用-CDM"><a href="#码分复用-CDM" class="headerlink" title="码分复用(CDM)"></a><strong>码分复用(CDM)</strong></h3><p>常用的名词是码分多址 CDMA (Code Division Multiple Access)。</p>
+<p>码分复用CDM（Code Division Multiplexing）是各用户使用经过特殊挑选的不同码型，在同样的时间使用同样的频带进行通信，但彼此不会造成干扰。</p>
+<p>这种系统发送的信号有很强的抗干扰能力，其频谱类似于白噪声，不易被敌人发现。</p>
+<p>在CDMA中，每一个比特时间划分为 m 个短的间隔，称为码片(chip)。通常m的值是64或者128。</p>
+<p>每个站被指派一个惟一的 m bit 码片序列(chip sequence) 。</p>
+<ul>
+<li>如发送比特 1，则发送自己的 m bit 码片序列。</li>
+<li>如发送比特 0，则发送该码片序列的二进制反码。</li>
+</ul>
+<p>每一个站分配的码片序列不仅必须各不相同，并且还必须相互正交（内积为0）。</p>
+<p>例如，S 站的 8 bit 码片序列是 00011011。</p>
+<p>发送比特 1 时，就发送序列 00011011，<br>发送比特 0 时，就发送序列 11100100。</p>
+<p>为了方便，接惯例将码片中的0写为-1，将1写为+1，S 站的码片序列：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(–<span class="number">1</span> –<span class="number">1</span> –<span class="number">1</span> +<span class="number">1</span> +<span class="number">1</span> –<span class="number">1</span> +<span class="number">1</span> +<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>若S站信息发送率为b（b/s），则实际数据发送率为mb（Baud），同时S站所占用的频带宽度也提高到原来的m倍。</p>
+<p>令向量 S 表示站 S 的码片向量，令 T 表示其他任何站的码片向量，m bit。</p>
+<p>两个不同站的码片序列正交，就是向量 S 和T 的规格化内积(inner product)都是 0：</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zgxGhDbvVAtHyQAneOMqGDBtAS3DotbwTJrxDZk3qCqvZvkciAdZMFpZBFYo8akqhg!!/b&bo=4wBIAAAAAAARB5s!&rf=viewer_4" alt="image"></p>
+<p>任何一个码片向量和该码片向量自己的规格化内积都是1 。</p>
+<p>例如S为 （+1,+1,-1）,则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1/3) * 3 = 1</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vskfy2t6hOhjtXaD5RFLjJNvSPaWK3GfP7Rq1P6gom8WjZx3Anfla1MjMld41VUANLA!!/b&bo=0QFMAAAAAAARF7w!&rf=viewer_4" alt="image"></p>
+<p>一个码片向量和该码片反码的向量的规格化内积值是 –1。</p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/AhdOM4QqaJmhyYpLm8c4zhx.R8K8ymgUUzZKWBBOjcTBjj4BNP9XgVdakEB*xAGqZq3FHRxtflq*Ta*1ecIYtw!!/b&bo=HgMGAgAAAAARByk!&rf=viewer_4" alt="image"></p>
+<p><img src="http://m.qpic.cn/psc?/V11lfhu01dRHln/pP8rOZrZ0vRZM69ZCg1vslS2zelcbtkksxY.Sm9E8LC9G6TomBzC6GYDHNMjhRFS848yQRqWpx7TV0fRpFW22w!!/b&bo=9wI4AgAAAAARF.8!&rf=viewer_4" alt="image"></p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2013/09/05/计算机网络/12、计算机网络 之物理层数字传输系统/" class="pre-post btn btn-default" title='12、计算机网络 之物理层数字传输系统'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            12、计算机网络 之物理层数字传输系统</span>
+    </a>
+    
+    
+    <a href="/2013/09/05/计算机网络/10、计算机网络 之物理层下面的传输媒体/" class="next-post btn btn-default" title='10、计算机网络 之物理层下面的传输媒体'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            10、计算机网络 之物理层下面的传输媒体</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算机网络-之物理层信道复用"><span class="toc-text">计算机网络 之物理层信道复用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#频分复用-FDM（Frequency-Division-Multiplexing）"><span class="toc-text">频分复用 FDM（Frequency Division Multiplexing）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时分复用（TDM）"><span class="toc-text">时分复用（TDM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#统计时分复用-Statistic-TDM"><span class="toc-text">统计时分复用 (Statistic TDM)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#波分复用WDM"><span class="toc-text">波分复用WDM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#码分复用-CDM"><span class="toc-text">码分复用(CDM)</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>

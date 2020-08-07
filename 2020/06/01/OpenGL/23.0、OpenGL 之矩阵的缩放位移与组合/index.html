@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://www.zackaddy.xin">
+    <!--SEO-->
+
+<meta name="keywords" content="OpenGL">
+
+
+<meta name="description" content="OpenGL 之矩阵的缩放位移与组合缩放对一个向量进行缩放(Scaling)就是对向量的长度进行缩放，而保持它的方向不变。
+12345678910111213141516\begin&#123;...">
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+<title>
+    
+    23.0、OpenGL 之矩阵的缩放位移与组合 |
+    
+    ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海
+</title>
+
+<link rel="alternate" href="/atom.xml" title="ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+    
+
+
+
+    
+
+</head></html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+<canvas id="canvas" style="position: fixed;width: 100%;height: 100%;left: 0;top: 0;"></canvas>
+<a href="https://github.com/herghost000"><img style="position: absolute;left: 0;top: 0;z-index: 11" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <header class="main-header"  >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='ZackAddy'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <h2>
+                从未如此简单有趣
+            </h2>
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.zackaddy.xin">
+                        ZackAddy&#39;s Blog - 不积跬步，无以至千里；不积小流，无以成江海</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa"></i>HOME</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/categories"><i class="fa"></i>CATEGORIES</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/archives"><i class="fa"></i>TIMELINE</a>
+                        </li>
+                        <li role="presentation" class="text-center">
+                            <a href="/about"><i class="fa"></i>ABOUT</a>
+                        </li>
+                    </ul>
+<!--                    <div class="menu-title">-->
+<!--                        <a href="/"><i class="fa"></i>首页</a>-->
+<!--                    </div>-->
+<!--                    <div class="menu-title">-->
+<!--                        <span>分类</span>-->
+<!--                        <ul class="menu">-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/LinearAlgebra/"><i class="fa "></i>-->
+<!--                                        LinearAlgebra</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cocos Creator/"><i class="fa "></i>-->
+<!--                                        Cocos Creator</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/OpenGL/"><i class="fa "></i>-->
+<!--                                        OpenGL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/JavaScript/"><i class="fa "></i>-->
+<!--                                        JavaScript</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/代码重构/"><i class="fa "></i>-->
+<!--                                        代码重构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/C/"><i class="fa "></i>-->
+<!--                                        C</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp/"><i class="fa "></i>-->
+<!--                                        C++</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/数据结构/"><i class="fa "></i>-->
+<!--                                        数据结构</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Cpp设计模式/"><i class="fa "></i>-->
+<!--                                        C++设计模式</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/MFC/"><i class="fa "></i>-->
+<!--                                        MFC</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/STL/"><i class="fa "></i>-->
+<!--                                        STL</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/COM组件/"><i class="fa "></i>-->
+<!--                                        COM组件</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Golang/"><i class="fa "></i>-->
+<!--                                        Golang</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Mysql/"><i class="fa "></i>-->
+<!--                                        Mysql</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Redis/"><i class="fa "></i>-->
+<!--                                        Redis</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Nginx/"><i class="fa "></i>-->
+<!--                                        Nginx</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/PHP/"><i class="fa "></i>-->
+<!--                                        PHP</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/8086汇编/"><i class="fa "></i>-->
+<!--                                        8086汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/x86汇编/"><i class="fa "></i>-->
+<!--                                        x86汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Smali汇编/"><i class="fa "></i>-->
+<!--                                        Smali汇编</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Lua/"><i class="fa "></i>-->
+<!--                                        Lua</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/逆向分析/"><i class="fa "></i>-->
+<!--                                        逆向分析</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows驱动/"><i class="fa "></i>-->
+<!--                                        Windows驱动</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Windows内核/"><i class="fa "></i>-->
+<!--                                        Windows内核</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Vue/"><i class="fa "></i>-->
+<!--                                        Vue</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/React/"><i class="fa "></i>-->
+<!--                                        React</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/Flutter Widget/"><i class="fa "></i>-->
+<!--                                        Flutter Widget</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/categories/计算机网络/"><i class="fa "></i>-->
+<!--                                        计算机网络</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                                <li role="presentation" class="text-center">-->
+<!--                                    <a href="/archives/"><i class="fa "></i>-->
+<!--                                        时间轴</a>-->
+<!--                                </li>-->
+<!--                            -->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="23.0、OpenGL 之矩阵的缩放位移与组合">
+            
+            23.0、OpenGL 之矩阵的缩放位移与组合
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/OpenGL/">OpenGL</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/OpenGL/">OpenGL</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/06/01</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="OpenGL-之矩阵的缩放位移与组合"><a href="#OpenGL-之矩阵的缩放位移与组合" class="headerlink" title="OpenGL 之矩阵的缩放位移与组合"></a><strong>OpenGL 之矩阵的缩放位移与组合</strong></h2><h3 id="缩放"><a href="#缩放" class="headerlink" title="缩放"></a><strong>缩放</strong></h3><p>对一个向量进行缩放(Scaling)就是对向量的长度进行缩放，而保持它的方向不变。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;pmatrix&#125;</span><br><span class="line">   S_1 &amp; 0 &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; S_2 &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; S_3 &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   S_1 \cdot x \\</span><br><span class="line">   S_2 \cdot y \\</span><br><span class="line">   S_3 \cdot z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="齐次坐标-Homogeneous-Coordinates"><a href="#齐次坐标-Homogeneous-Coordinates" class="headerlink" title="齐次坐标(Homogeneous Coordinates)"></a><strong>齐次坐标(Homogeneous Coordinates)</strong></h3><p>向量的w分量也叫齐次坐标。想要从齐次向量得到3D向量，我们可以把x、y和z坐标分别除以w坐标。我们通常不会注意这个问题，因为w分量通常是1.0。使用齐次坐标有几点好处：它允许我们在3D向量上进行位移（如果没有w分量我们是不能位移向量的），而且下一章我们会用w值创建3D视觉效果。</p>
+<p>如果一个向量的齐次坐标是0，这个坐标就是方向向量(Direction Vector)，因为w坐标是0，这个向量就不能位移（译注：这也就是我们说的不能位移一个方向）。</p>
+<h3 id="位移"><a href="#位移" class="headerlink" title="位移"></a><strong>位移</strong></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">位移(Translation)是在原始向量的基础上加上另一个向量从而获得一个在不同位置的新向量的过程，从而在位移向量基础上移动了原始向量。</span><br><span class="line"></span><br><span class="line">我们已经讨论了向量加法，所以这应该不会太陌生。</span><br><span class="line"></span><br><span class="line">和缩放矩阵一样，在4×4矩阵上有几个特别的位置用来执行特定的操作，对于位移来说它们是第四列最上面的3个值。</span><br><span class="line"></span><br><span class="line">如果我们把位移向量表示为(Tx,Ty,Tz)，我们就能把位移矩阵定义为：</span><br><span class="line"></span><br><span class="line">\begin&#123;pmatrix&#125;</span><br><span class="line">   1 &amp; 0 &amp; 0 &amp; T_x \\</span><br><span class="line">   0 &amp; 1 &amp; 0 &amp; T_y \\</span><br><span class="line">   0 &amp; 0 &amp; 1 &amp; T_z \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   x + T_x \\</span><br><span class="line">   y + T_y \\</span><br><span class="line">   z + T_z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a><strong>旋转</strong></h3><p>沿x轴旋转：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;pmatrix&#125;</span><br><span class="line">   1 &amp; 0 &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; \cos\theta &amp; -\sin\theta &amp; 0 \\</span><br><span class="line">   0 &amp; \sin\theta &amp; \cos\theta &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   \cos\theta \cdot y - \sin\theta \cdot z \\</span><br><span class="line">   \sin\theta \cdot y + \cos\theta \cdot z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>沿y轴旋转：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;pmatrix&#125;</span><br><span class="line">   \cos\theta &amp; 0 &amp; \sin\theta &amp; 0 \\</span><br><span class="line">   0 &amp; 1 &amp; 1 &amp; 0 \\</span><br><span class="line">   -\sin\theta &amp; 0 &amp; \cos\theta &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   \cos\theta \cdot x - \sin\theta \cdot z \\</span><br><span class="line">   y \\</span><br><span class="line">   -\sin\theta \cdot x + \cos\theta \cdot z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>沿z轴旋转：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;pmatrix&#125;</span><br><span class="line">   \cos\theta &amp; -\sin\theta &amp; 0 &amp; 0 \\</span><br><span class="line">   \sin\theta &amp; \cos\theta &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   \cos\theta \cdot x - \sin\theta \cdot y \\</span><br><span class="line">   \sin\theta \cdot x + \cos\theta \cdot y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="矩阵的组合"><a href="#矩阵的组合" class="headerlink" title="矩阵的组合"></a><strong>矩阵的组合</strong></h3><p>使用矩阵进行变换的真正力量在于，根据矩阵之间的乘法，我们可以把多个变换组合到一个矩阵中。让我们看看我们是否能生成一个变换矩阵，让它组合多个变换。假设我们有一个顶点(x, y, z)，我们希望将其缩放2倍，然后位移(1, 2, 3)个单位。我们需要一个位移和缩放矩阵来完成这些变换。结果的变换矩阵看起来像这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Trans.Scale = \begin&#123;pmatrix&#125;</span><br><span class="line">   1 &amp; 0 &amp; 0 &amp; 1 \\</span><br><span class="line">   0 &amp; 1 &amp; 0 &amp; 2 \\</span><br><span class="line">   0 &amp; 0 &amp; 1 &amp; 3 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   2 &amp; 0 &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; 2 &amp; 0 &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 2 &amp; 0 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   2 &amp; 0 &amp; 0 &amp; 1 \\</span><br><span class="line">   0 &amp; 2 &amp; 0 &amp; 2 \\</span><br><span class="line">   0 &amp; 0 &amp; 2 &amp; 3 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，当矩阵相乘时我们先写位移再写缩放变换的。矩阵乘法是不遵守交换律的，这意味着它们的顺序很重要。当矩阵相乘时，在最右边的矩阵是第一个与向量相乘的，所以你应该从右向左读这个乘法。建议您在组合矩阵时，先进行缩放操作，然后是旋转，最后才是位移，否则它们会（消极地）互相影响。比如，如果你先位移再缩放，位移的向量也会同样被缩放（译注：比如向某方向移动2米，2米也许会被缩放成1米）！</p>
+<p>用最终的变换矩阵左乘我们的向量会得到以下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;pmatrix&#125;</span><br><span class="line">   2 &amp; 0 &amp; 0 &amp; 1 \\</span><br><span class="line">   0 &amp; 2 &amp; 0 &amp; 2 \\</span><br><span class="line">   0 &amp; 0 &amp; 2 &amp; 3 \\</span><br><span class="line">   0 &amp; 0 &amp; 0 &amp; 1</span><br><span class="line">\end&#123;pmatrix&#125; \cdot \begin&#123;pmatrix&#125;</span><br><span class="line">   x \\</span><br><span class="line">   y \\</span><br><span class="line">   z \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125; = \begin&#123;pmatrix&#125;</span><br><span class="line">   2x + 1 \\</span><br><span class="line">   2y + 2 \\</span><br><span class="line">   2z + 3 \\</span><br><span class="line">   1</span><br><span class="line">\end&#123;pmatrix&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不错！向量先缩放2倍，然后位移了(1, 2, 3)个单位。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">罗天</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/06/01/LinearAlgebra/69、LinearAlgebra 之行式就是列式/" class="pre-post btn btn-default" title='69、LinearAlgebra 之行式就是列式'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            69、LinearAlgebra 之行式就是列式</span>
+    </a>
+    
+    
+    <a href="/2020/05/31/LinearAlgebra/68、LinearAlgebra 之初等矩阵与行列式/" class="next-post btn btn-default" title='68、LinearAlgebra 之初等矩阵与行列式'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            68、LinearAlgebra 之初等矩阵与行列式</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+<p>评论系统未开启，无法评论！</p>
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenGL-之矩阵的缩放位移与组合"><span class="toc-text">OpenGL 之矩阵的缩放位移与组合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#缩放"><span class="toc-text">缩放</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#齐次坐标-Homogeneous-Coordinates"><span class="toc-text">齐次坐标(Homogeneous Coordinates)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#位移"><span class="toc-text">位移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#旋转"><span class="toc-text">旋转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#矩阵的组合"><span class="toc-text">矩阵的组合</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2012
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/herghost000" class="copyright-links" target="_blank" rel="nofollow">ZackX</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+<script>
+var tagOption = {
+    textColour: '#444', // 字体颜色
+    outlineMethod: 'block', // 选中模式
+    outlineColour: '#FFDAB9', // 选中模式的颜色
+    interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+    textHeight: 13,
+    outlineRadius: 3,
+    freezeActive: true || '', // 选中的标签是否继续滚动
+    frontSelect: true || '', // 不选标签云后部的标签
+    initial: [0.1, -0.1],
+    depth: 0.5,
+    decel: 0.95,
+    maxSpeed: 0.03,
+    reverse: true || '', // 是否反向触发
+    fadeIn: 500, // 进入动画时间
+    wheelZoom: false || '' // 是否启用鼠标滚轮
+}
+TagCanvas.Start('tag-cloud-3d', '', tagOption);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+<script src="/js/app.js?rev=@@hash"></script>
+
+
+
+</body>
+</html>
