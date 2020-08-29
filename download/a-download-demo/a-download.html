@@ -127,13 +127,13 @@
   });
 
   const dataUrlConfig = document.getElementById('dataUrlConfig');
-  dataUrlConfig.setAttribute('href', "data:text/plain;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
+  dataUrlConfig.setAttribute('href', "data:text/xml;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
   dataUrlConfig.setAttribute('download', 'download-data-url.mobileconfig');
   dataUrlConfig.addEventListener('click', () => {
     console.log('下载文件');
   });
 
-  const dataUrlConfigData = dataUrl2Blob("data:text/plain;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
+  const dataUrlConfigData = dataUrl2Blob("data:text/xml;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
   const downloadBlobConfig = document.getElementById('downloadBlobConfig');
   downloadBlobConfig.setAttribute('href', URL.createObjectURL(dataUrlConfigData));
   downloadBlobConfig.setAttribute('download', 'download-data-url.mobileconfig');

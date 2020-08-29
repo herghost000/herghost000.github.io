@@ -350,12 +350,12 @@
 
   const downloadBase64ConfigDom = document.getElementById('download-base64-config');
   downloadBase64ConfigDom.addEventListener('click', () => {
-    saveAs("data:text/plain;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF", "text-dpwnload.mobileconfig");
+    saveAs("data:text/xml;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF", "text-dpwnload.mobileconfig");
   });
 
   const downloadConfigDom = document.getElementById('download-config');
   downloadConfigDom.addEventListener('click', () => {
-    const dataUrlConfigData = dataUrl2Blob("data:text/plain;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
+    const dataUrlConfigData = dataUrl2Blob("data:text/xml;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
     saveAs(URL.createObjectURL(dataUrlConfigData), "text-dpwnload.mobileconfig");
   });
 
