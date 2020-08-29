@@ -115,15 +115,180 @@
       </tbody>
     </table>
     <a id='download-excel' class='button is-danger'>excel文件下载</a>
+    <a id='download-default-config' class='button is-danger'>config 文件下载</a>
+    <a id='download-base64-config' class='button is-danger'>config base64文件下载</a>
+    <a id='download-config' class='button is-danger'>config blob文件下载</a>
+    <a id='baidu-jpg' class='button is-danger'>百度图片下载</a>
   </div>
 </body>
 <script src="https://cdn.bootcss.com/javascript-canvas-to-blob/3.14.0/js/canvas-to-blob.min.js"></script>
 <script src="https://cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
 <script src="https://cdn.bootcss.com/xlsx/0.14.1/shim.min.js"></script>
 <script src="https://cdn.bootcss.com/xlsx/0.14.1/xlsx.full.min.js"></script>
-<script src='../util.js'></script>
-<script src='./canvas.js'></script>
 <script>
+  // 图片转base64
+  function image2base64(img) {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+    const mime = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
+    const dataUrl = canvas.toDataURL("image/" + mime);
+    return dataUrl;
+  }
+
+  // DataUrl 转 Blob数据
+  function dataUrl2Blob(dataUrl) {
+    var arr = dataUrl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bStr = atob(arr[1]),
+            n = bStr.length,
+            unit8Array = new Uint8Array(n);
+    while (n--) {
+      unit8Array[n] = bStr.charCodeAt(n);
+    }
+    return new Blob([unit8Array], { type: mime });
+  }
+
+  // 无闪现下载excel
+  function download(url) {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    function iframeLoad() {
+      console.log('iframe onload');
+      const win = iframe.contentWindow;
+      const doc = win.document;
+      if (win.location.href === url) {
+        if (doc.body.childNodes.length > 0) {
+          // response is error
+        }
+        iframe.parentNode.removeChild(iframe);
+      }
+    }
+    if ('onload' in iframe) {
+      iframe.onload = iframeLoad;
+    } else if (iframe.attachEvent) {
+      iframe.attachEvent('onload', iframeLoad);
+    } else {
+      iframe.onreadystatechange = function onreadystatechange() {
+        if (iframe.readyState === 'complete') {
+          iframeLoad;
+        }
+      };
+    }
+    iframe.src = '';
+    document.body.appendChild(iframe);
+
+    setTimeout(function loadUrl() { // eslint-disable-line
+      iframe.contentWindow.location.href = url;
+    }, 50);
+  }
+
+  var canvas;
+  var context;
+  var tool;
+  // 窗口准备好之后进行初始化工作
+
+  if (window.addEventListener) {
+    window.addEventListener('load',
+            init(),
+            false);
+  }
+
+  // 初始化canvas
+  function init() {
+
+    canvas = document.getElementById('canvas');
+    if (!canvas) {
+      return;
+    }
+    if (!canvas.getContext) {
+      return;
+    }
+
+    // 初始化画布
+    context = canvas.getContext('2d');
+    if (!context) {
+      return;
+    }
+
+    // 绘制背景, 不然的话没有背景，transparent
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 初始化画笔
+    tool = new toolPencil();
+
+    /**
+     * 监听鼠标移动事件，进行绘图
+     */
+    canvas.addEventListener('mousedown', evCanvas, false);
+    canvas.addEventListener('mousemove', evCanvas, false);
+    canvas.addEventListener('mouseup', evCanvas, false);
+
+  }
+
+  /**
+   * 画笔构造函数
+   * @returns {toolPencil}
+   */
+  function toolPencil() {
+    var tool = this;
+    this.started = false;
+    /**
+     * 监听鼠标摁下事件
+     */
+    this.mousedown = function (ev) {
+      /**
+       * 开始绘制
+       */
+      ev.preventDefault();
+      context.beginPath();
+      context.moveTo(ev._x, ev._y);
+      tool.started = true;
+    };
+
+    /**
+     * 如果已经开始绘制，监听鼠标移动，继续绘制
+     */
+    this.mousemove = function (ev) {
+      if (tool.started) {
+        context.lineTo(ev._x, ev._y);
+        context.stroke();
+      }
+    };
+
+    /**
+     * 结束绘制.
+     */
+    this.mouseup = function (ev) {
+      if (tool.started) {
+        tool.mousemove(ev);
+        tool.started = false;
+      }
+    };
+  }
+
+  /**
+   * 处理鼠标移动位置相对于画布的位置
+   *
+   * @param ev
+   */
+  function evCanvas(ev) {
+    var x, y;
+    if (ev.offsetX || ev.offsetY == 0) {
+      ev._x = ev.offsetX;
+      ev._y = ev.offsetY;
+    }
+    /**
+     * 执行三个监听函数 mousedown, mouseup, mousemove
+     */
+    var func = tool[ev.type];
+    if (func) {
+      func(ev);
+    }
+  }
   /* 下载canvas */
   function generateFilename(id, mime) {
     const filename = document.getElementById(id).value || document.getElementById(id).placeholder;
@@ -176,5 +341,29 @@
       if (typeof console !== 'undefined') console.log(e, wbout)
     }
   });
+
+
+  const downloadDefaultConfigDom = document.getElementById('download-default-config');
+  downloadDefaultConfigDom.addEventListener('click', () => {
+    saveAs("../files/test-download.mobileconfig", "text-dpwnload.mobileconfig");
+  });
+
+  const downloadBase64ConfigDom = document.getElementById('download-base64-config');
+  downloadBase64ConfigDom.addEventListener('click', () => {
+    saveAs("data:text/plain;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF", "text-dpwnload.mobileconfig");
+  });
+
+  const downloadConfigDom = document.getElementById('download-config');
+  downloadConfigDom.addEventListener('click', () => {
+    const dataUrlConfigData = dataUrl2Blob("data:text/plain;base64,5Y+N5a+55Y+N5a+554qv5b6X5LiK5aSn5biI5YKF");
+    saveAs(URL.createObjectURL(dataUrlConfigData), "text-dpwnload.mobileconfig");
+  });
+
+  const baiduJpgDom = document.getElementById('baidu-jpg');
+  baiduJpgDom.addEventListener('click', () => {
+    saveAs("http://e.hiphotos.baidu.com/image/pic/item/4610b912c8fcc3cef70d70409845d688d53f20f7.jpg", "text-dpwnload.jpg");
+  });
+
+
 </script>
 </html>
